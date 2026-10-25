@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef CUTEFISH_WAYLAND_SECURITY_DELEGATE_H_
-#define CUTEFISH_WAYLAND_SECURITY_DELEGATE_H_
+#ifndef LINGMO_WAYLAND_SECURITY_DELEGATE_H_
+#define LINGMO_WAYLAND_SECURITY_DELEGATE_H_
 
 #include <cstdint>
 #include <string>
@@ -70,4 +70,4 @@ private:
 
 } // namespace Lingmo::Wayland
 
-#endif // CUTEFISH_WAYLAND_SECURITY_DELEGATE_H_
+#endif // LINGMO_WAYLAND_SECURITY_DELEGATE_H_

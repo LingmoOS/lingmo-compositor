@@ -8,8 +8,8 @@
 // Adapted for Cutefish: integrates the upstream behavior with native
 // compositor types and ownership.
 
-#ifndef CUTEFISH_WAYLAND_CLIENT_TRACKER_H_
-#define CUTEFISH_WAYLAND_CLIENT_TRACKER_H_
+#ifndef LINGMO_WAYLAND_CLIENT_TRACKER_H_
+#define LINGMO_WAYLAND_CLIENT_TRACKER_H_
 
 #include <wayland-server-core.h>
 
@@ -64,4 +64,4 @@ private:
 
 } // namespace Lingmo::Wayland
 
-#endif // CUTEFISH_WAYLAND_CLIENT_TRACKER_H_
+#endif // LINGMO_WAYLAND_CLIENT_TRACKER_H_

@@ -9,8 +9,8 @@
 // Adapted for Cutefish: gfx::NativePixmapHandle becomes DmaBufAttributes, and
 // the slice of gpu::Capabilities the dmabuf protocol needs becomes DmaBufDevice.
 
-#ifndef CUTEFISH_RENDER_DMABUF_H_
-#define CUTEFISH_RENDER_DMABUF_H_
+#ifndef LINGMO_RENDER_DMABUF_H_
+#define LINGMO_RENDER_DMABUF_H_
 
 #include <sys/types.h>
 
@@ -73,4 +73,4 @@ public:
 
 } // namespace Lingmo::Render
 
-#endif // CUTEFISH_RENDER_DMABUF_H_
+#endif // LINGMO_RENDER_DMABUF_H_

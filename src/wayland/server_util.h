@@ -8,8 +8,8 @@
 // Adapted for Cutefish: integrates the upstream behavior with native
 // compositor types and ownership.
 
-#ifndef CUTEFISH_WAYLAND_SERVER_UTIL_H_
-#define CUTEFISH_WAYLAND_SERVER_UTIL_H_
+#ifndef LINGMO_WAYLAND_SERVER_UTIL_H_
+#define LINGMO_WAYLAND_SERVER_UTIL_H_
 
 #include <wayland-server-core.h>
 
@@ -93,4 +93,4 @@ base::PointF logicalToClient(const base::PointF& point, double scale);
 
 } // namespace Lingmo::Wayland
 
-#endif // CUTEFISH_WAYLAND_SERVER_UTIL_H_
+#endif // LINGMO_WAYLAND_SERVER_UTIL_H_

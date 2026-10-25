@@ -12,8 +12,8 @@
 // Trimmed for Cutefish: no globals are registered yet, and the fd is watched by
 // the compositor's own main loop instead of base::MessagePumpForUI.
 
-#ifndef CUTEFISH_WAYLAND_SERVER_H_
-#define CUTEFISH_WAYLAND_SERVER_H_
+#ifndef LINGMO_WAYLAND_SERVER_H_
+#define LINGMO_WAYLAND_SERVER_H_
 
 #include <chrono>
 #include <memory>
@@ -123,4 +123,4 @@ private:
 
 } // namespace Lingmo::Wayland
 
-#endif // CUTEFISH_WAYLAND_SERVER_H_
+#endif // LINGMO_WAYLAND_SERVER_H_

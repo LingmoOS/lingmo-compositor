@@ -9,8 +9,8 @@
 // Adapted for Cutefish: integrates the upstream behavior with native
 // compositor types and ownership.
 
-#ifndef CUTEFISH_WAYLAND_SCOPED_WL_H_
-#define CUTEFISH_WAYLAND_SCOPED_WL_H_
+#ifndef LINGMO_WAYLAND_SCOPED_WL_H_
+#define LINGMO_WAYLAND_SCOPED_WL_H_
 
 #include <wayland-server-core.h>
 
@@ -37,4 +37,4 @@ using ScopedWlDisplay = std::unique_ptr<wl_display, WlDisplayDeleter>;
 
 } // namespace Lingmo::Wayland
 
-#endif // CUTEFISH_WAYLAND_SCOPED_WL_H_
+#endif // LINGMO_WAYLAND_SCOPED_WL_H_

@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef CUTEFISH_BACKEND_DRM_DRM_PROPERTIES_H_
-#define CUTEFISH_BACKEND_DRM_DRM_PROPERTIES_H_
+#ifndef LINGMO_BACKEND_DRM_DRM_PROPERTIES_H_
+#define LINGMO_BACKEND_DRM_DRM_PROPERTIES_H_
 
 #include <cstdint>
 #include <optional>
@@ -50,4 +50,4 @@ private:
 
 } // namespace Lingmo::Backend
 
-#endif // CUTEFISH_BACKEND_DRM_DRM_PROPERTIES_H_
+#endif // LINGMO_BACKEND_DRM_DRM_PROPERTIES_H_

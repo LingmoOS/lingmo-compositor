@@ -11,8 +11,8 @@
 // Adapted for Cutefish: gfx::GpuFenceHandle becomes a plain owned sync_file fd
 // and sync_merge() is issued directly, since libsync is an Android library.
 
-#ifndef CUTEFISH_RENDER_SYNC_FENCE_H_
-#define CUTEFISH_RENDER_SYNC_FENCE_H_
+#ifndef LINGMO_RENDER_SYNC_FENCE_H_
+#define LINGMO_RENDER_SYNC_FENCE_H_
 
 #include <cstdint>
 #include <optional>
@@ -77,4 +77,4 @@ private:
 
 } // namespace Lingmo::Render
 
-#endif // CUTEFISH_RENDER_SYNC_FENCE_H_
+#endif // LINGMO_RENDER_SYNC_FENCE_H_

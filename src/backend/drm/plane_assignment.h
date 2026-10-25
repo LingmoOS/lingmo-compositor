@@ -11,8 +11,8 @@
 // method mutating in_use/owning_crtc on a shared plane list, since one output
 // on one CRTC has no plane migration to track.
 
-#ifndef CUTEFISH_BACKEND_DRM_PLANE_ASSIGNMENT_H_
-#define CUTEFISH_BACKEND_DRM_PLANE_ASSIGNMENT_H_
+#ifndef LINGMO_BACKEND_DRM_PLANE_ASSIGNMENT_H_
+#define LINGMO_BACKEND_DRM_PLANE_ASSIGNMENT_H_
 
 #include <cstdint>
 #include <vector>
@@ -46,4 +46,4 @@ std::vector<PlaneAssignment> assignPlanes(const std::vector<DrmPlane>& planes, i
 
 } // namespace Lingmo::Backend
 
-#endif // CUTEFISH_BACKEND_DRM_PLANE_ASSIGNMENT_H_
+#endif // LINGMO_BACKEND_DRM_PLANE_ASSIGNMENT_H_

@@ -11,8 +11,8 @@
 // dynamic Intel cursor-size table is omitted; one buffer size is allocated from
 // the device's reported maximum.
 
-#ifndef CUTEFISH_BACKEND_DRM_DRM_CURSOR_H_
-#define CUTEFISH_BACKEND_DRM_DRM_CURSOR_H_
+#ifndef LINGMO_BACKEND_DRM_DRM_CURSOR_H_
+#define LINGMO_BACKEND_DRM_DRM_CURSOR_H_
 
 #include <string>
 
@@ -94,4 +94,4 @@ private:
 
 } // namespace Lingmo::Backend
 
-#endif // CUTEFISH_BACKEND_DRM_DRM_CURSOR_H_
+#endif // LINGMO_BACKEND_DRM_DRM_CURSOR_H_

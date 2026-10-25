@@ -9,8 +9,8 @@
 // atomic request is a plain property list rather than a drmModeAtomicReq, so
 // the planner and the commit path can be exercised without a DRM device.
 
-#ifndef CUTEFISH_BACKEND_DRM_DRM_DEVICE_API_H_
-#define CUTEFISH_BACKEND_DRM_DRM_DEVICE_API_H_
+#ifndef LINGMO_BACKEND_DRM_DRM_DEVICE_API_H_
+#define LINGMO_BACKEND_DRM_DRM_DEVICE_API_H_
 
 #include "base/geometry.h"
 
@@ -123,4 +123,4 @@ public:
 
 } // namespace Lingmo::Backend
 
-#endif // CUTEFISH_BACKEND_DRM_DRM_DEVICE_API_H_
+#endif // LINGMO_BACKEND_DRM_DRM_DEVICE_API_H_

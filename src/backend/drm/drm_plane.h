@@ -9,8 +9,8 @@
 // are kept free of ioctls, so plane assignment is testable; enumeration lives
 // in drm_backend.cpp.
 
-#ifndef CUTEFISH_BACKEND_DRM_DRM_PLANE_H_
-#define CUTEFISH_BACKEND_DRM_DRM_PLANE_H_
+#ifndef LINGMO_BACKEND_DRM_DRM_PLANE_H_
+#define LINGMO_BACKEND_DRM_DRM_PLANE_H_
 
 #include <cstdint>
 #include <map>
@@ -50,4 +50,4 @@ struct DrmPlane {
 
 } // namespace Lingmo::Backend
 
-#endif // CUTEFISH_BACKEND_DRM_DRM_PLANE_H_
+#endif // LINGMO_BACKEND_DRM_DRM_PLANE_H_

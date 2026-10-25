@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef CUTEFISH_BACKEND_DRM_DRM_SELECTION_H_
-#define CUTEFISH_BACKEND_DRM_DRM_SELECTION_H_
+#ifndef LINGMO_BACKEND_DRM_DRM_SELECTION_H_
+#define LINGMO_BACKEND_DRM_DRM_SELECTION_H_
 
 #include <xf86drmMode.h>
 
@@ -77,4 +77,4 @@ std::string connectorName(uint32_t type, uint32_t typeId);
 
 } // namespace Lingmo::Backend
 
-#endif // CUTEFISH_BACKEND_DRM_DRM_SELECTION_H_
+#endif // LINGMO_BACKEND_DRM_DRM_SELECTION_H_

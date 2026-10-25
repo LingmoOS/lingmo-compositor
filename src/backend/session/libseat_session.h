@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef CUTEFISH_BACKEND_SESSION_LIBSEAT_SESSION_H_
-#define CUTEFISH_BACKEND_SESSION_LIBSEAT_SESSION_H_
+#ifndef LINGMO_BACKEND_SESSION_LIBSEAT_SESSION_H_
+#define LINGMO_BACKEND_SESSION_LIBSEAT_SESSION_H_
 
 
 #include <memory>
@@ -50,4 +50,4 @@ private:
 
 } // namespace Lingmo::Backend
 
-#endif // CUTEFISH_BACKEND_SESSION_LIBSEAT_SESSION_H_
+#endif // LINGMO_BACKEND_SESSION_LIBSEAT_SESSION_H_

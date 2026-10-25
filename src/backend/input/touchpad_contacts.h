@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef CUTEFISH_BACKEND_INPUT_TOUCHPAD_CONTACTS_H_
-#define CUTEFISH_BACKEND_INPUT_TOUCHPAD_CONTACTS_H_
+#ifndef LINGMO_BACKEND_INPUT_TOUCHPAD_CONTACTS_H_
+#define LINGMO_BACKEND_INPUT_TOUCHPAD_CONTACTS_H_
 
 #include "base/geometry.h"
 #include "input/touchpad_click.h"
@@ -60,4 +60,4 @@ private:
 
 } // namespace Lingmo::Backend
 
-#endif // CUTEFISH_BACKEND_INPUT_TOUCHPAD_CONTACTS_H_
+#endif // LINGMO_BACKEND_INPUT_TOUCHPAD_CONTACTS_H_

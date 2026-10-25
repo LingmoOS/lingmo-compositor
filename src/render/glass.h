@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef CUTEFISH_RENDER_GLASS_H_
-#define CUTEFISH_RENDER_GLASS_H_
+#ifndef LINGMO_RENDER_GLASS_H_
+#define LINGMO_RENDER_GLASS_H_
 
 namespace Lingmo::Render {
 
@@ -92,4 +92,4 @@ inline bool operator!=(const GlassParams &a, const GlassParams &b)
 
 } // namespace Lingmo::Render
 
-#endif // CUTEFISH_RENDER_GLASS_H_
+#endif // LINGMO_RENDER_GLASS_H_

@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef CUTEFISH_RENDER_EGL_RENDERER_H_
-#define CUTEFISH_RENDER_EGL_RENDERER_H_
+#ifndef LINGMO_RENDER_EGL_RENDERER_H_
+#define LINGMO_RENDER_EGL_RENDERER_H_
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -252,4 +252,4 @@ private:
 
 } // namespace Lingmo::Render
 
-#endif // CUTEFISH_RENDER_EGL_RENDERER_H_
+#endif // LINGMO_RENDER_EGL_RENDERER_H_

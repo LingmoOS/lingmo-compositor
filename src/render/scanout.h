@@ -10,8 +10,8 @@
 // import slot is keyed by device and opaque, so nothing above the backend has
 // to know that DRM exists.
 
-#ifndef CUTEFISH_RENDER_SCANOUT_H_
-#define CUTEFISH_RENDER_SCANOUT_H_
+#ifndef LINGMO_RENDER_SCANOUT_H_
+#define LINGMO_RENDER_SCANOUT_H_
 
 #include <memory>
 #include <utility>
@@ -94,4 +94,4 @@ private:
 
 } // namespace Lingmo::Render
 
-#endif // CUTEFISH_RENDER_SCANOUT_H_
+#endif // LINGMO_RENDER_SCANOUT_H_

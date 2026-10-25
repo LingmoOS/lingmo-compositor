@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef CUTEFISH_TOOLKIT_TOOLKIT_HOST_H_
-#define CUTEFISH_TOOLKIT_TOOLKIT_HOST_H_
+#ifndef LINGMO_TOOLKIT_TOOLKIT_HOST_H_
+#define LINGMO_TOOLKIT_TOOLKIT_HOST_H_
 
 #include <cstdint>
 #include <memory>
@@ -113,4 +113,4 @@ private:
 
 } // namespace Lingmo::Toolkit
 
-#endif // CUTEFISH_TOOLKIT_TOOLKIT_HOST_H_
+#endif // LINGMO_TOOLKIT_TOOLKIT_HOST_H_

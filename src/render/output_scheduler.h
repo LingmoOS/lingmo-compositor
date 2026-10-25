@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef CUTEFISH_RENDER_OUTPUT_SCHEDULER_H_
-#define CUTEFISH_RENDER_OUTPUT_SCHEDULER_H_
+#ifndef LINGMO_RENDER_OUTPUT_SCHEDULER_H_
+#define LINGMO_RENDER_OUTPUT_SCHEDULER_H_
 
 #include <algorithm>
 #include <array>

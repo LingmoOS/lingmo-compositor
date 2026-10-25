@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef CUTEFISH_BACKEND_INPUT_LIBINPUT_BACKEND_H_
-#define CUTEFISH_BACKEND_INPUT_LIBINPUT_BACKEND_H_
+#ifndef LINGMO_BACKEND_INPUT_LIBINPUT_BACKEND_H_
+#define LINGMO_BACKEND_INPUT_LIBINPUT_BACKEND_H_
 
 #include "input/mouse_settings.h"
 #include "input/seat_observer.h"
@@ -108,4 +108,4 @@ private:
 
 } // namespace Lingmo::Backend
 
-#endif // CUTEFISH_BACKEND_INPUT_LIBINPUT_BACKEND_H_
+#endif // LINGMO_BACKEND_INPUT_LIBINPUT_BACKEND_H_

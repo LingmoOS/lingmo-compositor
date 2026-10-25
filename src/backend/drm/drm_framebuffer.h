@@ -9,8 +9,8 @@
 // sequence tracking, and the client DMA-BUF import upstream gets from
 // GbmPixmap is done here.
 
-#ifndef CUTEFISH_BACKEND_DRM_DRM_FRAMEBUFFER_H_
-#define CUTEFISH_BACKEND_DRM_DRM_FRAMEBUFFER_H_
+#ifndef LINGMO_BACKEND_DRM_DRM_FRAMEBUFFER_H_
+#define LINGMO_BACKEND_DRM_DRM_FRAMEBUFFER_H_
 
 #include "base/geometry.h"
 
@@ -103,4 +103,4 @@ private:
 
 } // namespace Lingmo::Backend
 
-#endif // CUTEFISH_BACKEND_DRM_DRM_FRAMEBUFFER_H_
+#endif // LINGMO_BACKEND_DRM_DRM_FRAMEBUFFER_H_

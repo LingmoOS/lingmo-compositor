@@ -8,8 +8,8 @@
 // Adapted for Cutefish: wraps the compositor-owned DRM descriptor behind its
 // small injectable ioctl interface.
 
-#ifndef CUTEFISH_BACKEND_DRM_DRM_DEVICE_H_
-#define CUTEFISH_BACKEND_DRM_DRM_DEVICE_H_
+#ifndef LINGMO_BACKEND_DRM_DRM_DEVICE_H_
+#define LINGMO_BACKEND_DRM_DRM_DEVICE_H_
 
 #include "backend/drm/drm_device_api.h"
 
@@ -63,4 +63,4 @@ private:
 
 } // namespace Lingmo::Backend
 
-#endif // CUTEFISH_BACKEND_DRM_DRM_DEVICE_H_
+#endif // LINGMO_BACKEND_DRM_DRM_DEVICE_H_

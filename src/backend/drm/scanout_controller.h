@@ -17,8 +17,8 @@
 // upstream allocates are replaced by the composited framebuffer already in
 // hand, which has exactly the format and modifier the real commit will use.
 
-#ifndef CUTEFISH_BACKEND_DRM_SCANOUT_CONTROLLER_H_
-#define CUTEFISH_BACKEND_DRM_SCANOUT_CONTROLLER_H_
+#ifndef LINGMO_BACKEND_DRM_SCANOUT_CONTROLLER_H_
+#define LINGMO_BACKEND_DRM_SCANOUT_CONTROLLER_H_
 
 #include <cstdint>
 #include <memory>
@@ -174,4 +174,4 @@ private:
 
 } // namespace Lingmo::Backend
 
-#endif // CUTEFISH_BACKEND_DRM_SCANOUT_CONTROLLER_H_
+#endif // LINGMO_BACKEND_DRM_SCANOUT_CONTROLLER_H_

@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef CUTEFISH_TOOLKIT_COMPOSITOR_COLORS_H_
-#define CUTEFISH_TOOLKIT_COMPOSITOR_COLORS_H_
+#ifndef LINGMO_TOOLKIT_COMPOSITOR_COLORS_H_
+#define LINGMO_TOOLKIT_COMPOSITOR_COLORS_H_
 
 #include <cstdint>
 
@@ -40,4 +40,4 @@ void addCompositorColors(ui::ColorMixer &mixer, const ui::Theme &theme);
 
 } // namespace Lingmo::Toolkit
 
-#endif // CUTEFISH_TOOLKIT_COMPOSITOR_COLORS_H_
+#endif // LINGMO_TOOLKIT_COMPOSITOR_COLORS_H_
