@@ -97,7 +97,7 @@ lingmo_wayland_protocol(linux-dmabuf-v1
 lingmo_wayland_protocol(linux-drm-syncobj-v1
     ${WAYLAND_PROTOCOLS_DATADIR}/staging/linux-drm-syncobj/linux-drm-syncobj-v1.xml)
 
-# Cutefish's own private protocols. lingmo-sdk/protocols keeps the
+# Lingmo own private protocols. lingmo-sdk/protocols keeps the
 # client-side copy of every one a client speaks, and the two copies must stay
 # byte-identical: they define the wire format.
 set(LINGMO_PRIVATE_PROTOCOL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/protocols)
