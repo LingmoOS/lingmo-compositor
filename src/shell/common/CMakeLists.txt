@@ -28,5 +28,5 @@ add_library(lingmo-shell-common STATIC
     wm_task_windows.cpp
     wm_task_windows.h
 )
-target_link_libraries(lingmo-shell-common PUBLIC lingmo-core lingmo-wm Lingmo::ToolkitBase
-    Lingmo::Toolkit PkgConfig::TitleText)
+target_link_libraries(lingmo-shell-common PUBLIC lingmo-core lingmo-wm Lingmo::SDKBase
+    Lingmo::SDK PkgConfig::TitleText)

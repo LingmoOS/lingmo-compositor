@@ -27,7 +27,7 @@ function(lingmo_add_test name)
     endif()
 endfunction()
 
-lingmo_add_test(main_loop_test lingmo-toolkit-host)
+lingmo_add_test(main_loop_test lingmo-sdk-host)
 lingmo_add_test(core_test)
 target_sources(core_test PRIVATE ${PROJECT_SOURCE_DIR}/src/core/compositor_options.cpp)
 target_compile_definitions(core_test PRIVATE
@@ -260,7 +260,7 @@ lingmo_add_test(window_visual_test lingmo-decoration)
 lingmo_add_test(window_visual_pixel_test lingmo-decoration lingmo-render)
 set_tests_properties(window_visual_pixel_test PROPERTIES ENVIRONMENT "LIBGL_ALWAYS_SOFTWARE=1;EGL_PLATFORM=surfaceless")
 add_executable(toolkit-resize-client visuals/toolkit_client.cpp)
-target_link_libraries(toolkit-resize-client PRIVATE Lingmo::Toolkit)
+target_link_libraries(toolkit-resize-client PRIVATE Lingmo::SDK)
 # DBUS: the GTK clients activate portal and gvfs services on the session bus.
 lingmo_add_test(window_visual_toolkit_test DBUS lingmo-wayland-input lingmo-wayland-shell
     lingmo-decoration lingmo-render PkgConfig::WaylandClient)
