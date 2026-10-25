@@ -21,7 +21,7 @@ option(BUILD_TESTING "Build the test suite" OFF)
 include(CTest)
 
 find_package(PkgConfig REQUIRED)
-find_package(LingmoToolkit REQUIRED)
+find_package(LingmoSDK REQUIRED)
 pkg_check_modules(TitleText REQUIRED IMPORTED_TARGET harfbuzz freetype2 fontconfig icu-uc icu-i18n)
 pkg_check_modules(WaylandServer REQUIRED IMPORTED_TARGET wayland-server>=1.23)
 pkg_check_modules(Libseat REQUIRED IMPORTED_TARGET libseat)
@@ -97,7 +97,7 @@ lingmo_wayland_protocol(linux-dmabuf-v1
 lingmo_wayland_protocol(linux-drm-syncobj-v1
     ${WAYLAND_PROTOCOLS_DATADIR}/staging/linux-drm-syncobj/linux-drm-syncobj-v1.xml)
 
-# Cutefish's own private protocols. lingmo-toolkit/protocols keeps the
+# Cutefish's own private protocols. lingmo-sdk/protocols keeps the
 # client-side copy of every one a client speaks, and the two copies must stay
 # byte-identical: they define the wire format.
 set(LINGMO_PRIVATE_PROTOCOL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/protocols)
@@ -188,7 +188,7 @@ add_library(lingmo-core STATIC
     src/core/process_environment.h
 )
 target_include_directories(lingmo-core PUBLIC src)
-target_link_libraries(lingmo-core PUBLIC Lingmo::ToolkitBase)
+target_link_libraries(lingmo-core PUBLIC Lingmo::SDKBase)
 set_target_properties(lingmo-core PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # Backend-independent display contracts. DRM, Wayland and UI adapters consume
@@ -227,7 +227,7 @@ add_library(lingmo-display STATIC
     src/display/recommended_scale.h
 )
 target_include_directories(lingmo-display PUBLIC src)
-target_link_libraries(lingmo-display PUBLIC lingmo-core Lingmo::ToolkitBase)
+target_link_libraries(lingmo-display PUBLIC lingmo-core Lingmo::SDKBase)
 set_target_properties(lingmo-display PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 add_library(lingmo-display-ipc STATIC
@@ -314,7 +314,7 @@ add_library(lingmo-scene STATIC
     src/render/texture.h
 )
 target_include_directories(lingmo-scene PUBLIC src)
-target_link_libraries(lingmo-scene PUBLIC lingmo-core lingmo-sync Lingmo::ToolkitBase Lingmo::Toolkit)
+target_link_libraries(lingmo-scene PUBLIC lingmo-core lingmo-sync Lingmo::SDKBase Lingmo::SDK)
 set_target_properties(lingmo-scene PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # Compositor model and the Wayland protocol implementations that drive it.
@@ -350,9 +350,9 @@ add_library(lingmo-compositor-core STATIC
     src/wayland/protocols/wl_shm.h
 )
 target_include_directories(lingmo-compositor-core PUBLIC src)
-# Lingmo::Toolkit for the blur shape's ui::Path.
+# Lingmo::SDK for the blur shape's ui::Path.
 target_link_libraries(lingmo-compositor-core PUBLIC lingmo-wayland lingmo-scene lingmo-protocols
-    Lingmo::Toolkit)
+    Lingmo::SDK)
 set_target_properties(lingmo-compositor-core PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # Compositor-side input: seat, pointer, keyboard, xkb. Free of libinput and of
@@ -360,7 +360,7 @@ set_target_properties(lingmo-compositor-core PROPERTIES POSITION_INDEPENDENT_COD
 # The session bus services of input, shortcuts and cursors.
 add_library(lingmo-input-dbus STATIC src/input/dbus_export.cpp src/input/dbus_export.h)
 target_include_directories(lingmo-input-dbus PUBLIC src)
-target_link_libraries(lingmo-input-dbus PUBLIC lingmo-core Lingmo::ToolkitBase)
+target_link_libraries(lingmo-input-dbus PUBLIC lingmo-core Lingmo::SDKBase)
 
 add_library(lingmo-mouse-settings STATIC
     src/input/mouse_settings.cpp
@@ -431,7 +431,7 @@ add_library(lingmo-input STATIC
     src/input/input_manager.h
 )
 target_include_directories(lingmo-input PUBLIC src)
-target_link_libraries(lingmo-input PUBLIC lingmo-display lingmo-compositor-core Lingmo::ToolkitBase
+target_link_libraries(lingmo-input PUBLIC lingmo-display lingmo-compositor-core Lingmo::SDKBase
     PkgConfig::Xkbcommon)
 set_target_properties(lingmo-input PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
@@ -525,7 +525,7 @@ add_library(lingmo-wm STATIC
 )
 target_include_directories(lingmo-wm PUBLIC src)
 target_link_libraries(lingmo-wm PUBLIC lingmo-input lingmo-compositor-core lingmo-display
-    lingmo-core Lingmo::ToolkitBase)
+    lingmo-core Lingmo::SDKBase)
 set_target_properties(lingmo-wm PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # Server-side window decoration. Above the window manager and the scene, below
@@ -553,7 +553,7 @@ add_library(lingmo-decoration STATIC
     src/decoration/theme_preferences.h
 )
 target_include_directories(lingmo-decoration PUBLIC src)
-target_link_libraries(lingmo-decoration PUBLIC lingmo-wm lingmo-scene Lingmo::Toolkit
+target_link_libraries(lingmo-decoration PUBLIC lingmo-wm lingmo-scene Lingmo::SDK
     PRIVATE PkgConfig::TitleText)
 set_target_properties(lingmo-decoration PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
@@ -625,7 +625,7 @@ add_library(lingmo-session STATIC
     src/session/window_debug_service.h
 )
 target_include_directories(lingmo-session PUBLIC src)
-target_link_libraries(lingmo-session PUBLIC lingmo-compositor-core lingmo-wm Lingmo::Toolkit)
+target_link_libraries(lingmo-session PUBLIC lingmo-compositor-core lingmo-wm Lingmo::SDK)
 set_target_properties(lingmo-session PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # An agent driving the seat once the user agrees, over
@@ -639,7 +639,7 @@ add_library(lingmo-computer-control STATIC
     src/computer_control/remembered_apps.h
 )
 target_include_directories(lingmo-computer-control PUBLIC src)
-target_link_libraries(lingmo-computer-control PUBLIC lingmo-input lingmo-input-dbus Lingmo::ToolkitBase)
+target_link_libraries(lingmo-computer-control PUBLIC lingmo-input lingmo-input-dbus Lingmo::SDKBase)
 set_target_properties(lingmo-computer-control PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # Keyboard shortcuts: the Ash accelerator controller and its configuration,
@@ -855,11 +855,11 @@ add_library(lingmo-display-runtime STATIC src/display/display_runtime.cpp)
 target_link_libraries(lingmo-display-runtime PUBLIC lingmo-backend lingmo-wayland-shell
     lingmo-wm lingmo-display lingmo-wayland-input lingmo-cursor)
 # The toolkit's application inside the compositor, for the panels it draws itself.
-add_library(lingmo-toolkit-host STATIC
+add_library(lingmo-sdk-host STATIC
     src/toolkit/toolkit_host.cpp src/toolkit/toolkit_host.h
     src/toolkit/compositor_colors.cpp src/toolkit/compositor_colors.h)
-target_include_directories(lingmo-toolkit-host PUBLIC src)
-target_link_libraries(lingmo-toolkit-host PUBLIC Lingmo::Toolkit lingmo-render)
+target_include_directories(lingmo-sdk-host PUBLIC src)
+target_link_libraries(lingmo-sdk-host PUBLIC Lingmo::SDK lingmo-render)
 
 find_library(PAM_LIBRARY pam REQUIRED)
 add_executable(lingmo-auth-helper src/auth/auth_helper.cpp)
@@ -877,7 +877,7 @@ add_library(lingmo-auth STATIC
 target_include_directories(lingmo-auth PUBLIC src)
 # The status bar's items and backdrop rules come from the shell's libraries,
 # defined further down.
-target_link_libraries(lingmo-auth PUBLIC lingmo-session lingmo-toolkit-host
+target_link_libraries(lingmo-auth PUBLIC lingmo-session lingmo-sdk-host
     lingmo-shell-bar-items lingmo-shell-wallpaper PRIVATE PkgConfig::TitleText)
 target_compile_definitions(lingmo-auth PRIVATE
     LINGMO_AUTH_HELPER="${CMAKE_INSTALL_FULL_LIBEXECDIR}/lingmo-auth-helper")
@@ -888,7 +888,7 @@ add_library(lingmo-switcher STATIC
     src/switcher/switcher_view.cpp src/switcher/switcher_view.h)
 target_include_directories(lingmo-switcher PUBLIC src)
 target_link_libraries(lingmo-switcher PUBLIC lingmo-wm lingmo-decoration lingmo-scene
-    lingmo-toolkit-host)
+    lingmo-sdk-host)
 
 # The desktop shell inside the compositor: its internal windows, their input
 # and rendering, and the components built on them.
@@ -903,7 +903,7 @@ add_library(lingmo-shell STATIC
     src/shell/window_renderer.cpp src/shell/window_renderer.h)
 target_include_directories(lingmo-shell PUBLIC src)
 target_link_libraries(lingmo-shell PUBLIC lingmo-wm lingmo-input lingmo-display
-    lingmo-decoration lingmo-toolkit-host lingmo-shell-common PRIVATE lingmo-wayland-shell)
+    lingmo-decoration lingmo-sdk-host lingmo-shell-common PRIVATE lingmo-wayland-shell)
 target_compile_definitions(lingmo-shell PRIVATE
     LINGMO_SHELL_DATA_DIR="${CMAKE_INSTALL_FULL_DATADIR}/lingmo-compositor/shell")
 install(DIRECTORY data/shell/ DESTINATION ${CMAKE_INSTALL_DATADIR}/lingmo-compositor/shell)
@@ -959,10 +959,10 @@ target_link_libraries(lingmo-compositor
 
 pkg_check_modules(WaylandCaptureClient REQUIRED IMPORTED_TARGET wayland-client)
 add_executable(lingmo-screenshot src/tools/screenshot.cpp)
-target_link_libraries(lingmo-screenshot PRIVATE PkgConfig::WaylandCaptureClient Lingmo::ToolkitBase)
+target_link_libraries(lingmo-screenshot PRIVATE PkgConfig::WaylandCaptureClient Lingmo::SDKBase)
 
 add_executable(lingmo-displayctl src/tools/displayctl.cpp)
-target_link_libraries(lingmo-displayctl PRIVATE lingmo-display-ipc Lingmo::ToolkitBase)
+target_link_libraries(lingmo-displayctl PRIVATE lingmo-display-ipc Lingmo::SDKBase)
 
 option(LINGMO_ENABLE_XWAYLAND "Build the native Xwayland frontend" ON)
 if(LINGMO_ENABLE_XWAYLAND)
@@ -984,7 +984,7 @@ if(LINGMO_ENABLE_XWAYLAND)
         ${xwayland-keyboard-grab-unstable-v1_SOURCES})
     target_include_directories(lingmo-xwayland PUBLIC src ${LINGMO_PROTOCOL_DIR})
     target_link_libraries(lingmo-xwayland PUBLIC lingmo-wayland-private-shell PkgConfig::Xcb Threads::Threads
-        Lingmo::ToolkitBase)
+        Lingmo::SDKBase)
     target_link_libraries(lingmo-compositor PRIVATE lingmo-xwayland)
     target_compile_definitions(lingmo-compositor PRIVATE LINGMO_ENABLE_XWAYLAND)
     install(FILES ${WAYLAND_PROTOCOLS_DATADIR}/staging/xwayland-shell/xwayland-shell-v1.xml
@@ -1008,7 +1008,7 @@ add_library(lingmo-cursor STATIC src/cursor/theme.cpp src/cursor/cursor.cpp
     src/cursor/output_cursor_router.cpp src/cursor/output_cursor_router.h)
 target_include_directories(lingmo-cursor PUBLIC src)
 target_sources(lingmo-cursor PRIVATE src/cursor/preferences.cpp src/cursor/preferences.h)
-target_link_libraries(lingmo-cursor PUBLIC lingmo-input lingmo-display Lingmo::Toolkit)
+target_link_libraries(lingmo-cursor PUBLIC lingmo-input lingmo-display Lingmo::SDK)
 target_link_libraries(lingmo-compositor PRIVATE lingmo-cursor)
 
 # The shell's backends: models and D-Bus services without views.
