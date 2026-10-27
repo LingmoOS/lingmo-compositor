@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 // The compositor's components live in Lingmo::Scene, Lingmo::Clipboard,
-// Lingmo::Display, ... but the sources name them with lower-case prefixes
-// (scene::, clipboard::, display::, ...). Declare the namespaces first, so the
-// aliases below have a target even at the top of a translation unit, then give
-// the lower-case names a target at global scope. Included in every source by
-// the project's compile options.
+// Lingmo::Input, Lingmo::Display, ... but the sources name them with
+// lower-case prefixes (scene::, clipboard::, input::, display::, ...).
+// Declare the namespaces first so the aliases below have a target even at the
+// very top of a translation unit, then give the lower-case names a target at
+// global scope. The project's compile options force-include this header.
 #pragma once
 
 #ifdef __cplusplus
@@ -21,13 +21,18 @@ namespace ComputerControl {}
 namespace Core {}
 namespace Cursor {}
 namespace Decoration {}
-namespace Display {}
+namespace Display {
+namespace ipc {}
+}
+namespace Input {}
 namespace Scene {
 namespace Motion {}
 }
 namespace Session {}
 namespace Shell {}
 namespace Switcher {}
+namespace WM {}
+namespace ui {}
 } // namespace Lingmo
 
 namespace accelerators = Lingmo::Accelerators;
@@ -40,6 +45,8 @@ namespace core = Lingmo::Core;
 namespace cursor = Lingmo::Cursor;
 namespace decoration = Lingmo::Decoration;
 namespace display = Lingmo::Display;
+namespace input = Lingmo::Input;
+namespace ipc = Lingmo::Display::ipc;
 namespace scene = Lingmo::Scene;
 namespace session = Lingmo::Session;
 namespace shell = Lingmo::Shell;
