@@ -45,7 +45,7 @@ bool ScreenSaverService::registerService()
     if (m_registered)
         return true;
     if (!m_bus) {
-        CF_WARNING(logs()) << "Cannot export ScreenSaver: no session bus";
+        LM_WARNING(logs()) << "Cannot export ScreenSaver: no session bus";
         return false;
     }
     std::vector<std::unique_ptr<base::dbus::Object>> objects;
@@ -64,13 +64,13 @@ bool ScreenSaverService::registerService()
         // Only the paths exported here go with a failure: another object may
         // hold this one.
         if (!object->publish()) {
-            CF_WARNING(logs()) << "Cannot export ScreenSaver at" << path;
+            LM_WARNING(logs()) << "Cannot export ScreenSaver at" << path;
             return false;
         }
         objects.push_back(std::move(object));
     }
     if (!m_bus->requestName(serviceName)) {
-        CF_WARNING(logs()) << "Cannot own ScreenSaver service";
+        LM_WARNING(logs()) << "Cannot own ScreenSaver service";
         return false;
     }
     m_objects = std::move(objects);

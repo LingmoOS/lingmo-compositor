@@ -78,7 +78,7 @@ bool AcceleratorService::registerService()
         return true;
     auto exported = input::DBusExport::create(kService, kPath, kService);
     if (!exported) {
-        CF_WARNING(cfInput) << "Cannot export the shortcuts service: no session bus";
+        LM_WARNING(cfInput) << "Cannot export the shortcuts service: no session bus";
         return false;
     }
     base::dbus::Object &object = exported->object();

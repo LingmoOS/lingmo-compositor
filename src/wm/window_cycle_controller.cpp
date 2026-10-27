@@ -203,7 +203,7 @@ void WindowCycleController::startCycling()
     if (const input::Seat *seat = m_manager->seat())
         m_pointerOrigin = seat->pointerLocation();
     m_showTimer.start();
-    CF_DEBUG(cfInputTransitions) << "application cycle started over" << m_applications.size()
+    LM_DEBUG(cfInputTransitions) << "application cycle started over" << m_applications.size()
                                 << "applications";
 }
 
@@ -242,7 +242,7 @@ void WindowCycleController::stopCycling(bool accept)
     const auto applications = std::exchange(m_applications, {});
     if (accept && !applications.empty())
         switchToApplication(applications[m_currentIndex]);
-    CF_DEBUG(cfInputTransitions) << "application cycle" << (accept ? "completed" : "cancelled");
+    LM_DEBUG(cfInputTransitions) << "application cycle" << (accept ? "completed" : "cancelled");
 }
 
 void WindowCycleController::switchToApplication(const std::vector<Window *> &windows)

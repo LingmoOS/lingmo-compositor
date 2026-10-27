@@ -68,7 +68,7 @@ bool AppMenuRegistrar::registerService()
             },
             dbus::ArgumentNames{{"windowId"}, {"service", "menuObjectPath"}});
     if (!object->publish() || !m_bus->requestName(kService, base::dbus::Connection::DoNotQueue)) {
-        CF_WARNING(cfAppMenu) << "Cannot serve" << kService;
+        LM_WARNING(cfAppMenu) << "Cannot serve" << kService;
         return false;
     }
     m_object = std::move(object);

@@ -55,7 +55,7 @@ void Buffer::onAttach(bool cached)
 void Buffer::onDetach(bool cached)
 {
     if (m_attachCount == 0) {
-        CF_WARNING(cfCompositor) << "Buffer detached more often than attached";
+        LM_WARNING(cfCompositor) << "Buffer detached more often than attached";
         return;
     }
     --m_attachCount;
@@ -106,7 +106,7 @@ void Buffer::onScanoutAcquired()
 void Buffer::onScanoutReleased(render::SyncFence fence)
 {
     if (m_scanoutCount == 0) {
-        CF_WARNING(cfCompositor) << "Buffer left scanout more often than it entered it";
+        LM_WARNING(cfCompositor) << "Buffer left scanout more often than it entered it";
         return;
     }
     --m_scanoutCount;

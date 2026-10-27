@@ -49,7 +49,7 @@ bool SleepLock::start()
     if (m_started)
         return true;
     if (!m_bus) {
-        CF_WARNING(logs()) << "Cannot follow logind's PrepareForSleep: no system bus";
+        LM_WARNING(logs()) << "Cannot follow logind's PrepareForSleep: no system bus";
         return false;
     }
     m_prepareForSleep =
@@ -59,7 +59,7 @@ bool SleepLock::start()
                     prepareForSleep(sleeping);
             });
     if (m_prepareForSleep.isNull()) {
-        CF_WARNING(logs()) << "Cannot follow logind's PrepareForSleep";
+        LM_WARNING(logs()) << "Cannot follow logind's PrepareForSleep";
         return false;
     }
     m_started = true;
@@ -77,7 +77,7 @@ void SleepLock::inhibit()
             [this](const base::dbus::Reply &reply) {
                 base::dbus::PendingCall done = std::move(m_inhibiting);
                 if (reply.isError()) {
-                    CF_WARNING(logs()) << "Cannot delay sleep to lock the screen:"
+                    LM_WARNING(logs()) << "Cannot delay sleep to lock the screen:"
                                << reply.error().message;
                     return;
                 }
@@ -137,7 +137,7 @@ void SleepLock::updateLockedHint(SessionState state)
         return;
     m_lockedHint = locked;
     if (!m_logindSession.send("SetLockedHint", locked))
-        CF_WARNING(logs()) << "Cannot tell logind that the session is"
+        LM_WARNING(logs()) << "Cannot tell logind that the session is"
                            << (locked ? "locked" : "unlocked");
 }
 } // namespace Lingmo::Session

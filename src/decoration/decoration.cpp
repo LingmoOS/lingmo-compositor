@@ -295,7 +295,7 @@ bool Decoration::onPointerButton(input::Timestamp timestamp, const base::PointF 
     if (!m_window)
         return false;
 
-    CF_DEBUG(cfInputTransitions) << "decoration target" << m_window
+    LM_DEBUG(cfInputTransitions) << "decoration target" << m_window
                                  << (pressed ? "press" : "release") << "caption-capture"
                                  << m_pressedButton;
     if (pressed)
@@ -311,7 +311,7 @@ bool Decoration::onTouchDown(input::Timestamp timestamp, int32_t id, const base:
 {
     if (!m_window)
         return false;
-    CF_DEBUG(cfInputTransitions) << "decoration target" << m_window << "touch down" << id;
+    LM_DEBUG(cfInputTransitions) << "decoration target" << m_window << "touch down" << id;
     return press(timestamp, at, id);
 }
 
@@ -391,7 +391,7 @@ bool Decoration::press(input::Timestamp timestamp, const base::PointF &location,
         m_lastTitleBarPressPoint = framePoint;
         m_hadTitleBarPress = !doubleClick;
 
-        CF_DEBUG(cfInputTransitions)
+        LM_DEBUG(cfInputTransitions)
                 << "decoration titlebar action" << (doubleClick ? "maximize-toggle" : "begin-move");
         if (doubleClick)
             toggleMaximize();
@@ -425,7 +425,7 @@ void Decoration::runButtonAction(CaptionButtonType type)
     // client's process.
     switch (type) {
     case CaptionButtonType::Close:
-        CF_DEBUG(cfCompositor) << "decoration: close" << m_window->title();
+        LM_DEBUG(cfCompositor) << "decoration: close" << m_window->title();
         m_window->requestClose();
         break;
     case CaptionButtonType::Minimize:

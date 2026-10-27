@@ -143,7 +143,7 @@ void SnapDragController::setSnapType(SnapType type)
     if (m_snapType == type)
         return;
     m_snapType = type;
-    CF_DEBUG(cfCompositor) << "drag snap target:" << toString(type);
+    LM_DEBUG(cfCompositor) << "drag snap target:" << toString(type);
     updatePreview();
 }
 

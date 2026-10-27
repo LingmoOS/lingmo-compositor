@@ -80,7 +80,7 @@ bool StatusBar::registerServices()
         object->addMethod("requestReboot", [this] { m_powerActions.request(PowerActions::Reboot); });
         object->addMethod("requestShutdown", [this] { m_powerActions.request(PowerActions::Shutdown); });
         if (!object->publish() || !m_bus->requestName("org.lingmo.Statusbar", dbus::Connection::DoNotQueue)) {
-            CF_WARNING(cfStatusBar) << "Cannot own org.lingmo.Statusbar";
+            LM_WARNING(cfStatusBar) << "Cannot own org.lingmo.Statusbar";
             return false;
         }
         m_object = std::move(object);

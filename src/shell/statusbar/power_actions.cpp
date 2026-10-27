@@ -68,7 +68,7 @@ void PowerActions::cancel()
 void PowerActions::callSession(const char *method)
 {
     if (!m_session.send(method))
-        CF_WARNING(cfPower) << "Unable to request" << method << "from the session";
+        LM_WARNING(cfPower) << "Unable to request" << method << "from the session";
 }
 
 void PowerActions::logout()
@@ -91,7 +91,7 @@ void PowerActions::suspend()
     m_calls.track([&](std::function<void()> finished) {
         return m_session.callAsync("suspend", [finished](const dbus::Reply &reply) {
             if (reply.isError())
-                CF_WARNING(cfPower) << "Unable to request suspend:" << reply.error().message;
+                LM_WARNING(cfPower) << "Unable to request suspend:" << reply.error().message;
             finished();
         });
     });
@@ -102,7 +102,7 @@ void PowerActions::lockScreen()
     m_calls.track([&](std::function<void()> finished) {
         return m_screenSaver.callAsync("Lock", [finished](const dbus::Reply &reply) {
             if (reply.isError())
-                CF_WARNING(cfPower) << "Unable to request screen lock:" << reply.error().message;
+                LM_WARNING(cfPower) << "Unable to request screen lock:" << reply.error().message;
             finished();
         });
     });

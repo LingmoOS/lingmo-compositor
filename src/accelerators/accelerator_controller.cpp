@@ -220,7 +220,7 @@ void AcceleratorController::performAction(AcceleratorAction action, const Accele
     if (acceleratorProcessingRestriction(action) != Restriction::None)
         return;
 
-    CF_DEBUG(cfInput) << "Accelerator" << accelerator.shortcutText() << "->"
+    LM_DEBUG(cfInput) << "Accelerator" << accelerator.shortcutText() << "->"
                      << acceleratorActionName(action);
 
     switch (action) {

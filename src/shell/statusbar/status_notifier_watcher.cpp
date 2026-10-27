@@ -66,7 +66,7 @@ bool StatusNotifierWatcher::registerService()
     object->addSignal("StatusNotifierHostRegistered", "");
     object->addSignal("StatusNotifierHostUnregistered", "");
     if (!object->publish() || !m_bus->requestName(kService, base::dbus::Connection::DoNotQueue)) {
-        CF_WARNING(cfTray) << "Cannot serve" << kService;
+        LM_WARNING(cfTray) << "Cannot serve" << kService;
         return false;
     }
     m_object = std::move(object);
@@ -146,7 +146,7 @@ void StatusNotifierWatcher::ownerChanged(const std::string &service, const std::
     for (const std::string &id : waiting) {
         if (std::find(m_items.begin(), m_items.end(), id) != m_items.end())
             continue;
-        CF_DEBUG(cfTray) << "Registering" << id << "to the tray";
+        LM_DEBUG(cfTray) << "Registering" << id << "to the tray";
         m_items.push_back(id);
         if (m_object)
             m_object->emitSignal("StatusNotifierItemRegistered", id);

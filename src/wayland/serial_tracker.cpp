@@ -98,7 +98,7 @@ std::optional<SerialTracker::EventType> SerialTracker::eventType(uint32_t serial
         // should only reject if the serial number is in neither the upper nor
         // lower parts of the space.
         if (!((serial < m_maxEvent) || (serial >= m_minEvent))) {
-            CF_WARNING(cfWayland) << "No event type for serial" << serial
+            LM_WARNING(cfWayland) << "No event type for serial" << serial
                                   << "- it is in the void range";
             return std::nullopt;
         }
@@ -106,7 +106,7 @@ std::optional<SerialTracker::EventType> SerialTracker::eventType(uint32_t serial
         // Normal, non-overflowed case. Reject the serial number if it isn't in
         // the interval.
         if (!((serial < m_maxEvent) && (serial >= m_minEvent))) {
-            CF_WARNING(cfWayland) << "No event type for serial" << serial
+            LM_WARNING(cfWayland) << "No event type for serial" << serial
                                   << "- it is outside of the range";
             return std::nullopt;
         }

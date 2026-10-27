@@ -36,7 +36,7 @@ namespace {
 void pointer_set_cursor(wl_client *client, wl_resource *resource, uint32_t serial,
                         wl_resource *surfaceResource, int32_t hotspotX, int32_t hotspotY)
 {
-    CF_DEBUG(cfCursorTransitions) << "request pointer" << wl_resource_get_id(resource) << "client"
+    LM_DEBUG(cfCursorTransitions) << "request pointer" << wl_resource_get_id(resource) << "client"
                                   << wl_resource_get_client(resource) << "enter-serial" << serial;
     auto *pointer = getUserDataAs<input::Pointer>(resource);
     auto *delegate = static_cast<WaylandPointerDelegate *>(pointer->delegate());

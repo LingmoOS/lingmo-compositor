@@ -558,7 +558,7 @@ bool CompositorShell::init()
                     m_dockLayout.setSessionEnding(ending);
                 });
         if (!m_applicationsService->registerService())
-            CF_WARNING(cfWayland) << "The applications service is unavailable";
+            LM_WARNING(cfWayland) << "The applications service is unavailable";
 
         m_windowDebugService = std::make_unique<session::WindowDebugService>(&m_windowManager);
         m_windowDebugService->setInput(&m_inputManager);
@@ -573,7 +573,7 @@ bool CompositorShell::init()
             return lines;
         });
         if (!m_windowDebugService->registerService())
-            CF_WARNING(cfWayland) << "The window debug service is unavailable";
+            LM_WARNING(cfWayland) << "The window debug service is unavailable";
     }
 
     if (m_options.noDrm) {
@@ -602,7 +602,7 @@ bool CompositorShell::init()
             m_globals->privileged()->adoptShellConnection(fd);
         };
         if (!m_shellControl->listen(m_options.shellControlSocket))
-            CF_WARNING(cfWayland) << "Continuing without a trusted shell channel";
+            LM_WARNING(cfWayland) << "Continuing without a trusted shell channel";
     }
 
     m_sceneSync.setSingleShot(true);
@@ -1101,7 +1101,7 @@ bool CompositorShell::initDrm()
     m_dmabufGlobal = wayland::LinuxDmabufGlobal::create(m_server->display(), &m_compositor,
                                                         m_backend->renderer());
     if (!m_dmabufGlobal) {
-        CF_WARNING(cfWayland) << "linux-dmabuf is unavailable on this device";
+        LM_WARNING(cfWayland) << "linux-dmabuf is unavailable on this device";
     } else {
         // A fullscreen client is steered to a layout the primary plane takes,
         // so its buffers can be flipped instead of composited.
@@ -1121,7 +1121,7 @@ bool CompositorShell::initDrm()
     // correct.
     m_syncobjGlobal = wayland::createLinuxDrmSyncobjGlobal(m_server->display(), m_backend->fd());
     if (!m_syncobjGlobal)
-        CF_WARNING(cfWayland) << "Explicit synchronization is unavailable on this device";
+        LM_WARNING(cfWayland) << "Explicit synchronization is unavailable on this device";
 
     const auto populateOutputModel = [](auto *output, auto *model) {
         model->pixelSize = output->size();
@@ -1152,10 +1152,10 @@ bool CompositorShell::initDrm()
 
     m_inputBackend = backend::LibinputBackend::create(m_session.get(), &m_inputManager);
     if (!m_inputBackend)
-        CF_WARNING(cfInput) << "Continuing without input devices";
+        LM_WARNING(cfInput) << "Continuing without input devices";
 
     m_backendSubscriptions.push_back(m_session->activeChanged.connect([this](bool active) {
-        CF_INFO(base::LogCategory::defaultCategory()) << "Compositor seat active" << active;
+        LM_INFO(base::LogCategory::defaultCategory()) << "Compositor seat active" << active;
         for (const auto &output : m_backend->allOutputs())
             output->reportStats();
         if (!active) {
@@ -1244,7 +1244,7 @@ bool CompositorShell::initDisplay()
                 m_topologyCoordinator->reconciled.connect([this](bool succeeded) {
                     releaseCursor();
                     if (!succeeded)
-                        CF_WARNING(cfWayland) << "Display topology recovery failed; waiting for "
+                        LM_WARNING(cfWayland) << "Display topology recovery failed; waiting for "
                                                 "another hardware event or seat activation";
                 }));
         m_topologyCoordinator->start();
@@ -1270,7 +1270,7 @@ bool CompositorShell::initDisplay()
                 m_nightLight->animateTo(strength, duration);
             });
     if (!m_displayService->registerService(m_options.displayConfigService))
-        CF_WARNING(cfWayland) << "Native display configuration D-Bus service is unavailable";
+        LM_WARNING(cfWayland) << "Native display configuration D-Bus service is unavailable";
     return true;
 }
 
@@ -1290,7 +1290,7 @@ bool CompositorShell::notifyReady()
     if (m_options.readyFd < 0)
         return true;
     if (write(m_options.readyFd, "R", 1) != 1) {
-        CF_CRITICAL(cfWayland) << "Cannot notify session that the compositor is ready";
+        LM_CRITICAL(cfWayland) << "Cannot notify session that the compositor is ready";
         return false;
     }
     close(m_options.readyFd);

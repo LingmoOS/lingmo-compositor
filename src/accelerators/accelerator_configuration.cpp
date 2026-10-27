@@ -127,7 +127,7 @@ void setLookupMaps(std::span<const AcceleratorData> accelerators,
         accelerator.setKeyState(data.triggerOnPress ? Accelerator::KeyState::Pressed
                                                     : Accelerator::KeyState::Released);
         if (!acceleratorToId.insertNew(accelerator, data.action)) {
-            CF_WARNING(cfInput) << "Duplicate default accelerator" << accelerator.shortcutText();
+            LM_WARNING(cfInput) << "Duplicate default accelerator" << accelerator.shortcutText();
             continue;
         }
         idToAccelerator[toActionId(data.action)].push_back(accelerator);
@@ -260,7 +260,7 @@ AcceleratorConfigResult AcceleratorConfiguration::addUserAccelerator(Accelerator
     const AcceleratorConfigResult result = doAddAccelerator(id, accelerator, /*saveOverride=*/true);
     if (result == AcceleratorConfigResult::Success)
         updateAndNotifyAccelerators();
-    CF_DEBUG(cfInput) << "addAccelerator" << id << accelerator.shortcutText() << toString(result);
+    LM_DEBUG(cfInput) << "addAccelerator" << id << accelerator.shortcutText() << toString(result);
     return result;
 }
 
@@ -273,7 +273,7 @@ AcceleratorConfigResult AcceleratorConfiguration::removeAccelerator(AcceleratorA
         restoreDefaultOwner(m_acceleratorToId.remapForLookup(accelerator));
         updateAndNotifyAccelerators();
     }
-    CF_DEBUG(cfInput) << "removeAccelerator" << id << accelerator.shortcutText() << toString(result);
+    LM_DEBUG(cfInput) << "removeAccelerator" << id << accelerator.shortcutText() << toString(result);
     return result;
 }
 
@@ -285,7 +285,7 @@ AcceleratorConfiguration::replaceAccelerator(AcceleratorActionId id,
     const AcceleratorConfigResult result = doReplaceAccelerator(id, oldAccelerator, newAccelerator);
     if (result == AcceleratorConfigResult::Success)
         updateAndNotifyAccelerators();
-    CF_DEBUG(cfInput) << "replaceAccelerator" << id << oldAccelerator.shortcutText() << "->"
+    LM_DEBUG(cfInput) << "replaceAccelerator" << id << oldAccelerator.shortcutText() << "->"
                      << newAccelerator.shortcutText() << toString(result);
     return result;
 }
@@ -332,7 +332,7 @@ AcceleratorConfigResult AcceleratorConfiguration::restoreDefault(AcceleratorActi
     }
 
     updateAndNotifyAccelerators();
-    CF_DEBUG(cfInput) << "restoreDefault" << id << toString(result);
+    LM_DEBUG(cfInput) << "restoreDefault" << id << toString(result);
     return result;
 }
 
@@ -463,7 +463,7 @@ void AcceleratorConfiguration::saveOverrides()
     for (const auto &[action, list] : m_overrides)
         m_settings.setValue(group + "/" + action, sortedKeys(base::json::Value(list)).serialize());
     if (!m_settings.sync())
-        CF_WARNING(cfInput) << "Cannot persist shortcut overrides to" << m_settings.path();
+        LM_WARNING(cfInput) << "Cannot persist shortcut overrides to" << m_settings.path();
 }
 
 void AcceleratorConfiguration::applyOverrides()
@@ -473,7 +473,7 @@ void AcceleratorConfiguration::applyOverrides()
     for (auto &[actionName, list] : m_overrides) {
         const auto action = acceleratorActionFromName(actionName);
         if (!action || !isValid(toActionId(*action))) {
-            CF_INFO(cfInput) << "Dropping shortcut overrides for unknown action"
+            LM_INFO(cfInput) << "Dropping shortcut overrides for unknown action"
                             << actionName;
             actionsToRemove.push_back(actionName);
             continue;
@@ -487,7 +487,7 @@ void AcceleratorConfiguration::applyOverrides()
         for (size_t i = 0; i < list.size();) {
             const auto modification = modificationFromJson(list[i]);
             if (!modification) {
-                CF_WARNING(cfInput) << "Malformed shortcut override for" << actionName;
+                LM_WARNING(cfInput) << "Malformed shortcut override for" << actionName;
                 list.erase(list.begin() + i);
                 continue;
             }
@@ -515,7 +515,7 @@ void AcceleratorConfiguration::applyOverrides()
         m_overrides.erase(action);
 
     if (!areAcceleratorsValid()) {
-        CF_WARNING(cfInput) << "Shortcut overrides are inconsistent; restoring the defaults";
+        LM_WARNING(cfInput) << "Shortcut overrides are inconsistent; restoring the defaults";
         restoreAllDefaults();
         return;
     }

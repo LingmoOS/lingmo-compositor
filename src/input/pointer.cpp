@@ -90,7 +90,7 @@ void Pointer::removeGestureDelegate(PointerGestureDelegate *delegate)
 
 void Pointer::setCursor(compositor::Surface *surface, const base::Point &hotspot)
 {
-    CF_DEBUG(cfCursorTransitions) << "set-cursor" << this << "requested" << surface
+    LM_DEBUG(cfCursorTransitions) << "set-cursor" << this << "requested" << surface
                                  << "explicit-hide" << (surface == nullptr) << "hotspot"
                                  << hotspot
                                  << "focus" << m_focusSurface;
@@ -102,7 +102,7 @@ void Pointer::setCursor(compositor::Surface *surface, const base::Point &hotspot
 
     if (surface != m_cursorSurface) {
         if (surface && surface->hasRole()) {
-            CF_WARNING(cfInput) << "wl_pointer.set_cursor: surface already has a role";
+            LM_WARNING(cfInput) << "wl_pointer.set_cursor: surface already has a role";
             return;
         }
         updatePointerSurface(surface);
@@ -218,7 +218,7 @@ compositor::Surface *Pointer::effectiveTargetForLocation(const base::PointF &roo
 void Pointer::setFocus(compositor::Surface *surface, const base::PointF &rootLocation,
                        const base::PointF &surfaceLocation)
 {
-    CF_DEBUG(cfCursorTransitions) << "focus" << this << "old" << m_focusSurface << "new" << surface;
+    LM_DEBUG(cfCursorTransitions) << "focus" << this << "old" << m_focusSurface << "new" << surface;
     cancelGesture();
     const bool cursorOwned = m_hasCursorRequest;
     m_deliveredButtons = NoButton;
@@ -471,7 +471,7 @@ void Pointer::traceCursor(const char *transition) const
     if (!cfCursorTransitions.isEnabled(base::LogLevel::Debug))
         return;
     auto *node = m_cursorSurface ? m_cursorSurface->node() : nullptr;
-    CF_DEBUG(cfCursorTransitions) << transition << this << "focus" << m_focusSurface << "cursor"
+    LM_DEBUG(cfCursorTransitions) << transition << this << "focus" << m_focusSurface << "cursor"
                                  << m_cursorSurface << "request-owned" << m_hasCursorRequest
                                  << "contents"
                                  << (m_cursorSurface && m_cursorSurface->hasContents()) << "buffer"

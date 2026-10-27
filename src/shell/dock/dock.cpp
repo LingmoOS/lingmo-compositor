@@ -57,7 +57,7 @@ bool Dock::registerService()
     object->addMethod("setMinimizedArea", [this](bool enabled) { m_settings.setMinimizedArea(enabled); },
                       dbus::ArgumentNames{{"enabled"}, {}});
     if (!object->publish() || !m_bus->requestName("org.lingmo.Dock", dbus::Connection::DoNotQueue)) {
-        CF_WARNING(cfDock) << "Cannot own org.lingmo.Dock";
+        LM_WARNING(cfDock) << "Cannot own org.lingmo.Dock";
         return false;
     }
     m_object = std::move(object);

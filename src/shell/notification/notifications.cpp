@@ -71,11 +71,11 @@ bool Notifications::registerServices()
     object->addSignal("applicationsChanged", "");
     object->addProperty("doNotDisturb", [this] { return m_settings.doNotDisturb(); });
     if (!object->publish()) {
-        CF_WARNING(cfNotificationService) << "Cannot export /Notification";
+        LM_WARNING(cfNotificationService) << "Cannot export /Notification";
         return false;
     }
     if (!m_bus->requestName("org.lingmo.Notification", dbus::Connection::DoNotQueue)) {
-        CF_WARNING(cfNotificationService) << "Cannot own org.lingmo.Notification";
+        LM_WARNING(cfNotificationService) << "Cannot own org.lingmo.Notification";
         return false;
     }
     m_object = std::move(object);

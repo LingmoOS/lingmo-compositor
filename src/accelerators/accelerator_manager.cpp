@@ -41,7 +41,7 @@ void AcceleratorManager::unregisterAccelerator(const Accelerator &accelerator,
 {
     TargetInfo *info = m_accelerators.find(accelerator);
     if (!info) {
-        CF_WARNING(cfInput) << "Unregistering an unknown accelerator" << accelerator.shortcutText();
+        LM_WARNING(cfInput) << "Unregistering an unknown accelerator" << accelerator.shortcutText();
         return;
     }
     if (info->unregister(target) && !info->hasTargets())

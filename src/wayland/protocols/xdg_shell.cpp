@@ -432,7 +432,7 @@ public:
             // An in-process client, as in the tests, has the compositor's own pid.
             if (pid <= 0 || pid == getpid())
                 return;
-            CF_INFO(cfWayland) << "Killing unresponsive client" << pid;
+            LM_INFO(cfWayland) << "Killing unresponsive client" << pid;
             kill(pid, SIGKILL);
         });
     }

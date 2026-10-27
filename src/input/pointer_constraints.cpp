@@ -76,7 +76,7 @@ bool PointerConstraints::add(PointerConstraintDelegate *delegate)
     // Can only have one constraint request per surface.
     const auto [it, inserted] = m_constraints.try_emplace(surface, delegate);
     if (!inserted) {
-        CF_DEBUG(cfInput) << "Pointer constraint not granted; one already exists.";
+        LM_DEBUG(cfInput) << "Pointer constraint not granted; one already exists.";
         delegate->onAlreadyConstrained();
         delegate->onDefunct();
         return false;
@@ -231,7 +231,7 @@ bool PointerConstraints::breakByUserAction()
     m_capturePermitted = false;
     if (!m_active)
         return false;
-    CF_DEBUG(cfInput) << "Pointer constraint broken by user action";
+    LM_DEBUG(cfInput) << "Pointer constraint broken by user action";
     update();
     return true;
 }

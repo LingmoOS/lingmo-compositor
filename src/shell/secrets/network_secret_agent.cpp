@@ -137,7 +137,7 @@ void NetworkSecretAgent::exportAgent()
                              [this](base::dbus::MethodCall &call) { deleteSecrets(call); },
                              {{"connection", "connectionPath"}, {}});
     if (!m_agentObject->publish()) {
-        CF_WARNING(cfSecrets) << "Cannot export the NetworkManager secret agent";
+        LM_WARNING(cfSecrets) << "Cannot export the NetworkManager secret agent";
         m_agentObject.reset();
     }
 }
@@ -155,7 +155,7 @@ bool NetworkSecretAgent::registerService()
                               {{"devicePath", "accessPointPath", "name", "wep"}, {}});
     if (!m_promptObject->publish()
         || !m_session->requestName(kPromptService, base::dbus::Connection::DoNotQueue)) {
-        CF_WARNING(cfSecrets) << "Cannot offer" << kPromptService;
+        LM_WARNING(cfSecrets) << "Cannot offer" << kPromptService;
         return false;
     }
     return true;
@@ -204,7 +204,7 @@ void NetworkSecretAgent::registerAgent(int attempt)
             m_registerRetry.start(std::chrono::milliseconds(100 << attempt));
             return;
         }
-        CF_WARNING(cfSecrets) << "Cannot register the NetworkManager secret agent:" << reply.error().message;
+        LM_WARNING(cfSecrets) << "Cannot register the NetworkManager secret agent:" << reply.error().message;
     });
 }
 

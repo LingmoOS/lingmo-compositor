@@ -138,7 +138,7 @@ bool WindowDebugService::registerService()
     if (m_registered)
         return true;
     if (!m_bus) {
-        CF_WARNING(logs()) << "Cannot export the window debug service: no session bus";
+        LM_WARNING(logs()) << "Cannot export the window debug service: no session bus";
         return false;
     }
     auto object = std::make_unique<base::dbus::Object>(m_bus, objectPath, serviceName);
@@ -169,11 +169,11 @@ bool WindowDebugService::registerService()
     object->addMethod("Key", [this](uint32_t code, bool pressed) { return Key(code, pressed); },
                       base::dbus::ArgumentNames{{"code", "pressed"}, {"result"}});
     if (!object->publish()) {
-        CF_WARNING(logs()) << "Cannot export the window debug service";
+        LM_WARNING(logs()) << "Cannot export the window debug service";
         return false;
     }
     if (!m_bus->requestName(serviceName)) {
-        CF_WARNING(logs()) << "Cannot own the window debug service";
+        LM_WARNING(logs()) << "Cannot own the window debug service";
         return false;
     }
     m_object = std::move(object);

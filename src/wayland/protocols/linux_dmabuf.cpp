@@ -376,7 +376,7 @@ std::unique_ptr<LinuxDmabufGlobal> LinuxDmabufGlobal::create(wl_display* display
 
     auto manager = std::make_unique<DmaBufFeedbackManager>(compositor, device);
     if (manager->formatsAndModifiers().empty()) {
-        CF_WARNING(cfWayland) << "No importable DMA-BUF format; not advertising linux-dmabuf";
+        LM_WARNING(cfWayland) << "No importable DMA-BUF format; not advertising linux-dmabuf";
         return nullptr;
     }
 

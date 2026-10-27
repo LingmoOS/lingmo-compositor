@@ -68,7 +68,7 @@ void SessionController::setState(SessionState state)
         else
             m_delegate->onSessionUnblocked();
     }
-    CF_INFO(cfCompositor) << "Session state" << toString(state);
+    LM_INFO(cfCompositor) << "Session state" << toString(state);
 
     const auto observers = m_observers;
     for (SessionObserver *observer : observers)

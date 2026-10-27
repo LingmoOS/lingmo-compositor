@@ -479,7 +479,7 @@ void WindowManager::setWorkArea(const base::Rect &bounds)
     if (area.isEmpty() || area == m_workArea)
         return;
     m_workArea = area;
-    CF_DEBUG(cfCompositor) << "work area" << m_workArea << "of output"
+    LM_DEBUG(cfCompositor) << "work area" << m_workArea << "of output"
                           << m_outputBounds;
     const WMEvent event(WMEventType::WorkAreaChanged);
     for (Window *window : std::vector<Window *>(m_stackingOrder)) {
@@ -694,7 +694,7 @@ Window *WindowManager::createWindow(compositor::Surface *rootSurface, const Wind
 
     restackScene();
 
-    CF_DEBUG(cfCompositor) << "Window created;" << toString(window->role()) << "total"
+    LM_DEBUG(cfCompositor) << "Window created;" << toString(window->role()) << "total"
                           << m_stackingOrder.size();
     windowAdded(window);
     return window;
@@ -882,7 +882,7 @@ void WindowManager::restackScene()
         std::vector<std::string> order;
         for (Window *window : m_stackingOrder)
             order.push_back(window->title() + "(" + toString(window->role()) + ")");
-        CF_DEBUG(cfCompositor) << "stacking, bottom to top:" << base::strings::join(order, " < ");
+        LM_DEBUG(cfCompositor) << "stacking, bottom to top:" << base::strings::join(order, " < ");
     }
 
     std::vector<scene::Node *> managedNodes;
@@ -1475,7 +1475,7 @@ void WindowManager::dismissPopupGrabs()
     // client is told. Dismissing one popup routinely destroys the rest of the
     // chain, which unregisters them from here; a cached copy of the list would
     // be full of dangling pointers by the second iteration.
-    CF_DEBUG(cfCompositor) << "dismissing" << m_popupGrabs.size() << "grabbing popup(s)";
+    LM_DEBUG(cfCompositor) << "dismissing" << m_popupGrabs.size() << "grabbing popup(s)";
     while (!m_popupGrabs.empty()) {
         ShellSurface *innermost = m_popupGrabs.back();
         m_popupGrabs.pop_back();
@@ -1758,7 +1758,7 @@ bool WindowManager::onPointerButton(input::Timestamp timestamp, const base::Poin
 bool WindowManager::handlePointerButton(input::Timestamp timestamp, const base::PointF &location,
                                         uint32_t code, bool pressed)
 {
-    CF_DEBUG(cfInputTransitions) << "WM code" << code << (pressed ? "press" : "release")
+    LM_DEBUG(cfInputTransitions) << "WM code" << code << (pressed ? "press" : "release")
                                 << "drag-target" << m_eventHandler->draggedWindow()
                                 << "frame-capture" << windowTrackingFramePress() << "hit-frame"
                                 << frameAt(location);

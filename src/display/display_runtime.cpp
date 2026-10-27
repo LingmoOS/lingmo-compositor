@@ -88,7 +88,7 @@ DisplayRuntime::DisplayRuntime(DisplayManager &manager, backend::DrmBackend *nat
         const auto result = setPower({wakeOnInput.begin(), wakeOnInput.end()},
                                      NativeDisplayDelegate::PowerState::On);
         if (!result.succeeded)
-            CF_WARNING(base::LogCategory::defaultCategory())
+            LM_WARNING(base::LogCategory::defaultCategory())
                     << "Unable to wake displays:" << result.error.message;
     });
     identity.seed(displayManager.hardware()->displays);
@@ -822,7 +822,7 @@ ConfigurationResult DisplayRuntime::configure(const DisplayConfiguration &config
                     bindFrames();
                     ++resources;
                     ++testRounds;
-                    CF_INFO(cfCompositor)
+                    LM_INFO(cfCompositor)
                             << "Retrying native route/buffer allocation, round" << testRounds;
                     last = exact(selected, NativeDisplayDelegate::ConfigureMode::TestOnly);
                 }
@@ -832,7 +832,7 @@ ConfigurationResult DisplayRuntime::configure(const DisplayConfiguration &config
                 diagnostics.push_back(
                         std::format("round {} [{}]: {}", testRounds, base::strings::join(keys, ","),
                                     last.succeeded ? std::string("passed") : last.error.message));
-                CF_INFO(cfCompositor) << "Display recovery" << diagnostics.back();
+                LM_INFO(cfCompositor) << "Display recovery" << diagnostics.back();
                 if (!current())
                     last = {false,
                             false,
@@ -879,7 +879,7 @@ ConfigurationResult DisplayRuntime::configure(const DisplayConfiguration &config
             if (checked.succeeded) {
                 selected = checked.normalized;
                 ++testRounds;
-                CF_WARNING(cfCompositor) << "Testing single-output rescue on" << survivor.value();
+                LM_WARNING(cfCompositor) << "Testing single-output rescue on" << survivor.value();
                 last = exact(selected, NativeDisplayDelegate::ConfigureMode::TestOnly);
                 if (!displayManager.hardware()
                     || displayManager.hardware()->topologyGeneration != hardware.topologyGeneration

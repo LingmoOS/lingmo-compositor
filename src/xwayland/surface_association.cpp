@@ -64,7 +64,7 @@ void SurfaceAssociation::removeSurface(Surface* surface)
     std::erase_if(m_surfaces, [surface](const auto& entry) {
         if (entry.second != surface)
             return false;
-        CF_WARNING(logs()) << "Xwayland abandoned surface serial" << entry.first;
+        LM_WARNING(logs()) << "Xwayland abandoned surface serial" << entry.first;
         return true;
     });
 }
@@ -74,7 +74,7 @@ void SurfaceAssociation::removeWindow(uint32_t window)
     std::erase_if(m_windows, [window](const auto& entry) {
         if (entry.second != window)
             return false;
-        CF_WARNING(logs()) << "Xwayland abandoned window serial" << entry.first;
+        LM_WARNING(logs()) << "Xwayland abandoned window serial" << entry.first;
         return true;
     });
 }

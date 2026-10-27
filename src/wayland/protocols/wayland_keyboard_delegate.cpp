@@ -124,18 +124,18 @@ void WaylandKeyboardDelegate::onKeyboardLayoutUpdated(const std::string &keymap)
     const size_t size = keymap.size() + 1;
     const int fd = memfd_create("lingmo-keymap", MFD_CLOEXEC);
     if (fd < 0) {
-        CF_WARNING(cfWayland) << "Failed to create a keymap memfd";
+        LM_WARNING(cfWayland) << "Failed to create a keymap memfd";
         return;
     }
     if (ftruncate(fd, static_cast<off_t>(size)) != 0) {
-        CF_WARNING(cfWayland) << "Failed to size the keymap memfd";
+        LM_WARNING(cfWayland) << "Failed to size the keymap memfd";
         close(fd);
         return;
     }
 
     void *memory = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (memory == MAP_FAILED) {
-        CF_WARNING(cfWayland) << "Failed to map the keymap memfd";
+        LM_WARNING(cfWayland) << "Failed to map the keymap memfd";
         close(fd);
         return;
     }

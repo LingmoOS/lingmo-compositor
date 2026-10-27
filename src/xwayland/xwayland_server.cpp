@@ -149,7 +149,7 @@ bool XwaylandServer::start(const Options& options)
     if (!writeReadiness())
         return false;
     m_published = true;
-    CF_INFO(logs()) << "Xwayland on demand: DISPLAY=" + m_displayName
+    LM_INFO(logs()) << "Xwayland on demand: DISPLAY=" + m_displayName
                     << "XAUTHORITY=" + m_authority;
     arm();
     if (ready)
@@ -547,7 +547,7 @@ void XwaylandServer::publish()
     m_timeout.stop();
     m_ready = true;
     m_published = true;
-    CF_INFO(logs()) << "Xwayland ready: DISPLAY=" + m_displayName << "XAUTHORITY=" + m_authority;
+    LM_INFO(logs()) << "Xwayland ready: DISPLAY=" + m_displayName << "XAUTHORITY=" + m_authority;
     if (!m_options.lazy && ready)
         ready();
     if (started)
@@ -569,7 +569,7 @@ void XwaylandServer::fail(const std::string& error)
     // X11 clients die with the server, but new ones keep working: the session
     // exported DISPLAY and XAUTHORITY once, and a restart keeps both.
     if (m_published && mayRestart()) {
-        CF_WARNING(logs()) << "Xwayland lost:" << error << "- restarting";
+        LM_WARNING(logs()) << "Xwayland lost:" << error << "- restarting";
         teardown(true);
         // A lazy server waits for the next client again.
         if (m_options.lazy)
@@ -579,7 +579,7 @@ void XwaylandServer::fail(const std::string& error)
         return;
     }
     m_error = error;
-    CF_WARNING(logs()) << "Xwayland unavailable:" << error;
+    LM_WARNING(logs()) << "Xwayland unavailable:" << error;
     stop();
     if (failure)
         failure(error);

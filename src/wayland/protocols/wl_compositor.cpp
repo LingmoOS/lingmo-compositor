@@ -204,7 +204,7 @@ void surface_set_buffer_transform(wl_client*, wl_resource* resource, int32_t tra
         bufferTransform = compositor::Transform::FlippedRotate270;
         break;
     default:
-        CF_WARNING(cfWayland).printf(
+        LM_WARNING(cfWayland).printf(
                 "wl_surface.set_buffer_transform: invalid transform %d", transform);
         wl_resource_post_error(resource, WL_SURFACE_ERROR_INVALID_TRANSFORM,
                                "buffer transform must be one of the values from "
@@ -219,7 +219,7 @@ void surface_set_buffer_transform(wl_client*, wl_resource* resource, int32_t tra
 void surface_set_buffer_scale(wl_client*, wl_resource* resource, int32_t scale)
 {
     if (scale < 1) {
-        CF_WARNING(cfWayland).printf("wl_surface.set_buffer_scale: invalid scale %d", scale);
+        LM_WARNING(cfWayland).printf("wl_surface.set_buffer_scale: invalid scale %d", scale);
         wl_resource_post_error(resource, WL_SURFACE_ERROR_INVALID_SCALE,
                                "buffer scale must be at least one ('%d' specified)", scale);
         return;

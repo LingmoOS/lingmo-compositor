@@ -207,7 +207,7 @@ bool ClipboardHistory::registerService()
     object->addMethod("toggle", [this] { toggle(); });
     if (!object->publish()
         || !m_bus->requestName("org.lingmo.ClipboardHistory", base::dbus::Connection::DoNotQueue)) {
-        CF_WARNING(cfClipboard) << "Cannot own org.lingmo.ClipboardHistory";
+        LM_WARNING(cfClipboard) << "Cannot own org.lingmo.ClipboardHistory";
         return false;
     }
     m_object = std::move(object);

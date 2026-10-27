@@ -220,7 +220,7 @@ bool ScreenCapture::registerService()
             },
             dbus::ArgumentNames {{"output", "cursor"}, {"png"}});
     if (!object->publish() || !bus->requestName("org.lingmo.Screenshot", dbus::Connection::DoNotQueue)) {
-        CF_WARNING(cfScreenshot) << "Cannot own org.lingmo.Screenshot";
+        LM_WARNING(cfScreenshot) << "Cannot own org.lingmo.Screenshot";
         return false;
     }
     m_service = std::move(object);

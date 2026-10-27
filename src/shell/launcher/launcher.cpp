@@ -56,7 +56,7 @@ bool Launcher::registerService()
     object->addMethod("toggle", [this] { toggle(); });
     if (!object->publish()
         || !m_bus->requestName("org.lingmo.Launcher", base::dbus::Connection::DoNotQueue)) {
-        CF_WARNING(cfLauncher) << "Cannot own org.lingmo.Launcher";
+        LM_WARNING(cfLauncher) << "Cannot own org.lingmo.Launcher";
         return false;
     }
     m_object = std::move(object);

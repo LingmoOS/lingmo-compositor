@@ -72,7 +72,7 @@ std::shared_ptr<Buffer> Compositor::createDmaBufBuffer(render::DmaBufAttributes 
 scene::SurfaceNode *Compositor::createSurfaceNode(Surface *surface)
 {
     m_surfaces.push_back(surface);
-    CF_DEBUG(cfCompositor) << "Surface created; total" << m_surfaces.size();
+    LM_DEBUG(cfCompositor) << "Surface created; total" << m_surfaces.size();
 
     if (!m_surfaceContainer)
         return nullptr;
@@ -96,7 +96,7 @@ void Compositor::surfaceDestroyed(Surface *surface)
 {
     m_surfaceByNode.erase(surface->node());
     m_surfaces.erase(std::remove(m_surfaces.begin(), m_surfaces.end(), surface), m_surfaces.end());
-    CF_DEBUG(cfCompositor) << "Surface destroyed; total" << m_surfaces.size();
+    LM_DEBUG(cfCompositor) << "Surface destroyed; total" << m_surfaces.size();
     scheduleRepaint();
 }
 

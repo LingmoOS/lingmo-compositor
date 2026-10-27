@@ -11,7 +11,7 @@
 
 namespace Lingmo::Core {
 
-// Written to with CF_DEBUG(cfInput) and friends.
+// Written to with LM_DEBUG(cfInput) and friends.
 using LogCategory = base::LogCategory;
 
 // Applies `rules` (base::logging::setRules syntax) to every category.

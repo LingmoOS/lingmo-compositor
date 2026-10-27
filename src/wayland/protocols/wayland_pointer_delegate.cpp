@@ -78,7 +78,7 @@ void WaylandPointerDelegate::onPointerEnter(compositor::Surface *surface,
     // toolkits do not expect it, so the flags are only used to seed our own
     // state.
     const auto serial = m_serialTracker->nextSerial(SerialTracker::POINTER_ENTER);
-    CF_DEBUG(cfCursorTransitions) << "enter pointer" << wl_resource_get_id(m_pointerResource)
+    LM_DEBUG(cfCursorTransitions) << "enter pointer" << wl_resource_get_id(m_pointerResource)
                                   << "client" << client() << "serial" << serial << "surface"
                                   << surface;
     m_enterSerial = serial;

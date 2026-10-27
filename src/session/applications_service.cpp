@@ -58,7 +58,7 @@ bool ApplicationsService::registerService()
     if (m_registered)
         return true;
     if (!m_bus) {
-        CF_WARNING(logs()) << "Cannot export the applications service: no session bus";
+        LM_WARNING(logs()) << "Cannot export the applications service: no session bus";
         return false;
     }
     auto object = std::make_unique<base::dbus::Object>(m_bus, objectPath, serviceName);
@@ -66,11 +66,11 @@ bool ApplicationsService::registerService()
     object->addMethod("QuitAll", "", "ss", [this](base::dbus::MethodCall &call) { quitAll(call); },
                       base::dbus::ArgumentNames{{}, {"result", "applicationId"}});
     if (!object->publish()) {
-        CF_WARNING(logs()) << "Cannot export the applications service";
+        LM_WARNING(logs()) << "Cannot export the applications service";
         return false;
     }
     if (!m_bus->requestName(serviceName)) {
-        CF_WARNING(logs()) << "Cannot own the applications service";
+        LM_WARNING(logs()) << "Cannot own the applications service";
         return false;
     }
     m_object = std::move(object);

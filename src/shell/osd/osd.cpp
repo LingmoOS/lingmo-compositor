@@ -100,7 +100,7 @@ bool Osd::registerService()
     object->addMethod("keyboardBrightnessDown", [this] { keyboardBrightnessDown(); });
     object->addMethod("keyboardBrightnessUp", [this] { keyboardBrightnessUp(); });
     if (!object->publish() || !bus->requestName("org.lingmo.Osd", dbus::Connection::DoNotQueue)) {
-        CF_WARNING(cfOsd) << "Cannot own org.lingmo.Osd";
+        LM_WARNING(cfOsd) << "Cannot own org.lingmo.Osd";
         return false;
     }
     m_service = std::move(object);

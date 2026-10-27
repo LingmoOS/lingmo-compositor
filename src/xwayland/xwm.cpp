@@ -586,7 +586,7 @@ void Xwm::kill(uint32_t window)
         return;
     const auto &w = *it->second;
     if (const uint32_t pid = ownerPid(w)) {
-        CF_INFO(logs()) << "Killing unresponsive X11 client" << pid;
+        LM_INFO(logs()) << "Killing unresponsive X11 client" << pid;
         ::kill(pid_t(pid), SIGKILL);
     }
     xcb_kill_client(m_connection, window);
@@ -1440,7 +1440,7 @@ Xwm::X11Window *Xwm::adopt(uint32_t window, const base::Rect &xGeometry, bool ov
         if (greediest == clients.end())
             return nullptr;
         if (greediest->first != m_disconnecting) {
-            CF_WARNING(logs())
+            LM_WARNING(logs())
                     << "Xwayland window limit reached; disconnecting the X11 client with"
                     << greediest->second.first << "windows";
             xcb_kill_client(m_connection, greediest->second.second);
@@ -1701,7 +1701,7 @@ void Xwm::event(xcb_generic_event_t *generic)
     }
     if (!type) {
         auto *error = reinterpret_cast<xcb_generic_error_t *>(generic);
-        CF_WARNING(logs()) << "XWM request error" << int(error->error_code)
+        LM_WARNING(logs()) << "XWM request error" << int(error->error_code)
                            << int(error->major_code);
         if (!m_ready) {
             m_initializationFailed = true;
@@ -1915,7 +1915,7 @@ void Xwm::event(xcb_generic_event_t *generic)
             if (generic->response_type & 0x80)
                 return;
             if (!m_association->addWindow(SurfaceAssociation::serial(d[0], d[1]), id))
-                CF_WARNING(logs()) << "Xwayland rejected window serial" << id;
+                LM_WARNING(logs()) << "Xwayland rejected window serial" << id;
         } else if (e->type == atom("_NET_REQUEST_FRAME_EXTENTS")) {
             // A client asking waits for the property to be written, changed or not.
             w.writtenExtents.reset();

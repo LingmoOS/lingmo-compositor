@@ -499,7 +499,7 @@ void DesksController::activateDeskInternal(Desk *desk, bool updateWindowActivati
     desk->activate(updateWindowActivation);
     old->deactivate(updateWindowActivation);
 
-    CF_DEBUG(cfCompositor) << "desk" << deskIndex(desk) << "active";
+    LM_DEBUG(cfCompositor) << "desk" << deskIndex(desk) << "active";
     notify([desk, old](DesksObserver *observer) {
         observer->onDeskActivationChanged(desk, old);
     });

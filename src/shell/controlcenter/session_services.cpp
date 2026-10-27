@@ -413,7 +413,7 @@ private:
                     method,
                     [method = std::string(method), finished](const dbus::Reply &reply) {
                         if (reply.isError())
-                            CF_WARNING(cfControlCenter) << "Privacy " << method << " failed: "
+                            LM_WARNING(cfControlCenter) << "Privacy " << method << " failed: "
                                                         << reply.error().message;
                         finished();
                     },

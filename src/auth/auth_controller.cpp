@@ -231,7 +231,7 @@ void AuthController::setState(State state, const std::string &errorMessage)
         return;
     m_state = state;
     m_errorMessage = errorMessage;
-    CF_DEBUG(cfAuth) << "state" << state;
+    LM_DEBUG(cfAuth) << "state" << state;
     stateChanged();
 }
 

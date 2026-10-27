@@ -49,7 +49,7 @@ bool PowerButton::start()
     if (m_started)
         return true;
     if (!m_bus) {
-        CF_WARNING(logs()) << "Cannot follow logind's PrepareForSleep: no system bus";
+        LM_WARNING(logs()) << "Cannot follow logind's PrepareForSleep: no system bus";
         return false;
     }
     m_prepareForSleep =
@@ -59,7 +59,7 @@ bool PowerButton::start()
                     prepareForSleep(sleeping);
             });
     if (m_prepareForSleep.isNull()) {
-        CF_WARNING(logs()) << "Cannot follow logind's PrepareForSleep";
+        LM_WARNING(logs()) << "Cannot follow logind's PrepareForSleep";
         return false;
     }
     m_started = true;
@@ -73,7 +73,7 @@ void PowerButton::inhibit()
             "Inhibit",
             [this](const base::dbus::Reply &reply) {
                 if (reply.isError()) {
-                    CF_WARNING(logs()) << "Cannot take the power button over from logind:"
+                    LM_WARNING(logs()) << "Cannot take the power button over from logind:"
                                << reply.error().message;
                     return;
                 }

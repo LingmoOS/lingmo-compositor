@@ -70,7 +70,7 @@ std::optional<CompositorOptions> CompositorOptions::parse(int argc, char **argv)
 
     const auto scale = compositor::OutputScale::parse(parser.value("scale"));
     if (!scale) {
-        CF_CRITICAL(base::LogCategory::defaultCategory())
+        LM_CRITICAL(base::LogCategory::defaultCategory())
                 << "Invalid output scale; expected a decimal from 1.0 through 4.0";
         return std::nullopt;
     }
@@ -79,7 +79,7 @@ std::optional<CompositorOptions> CompositorOptions::parse(int argc, char **argv)
     const auto durationScale =
             base::strings::toDouble(parser.value("animation-duration-scale"));
     if (!durationScale || !(*durationScale > 0)) {
-        CF_CRITICAL(base::LogCategory::defaultCategory())
+        LM_CRITICAL(base::LogCategory::defaultCategory())
                 << "Invalid --animation-duration-scale; expected a positive number";
         return std::nullopt;
     }
@@ -88,7 +88,7 @@ std::optional<CompositorOptions> CompositorOptions::parse(int argc, char **argv)
     if (parser.isSet("ready-fd")) {
         const auto fd = base::strings::toNumber<int>(parser.value("ready-fd"));
         if (!fd || *fd < 3 || fcntl(*fd, F_SETFD, FD_CLOEXEC) < 0) {
-            CF_CRITICAL(base::LogCategory::defaultCategory())
+            LM_CRITICAL(base::LogCategory::defaultCategory())
                     << "Invalid session startup file descriptor";
             return std::nullopt;
         }
@@ -99,7 +99,7 @@ std::optional<CompositorOptions> CompositorOptions::parse(int argc, char **argv)
     if (options.noDrm) {
         const auto count = base::strings::toNumber<int>(parser.value("headless-outputs"));
         if (!count || *count < 1 || *count > 16) {
-            CF_CRITICAL(base::LogCategory::defaultCategory())
+            LM_CRITICAL(base::LogCategory::defaultCategory())
                     << "Invalid --headless-outputs count; expected 1 through 16";
             return std::nullopt;
         }
