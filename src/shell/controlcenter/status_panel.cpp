@@ -79,10 +79,10 @@ static double cubicBezier(double x1, double y1, double x2, double y2, double t)
 // A row's background ink over the panel's surface.
 static ui::Color rowColor(bool pressed, bool hovered)
 {
-    const ui::Color surface = panel::statusSurfaceColor();
+    const ui::Color surface = ::Lingmo::Shell::Panel::statusSurfaceColor();
     if (pressed)
-        return panel::on(surface, 0.14);
-    return hovered ? panel::on(surface, 0.08) : ui::Color {0, 0, 0, 0};
+        return ::Lingmo::Shell::Panel::on(surface, 0.14);
+    return hovered ? ::Lingmo::Shell::Panel::on(surface, 0.08) : ui::Color {0, 0, 0, 0};
 }
 
 PanelRow::PanelRow()
@@ -194,8 +194,8 @@ void PanelRow::layout()
     const bool white = theme.darkMode || m_active;
     m_glyph->setColor(white ? kWhite : kLightArtwork);
     m_artwork->setTint(white ? kWhite : kLightArtwork);
-    m_lock->setColor(panel::secondaryTextColor());
-    m_detail->setColor(panel::secondaryTextColor());
+    m_lock->setColor(::Lingmo::Shell::Panel::secondaryTextColor());
+    m_detail->setColor(::Lingmo::Shell::Panel::secondaryTextColor());
 
     // The background reaches past the row's padding to kBackgroundMargin.
     const double inset = kRowMargin - kBackgroundMargin + kRowInset;
@@ -234,13 +234,13 @@ void PanelRow::paint(ui::Painter &painter)
     const ui::Color background = rowColor(enabled && m_pressed, enabled && isHovered());
     if (background.a > 0)
         painter.fillRoundedRect(localRect(), kBackgroundRadius, background);
-    const ui::Color surface = panel::statusSurfaceColor();
+    const ui::Color surface = ::Lingmo::Shell::Panel::statusSurfaceColor();
     // A step past the row's hover ink, so the badge still shows on a hovered row.
     const ui::Color badge = m_active ? ui::Theme::current().highlight
-                                     : panel::on(surface, panel::isDark(surface) ? 0.16 : 0.12);
+                                     : ::Lingmo::Shell::Panel::on(surface, ::Lingmo::Shell::Panel::isDark(surface) ? 0.16 : 0.12);
     const double inset = kRowMargin - kBackgroundMargin + kRowInset;
     const ui::RectF slot {inset, (geometry().height - kBadgeSize) / 2, kBadgeSize, kBadgeSize};
-    const ui::RectF plate = panel::parityPlate(slot, kGlyphSize, painter.scale());
+    const ui::RectF plate = ::Lingmo::Shell::Panel::parityPlate(slot, kGlyphSize, painter.scale());
     painter.fillRoundedRect(plate, plate.width / 2, badge);
 }
 
@@ -522,7 +522,7 @@ void StatusPanelView::layout()
         headerRight -= size.width + kSectionSpacing;
     }
     if (m_detail->isVisible()) {
-        m_detail->setColor(panel::secondaryTextColor());
+        m_detail->setColor(::Lingmo::Shell::Panel::secondaryTextColor());
         const double width = m_detail->sizeHint().width;
         m_detail->setGeometry({headerRight - width, alignedLabelTop(m_detail, textBaseline, scale), width,
                                m_detail->sizeHint().height});
@@ -546,14 +546,14 @@ void StatusPanelView::paint(ui::Painter &painter)
 {
     // The separator above the settings link.
     const double y = footerTop() + kSeparatorSpacing;
-    painter.fillRect({kHorizontalPadding, y, kWidth - 2 * kHorizontalPadding, 1}, panel::textColor(0.08));
+    painter.fillRect({kHorizontalPadding, y, kWidth - 2 * kHorizontalPadding, 1}, ::Lingmo::Shell::Panel::textColor(0.08));
 }
 
 // A 1 px line of the text colour at 0.08, as the panels' separators.
 class Separator final : public ui::View
 {
 protected:
-    void paint(ui::Painter &painter) override { painter.fillRect(localRect(), panel::textColor(0.08)); }
+    void paint(ui::Painter &painter) override { painter.fillRect(localRect(), ::Lingmo::Shell::Panel::textColor(0.08)); }
 };
 
 // The networks, laid out in the scroll view edge to edge so its bar sits on
@@ -746,7 +746,7 @@ void VolumePanel::refresh()
     m_noOutput->setVisible(!sink);
     m_slider->setVisible(sink);
     m_slider->setValue(sink ? services.volume() : 0);
-    m_slider->setIcon(panel::artwork(volumeIconName(sink, services.volume()), false));
+    m_slider->setIcon(::Lingmo::Shell::Panel::artwork(volumeIconName(sink, services.volume()), false));
 
     std::vector<AudioOutput> outputs = services.outputs();
     if (outputs != m_outputs) {
@@ -800,8 +800,8 @@ void VolumePanel::layoutBody(double top)
     const double x = kHorizontalPadding;
     const double width = kWidth - 2 * kHorizontalPadding;
     double y = top;
-    m_noOutput->setColor(panel::secondaryTextColor());
-    m_heading->setColor(panel::secondaryTextColor());
+    m_noOutput->setColor(::Lingmo::Shell::Panel::secondaryTextColor());
+    m_heading->setColor(::Lingmo::Shell::Panel::secondaryTextColor());
     if (m_noOutput->isVisible()) {
         m_noOutput->setGeometry({x, y, width, m_noOutput->sizeHint().height});
         y += m_noOutput->sizeHint().height + kSectionSpacing;
@@ -837,7 +837,7 @@ BatteryPanel::BatteryPanel(ControlCenterServices &services)
     m_heading->setWeight(kDemiBold);
     for (size_t i = 0; i < std::size(kProfiles); ++i) {
         PanelRow *row = body()->addChild<PanelRow>();
-        row->setArtwork(panel::artwork(std::string("power-profile-") + kProfiles[i]));
+        row->setArtwork(::Lingmo::Shell::Panel::artwork(std::string("power-profile-") + kProfiles[i]));
         row->setText(tr(kProfileNames[i]));
         row->onClicked = [this, i] { this->services().setPowerProfile(kProfiles[i]); };
         m_rows.push_back(row);
@@ -905,9 +905,9 @@ void BatteryPanel::layoutBody(double top)
 {
     const double x = kHorizontalPadding;
     const double width = kWidth - 2 * kHorizontalPadding;
-    m_source->setColor(panel::secondaryTextColor());
-    m_state->setColor(panel::secondaryTextColor());
-    m_heading->setColor(panel::secondaryTextColor());
+    m_source->setColor(::Lingmo::Shell::Panel::secondaryTextColor());
+    m_state->setColor(::Lingmo::Shell::Panel::secondaryTextColor());
+    m_heading->setColor(::Lingmo::Shell::Panel::secondaryTextColor());
     double y = top;
     const double sourceHeight = m_source->heightForWidth(width);
     m_source->setGeometry({x, y, width, sourceHeight});
