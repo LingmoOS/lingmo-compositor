@@ -21,7 +21,7 @@
 namespace Lingmo::Networkmanager {
 class Client;
 class Handler;
-} // namespace Lingmo::Networkmanager
+} // namespace Lingmo::Networkmanagermanager
 
 namespace Lingmo::Shell {
 

@@ -11,10 +11,10 @@
 #include "base/signal.h"
 #include "shell/statusbar/status_bar_panels.h"
 
-namespace Lingmo::Network {
+namespace Lingmo::Networkmanager {
 class Client;
 class Handler;
-} // namespace Lingmo::Network
+} // namespace Lingmo::Networkmanager
 
 namespace Lingmo::Shell {
 

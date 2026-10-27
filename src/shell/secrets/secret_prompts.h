@@ -17,7 +17,7 @@ namespace Lingmo::bluez {
 class Manager;
 }
 
-namespace Lingmo::Network {
+namespace Lingmo::Networkmanager {
 class Client;
 }
 
