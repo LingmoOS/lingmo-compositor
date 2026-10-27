@@ -36,7 +36,7 @@ static constexpr std::chrono::milliseconds kRetryLimit(60000);
 static bool holdsNoTrash(const std::string &mountPoint, const std::string &type)
 {
     // The system's own places; removable volumes may be mounted under /run/media.
-    for (const QStringView system : {"/proc", "/sys", "/dev", "/run"}) {
+    for (const std::string_view system : {"/proc", "/sys", "/dev", "/run"}) {
         if (mountPoint.starts_with(system) && (mountPoint.size() == system.size() || mountPoint[system.size()] == '/'))
             return !mountPoint.starts_with("/run/media/");
     }

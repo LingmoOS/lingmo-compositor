@@ -13,6 +13,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
+#include <string_view>
 
 using Lingmo::i18n::tr;
 
@@ -176,7 +177,7 @@ void GreetdBackend::readResponses()
         if (m_buffer.size() < 4 + size_t(length))
             return;
         const std::optional<base::json::Value> document =
-                base::json::Value::parse(QStringView(m_buffer).substr(4, length));
+                base::json::Value::parse(std::string_view(m_buffer).substr(4, length));
         m_buffer.erase(0, 4 + size_t(length));
         m_timeout.stop();
         if (!document || !document->isObject()) {
@@ -228,7 +229,7 @@ void GreetdBackend::handleResponse(const base::json::Value &response)
     const std::string kind = response["auth_message_type"].toString();
     base::json::Value answer;
     if (kind == "secret" && !m_pending.isEmpty()) {
-        answer = base::json::Value(QStringView(m_pending.constData(), m_pending.size()));
+        answer = base::json::Value(std::string_view(m_pending.constData(), m_pending.size()));
         m_pending.clear();
     } else if (kind == "visible") {
         answer = m_userName;

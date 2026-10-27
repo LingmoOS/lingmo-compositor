@@ -12,7 +12,7 @@
 namespace Lingmo::Shell {
 
 // The shell's own artwork, installed with the compositor.
-std::string shellDataFile(QStringView name);
+std::string shellDataFile(std::string_view name);
 // Tests read the artwork from the source tree.
 void setShellDataDirectoryForTesting(std::string directory);
 

@@ -20,6 +20,7 @@
 #include "wm/overview/overview_controller.h"
 #include "wm/window.h"
 #include "wm/window_manager.h"
+#include <string_view>
 namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Shell {
@@ -33,13 +34,13 @@ static constexpr render::Color kBlack {0, 0, 0, 1};
 static constexpr size_t kMaxSamples = 8;
 
 // #RGB, #RRGGBB or #AARRGGBB (alpha first); invalid (none) otherwise.
-static std::optional<ui::Color> parseColor(QStringView text)
+static std::optional<ui::Color> parseColor(std::string_view text)
 {
     if (text.empty() || text.front() != '#')
         return std::nullopt;
     text.remove_prefix(1);
     const std::optional<uint64_t> value = base::strings::toNumber<uint64_t>(text, 16);
-    if (!value || text.find_first_of("+-") != QStringView::npos)
+    if (!value || text.find_first_of("+-") != std::string_view::npos)
         return std::nullopt;
     switch (text.size()) {
     case 3:

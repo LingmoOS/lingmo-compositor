@@ -13,6 +13,7 @@
 #include "base/geometry.h"
 #include "base/signal.h"
 #include "base/timer.h"
+#include <string_view>
 
 namespace Lingmo::base {
 class Process;
@@ -63,7 +64,7 @@ public:
     std::function<void(int64_t pid)> onStopped;
 
 private:
-    void onOutput(QStringView output);
+    void onOutput(std::string_view output);
     void onFinished(int exitCode, bool crashed);
 
     const std::string m_program;

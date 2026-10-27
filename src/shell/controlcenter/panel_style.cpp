@@ -9,6 +9,7 @@
 #include "shell/shell_data.h"
 #include "ui/painter.h"
 #include "ui/theme.h"
+#include <string_view>
 
 namespace Lingmo::Shell::Panel {
 
@@ -108,13 +109,13 @@ void paintTile(ui::Painter &painter, const ui::RectF &rect)
     painter.fillRoundedRect(rect, kTileRadius, tileColor(), ui::Corners::Continuous);
 }
 
-std::string artwork(QStringView name, bool white)
+std::string artwork(std::string_view name, bool white)
 {
     return shellDataFile(std::string("controlcenter/") + (white ? "dark/" : "light/") + std::string(name)
                          + ".svg");
 }
 
-std::string artwork(QStringView name)
+std::string artwork(std::string_view name)
 {
     return shellDataFile(std::string("controlcenter/") + std::string(name) + ".svg");
 }

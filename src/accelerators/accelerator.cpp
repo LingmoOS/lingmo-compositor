@@ -13,6 +13,7 @@
 
 #include <linux/input-event-codes.h>
 #include <xkbcommon/xkbcommon.h>
+#include <string_view>
 
 
 namespace Lingmo::Accelerators {
@@ -20,7 +21,7 @@ namespace Lingmo::Accelerators {
 std::string Accelerator::shortcutText() const
 {
     std::string text;
-    const auto append = [&text](QStringView part) {
+    const auto append = [&text](std::string_view part) {
         if (!text.empty())
             text += '+';
         text += part;
@@ -64,7 +65,7 @@ std::string keysymText(uint32_t keysym)
     const int length = xkb_keysym_to_utf8(keysym, buffer, sizeof(buffer));
     if (length <= 1)
         return {};
-    return base::strings::toUpper(QStringView(buffer, size_t(length - 1)));
+    return base::strings::toUpper(std::string_view(buffer, size_t(length - 1)));
 }
 
 namespace {

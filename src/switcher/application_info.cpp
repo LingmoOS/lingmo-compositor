@@ -12,6 +12,7 @@
 #include "base/file.h"
 #include "base/locale.h"
 #include "base/strings.h"
+#include <string_view>
 
 namespace Lingmo::Switcher {
 
@@ -24,7 +25,7 @@ struct DesktopEntry {
     bool valid = false;
 };
 
-std::string trimmed(QStringView text)
+std::string trimmed(std::string_view text)
 {
     return std::string(base::strings::trimmed(text));
 }
@@ -53,7 +54,7 @@ DesktopEntry readDesktopEntry(const std::string &path)
         size_t end = contents->find('\n', start);
         if (end == std::string::npos)
             end = contents->size();
-        const std::string line = trimmed(QStringView(*contents).substr(start, end - start));
+        const std::string line = trimmed(std::string_view(*contents).substr(start, end - start));
         start = end + 1;
         if (line.empty() || line.front() == '#')
             continue;
@@ -66,8 +67,8 @@ DesktopEntry readDesktopEntry(const std::string &path)
         const size_t separator = line.find('=');
         if (!inGroup || separator == 0 || separator == std::string::npos)
             continue;
-        const std::string key = trimmed(QStringView(line).substr(0, separator));
-        const std::string value = trimmed(QStringView(line).substr(separator + 1));
+        const std::string key = trimmed(std::string_view(line).substr(0, separator));
+        const std::string value = trimmed(std::string_view(line).substr(separator + 1));
         if (key == "Name")
             entry.name = value;
         else if (key == "Name[" + locale + "]")

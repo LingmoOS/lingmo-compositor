@@ -20,6 +20,7 @@
 #include "base/url.h"
 #include "core/preferences.h"
 #include "shell/common/file_thread.h"
+#include <string_view>
 
 namespace Lingmo::Shell {
 
@@ -252,7 +253,7 @@ std::string ClipboardStore::keyFor(const ClipboardPayload &payload)
     base::CryptographicHash hash(base::CryptographicHash::Algorithm::Sha256);
     for (const auto &[type, data] : payload) {
         hash.addData(type);
-        hash.addData(QStringView("\0", 1));
+        hash.addData(std::string_view("\0", 1));
         // The size in the machine's byte order.
         const uint64_t size = data.size();
         hash.addData(&size, sizeof(size));
@@ -393,13 +394,13 @@ ClipboardPayload ClipboardStore::readBody(const std::string &path)
     if (!data)
         return {};
     ClipboardPayload payload;
-    QStringView rest(*data);
+    std::string_view rest(*data);
     while (!rest.empty()) {
         const size_t typeEnd = rest.find('\n');
-        const size_t sizeEnd = typeEnd == QStringView::npos ? typeEnd : rest.find('\n', typeEnd + 1);
-        if (sizeEnd == QStringView::npos)
+        const size_t sizeEnd = typeEnd == std::string_view::npos ? typeEnd : rest.find('\n', typeEnd + 1);
+        if (sizeEnd == std::string_view::npos)
             return {};
-        const QStringView sizeText = rest.substr(typeEnd + 1, sizeEnd - typeEnd - 1);
+        const std::string_view sizeText = rest.substr(typeEnd + 1, sizeEnd - typeEnd - 1);
         uint64_t size = 0;
         const auto [end, error] = std::from_chars(sizeText.data(), sizeText.data() + sizeText.size(), size);
         if (error != std::errc() || end != sizeText.data() + sizeText.size() || sizeText.empty()

@@ -11,10 +11,11 @@
 #include <unicode/ustring.h>
 
 #include "base/strings.h"
+#include <string_view>
 
 namespace Lingmo::Shell {
 
-static std::u32string folded(QStringView text)
+static std::u32string folded(std::string_view text)
 {
     std::u32string result = base::strings::utf8ToUtf32(text);
     for (char32_t &c : result)
@@ -22,7 +23,7 @@ static std::u32string folded(QStringView text)
     return result;
 }
 
-bool containsIgnoringCase(QStringView text, QStringView needle)
+bool containsIgnoringCase(std::string_view text, std::string_view needle)
 {
     if (needle.empty())
         return true;
@@ -31,7 +32,7 @@ bool containsIgnoringCase(QStringView text, QStringView needle)
     return std::search(haystack.begin(), haystack.end(), wanted.begin(), wanted.end()) != haystack.end();
 }
 
-std::string toLower(QStringView text)
+std::string toLower(std::string_view text)
 {
     const std::u16string source = base::strings::utf8ToUtf16(text);
     std::u16string result(source.size() + 8, u'\0');

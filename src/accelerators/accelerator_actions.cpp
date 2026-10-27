@@ -9,6 +9,7 @@
 
 #include <array>
 #include <utility>
+#include <string_view>
 
 namespace Lingmo::Accelerators {
 
@@ -84,7 +85,7 @@ std::vector<AcceleratorAction> allAcceleratorActions()
     return actions;
 }
 
-std::optional<AcceleratorAction> acceleratorActionFromName(QStringView name)
+std::optional<AcceleratorAction> acceleratorActionFromName(std::string_view name)
 {
     for (const auto &[action, candidate] : kActionNames) {
         if (name == candidate)

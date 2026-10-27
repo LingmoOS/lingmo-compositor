@@ -44,7 +44,7 @@ std::string loginBackgroundFile(const std::string &user);
 
 // Splits a command line on white space, with double quotes around an
 // argument holding spaces and three in a row standing for one.
-std::vector<std::string> splitCommand(QStringView command);
+std::vector<std::string> splitCommand(std::string_view command);
 
 } // namespace Lingmo::Auth
 

@@ -24,7 +24,7 @@ class Secret
 public:
     Secret() = default;
 
-    explicit Secret(QStringView text)
+    explicit Secret(std::string_view text)
     {
         // Reserved first: growing for the terminator would leave a copy behind.
         m_data.reserve(text.size() + 1);

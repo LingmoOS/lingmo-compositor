@@ -18,6 +18,7 @@
 #include "base/paths.h"
 #include "base/settings.h"
 #include "base/strings.h"
+#include <string_view>
 
 namespace Lingmo::Auth {
 
@@ -31,7 +32,7 @@ bool isSpace(char c)
     return c == ' ' || (c >= '\t' && c <= '\r');
 }
 
-std::string trimmed(QStringView text)
+std::string trimmed(std::string_view text)
 {
     return std::string(base::strings::trimmed(text));
 }
@@ -101,8 +102,8 @@ bool readEntry(const std::string &path, LoginSession *session)
         if (!inEntry || equals == 0 || equals == std::string::npos)
             continue;
         // The first of a repeated key counts.
-        keys.emplace(trimmed(QStringView(line).substr(0, equals)),
-                     trimmed(QStringView(line).substr(equals + 1)));
+        keys.emplace(trimmed(std::string_view(line).substr(0, equals)),
+                     trimmed(std::string_view(line).substr(equals + 1)));
     }
     const auto value = [&keys](const std::string &key, const std::string &fallback = {}) {
         const auto found = keys.find(key);
@@ -123,7 +124,7 @@ bool readEntry(const std::string &path, LoginSession *session)
     }
     std::vector<std::string> desktopNames;
     const std::string desktopNamesValue = value("DesktopNames");
-    for (const QStringView name : base::strings::splitViews(desktopNamesValue, ';')) {
+    for (const std::string_view name : base::strings::splitViews(desktopNamesValue, ';')) {
         if (!base::strings::trimmed(name).empty())
             desktopNames.emplace_back(base::strings::trimmed(name));
     }
@@ -162,7 +163,7 @@ std::string localName(const char *name)
 
 } // namespace
 
-std::vector<std::string> splitCommand(QStringView command)
+std::vector<std::string> splitCommand(std::string_view command)
 {
     std::vector<std::string> arguments;
     std::string argument;

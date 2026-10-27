@@ -10,6 +10,7 @@
 #include "base/settings.h"
 #include "base/strings.h"
 #include "shell/common/file_thread.h"
+#include <string_view>
 
 namespace Lingmo::Shell {
 
@@ -84,7 +85,7 @@ CaptureSettings::Values CaptureSettings::load(const std::string &path)
 void CaptureSettings::write(const std::string &name, const std::string &value)
 {
     writeSettings(m_path, [name = key(name.c_str()), value](base::Settings &settings) {
-        settings.setValue(name, QStringView(value));
+        settings.setValue(name, std::string_view(value));
     });
 }
 

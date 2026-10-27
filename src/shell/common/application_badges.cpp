@@ -13,8 +13,8 @@ namespace Lingmo::Shell {
 
 namespace dbus = base::dbus;
 
-static constexpr QStringView kScheme = "application://";
-static constexpr QStringView kSuffix = ".desktop";
+static constexpr std::string_view kScheme = "application://";
+static constexpr std::string_view kSuffix = ".desktop";
 
 static std::string lowered(std::string text)
 {

@@ -5,6 +5,7 @@
 #include "shell/shell_data.h"
 
 #include <cmath>
+#include <string_view>
 
 namespace Lingmo::Shell {
 
@@ -14,7 +15,7 @@ static std::string &dataDirectory()
     return directory;
 }
 
-std::string shellDataFile(QStringView name)
+std::string shellDataFile(std::string_view name)
 {
     return dataDirectory() + "/" + std::string(name);
 }

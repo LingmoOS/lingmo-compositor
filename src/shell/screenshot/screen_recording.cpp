@@ -16,6 +16,7 @@
 #include "base/process.h"
 #include "base/strings.h"
 #include "core/main_loop.h"
+#include <string_view>
 
 using Lingmo::i18n::tr;
 
@@ -105,7 +106,7 @@ bool ScreenRecording::start(const Target &target, const std::string &path)
     m_process->setStandardInputOpen(true);
     // Its loss ends only the recording.
     m_process->setOomProtectionDropped(true);
-    m_process->onStandardOutput = [this](QStringView output) { onOutput(output); };
+    m_process->onStandardOutput = [this](std::string_view output) { onOutput(output); };
     m_process->onFinished = [this](int exitCode, bool crashed) { onFinished(exitCode, crashed); };
     const bool started = m_process->start(m_program, arguments(target, path));
     // The recorder holds the only other end, so its exit ends the connection.
@@ -131,7 +132,7 @@ void ScreenRecording::stop()
     m_killTimer.start(kFinishTimeout);
 }
 
-void ScreenRecording::onOutput(QStringView output)
+void ScreenRecording::onOutput(std::string_view output)
 {
     m_output += output;
     if (!m_recording && m_output.find("started") != std::string::npos) {

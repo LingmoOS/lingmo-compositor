@@ -93,7 +93,7 @@ constexpr AcceleratorActionId toActionId(AcceleratorAction action)
 
 // The kebab-case identifier used in preferences and on the bus.
 std::string acceleratorActionName(AcceleratorAction action);
-std::optional<AcceleratorAction> acceleratorActionFromName(QStringView name);
+std::optional<AcceleratorAction> acceleratorActionFromName(std::string_view name);
 
 // Every action, in declaration order. An action need not have a default
 // binding to exist: it is then listed with none until the user adds one.

@@ -60,8 +60,8 @@ void paintTile(ui::Painter &painter, const ui::RectF &rect);
 // The status bar's images: `light/<name>.svg` (#383838 artwork) or
 // `dark/<name>.svg` (white), and the theme-less ones such as
 // power-profile-*.svg, all installed under controlcenter/.
-std::string artwork(QStringView name, bool white);
-std::string artwork(QStringView name);
+std::string artwork(std::string_view name, bool white);
+std::string artwork(std::string_view name);
 
 } // namespace Lingmo::Shell::Panel
 

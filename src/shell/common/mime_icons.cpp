@@ -13,6 +13,7 @@
 #include "base/file.h"
 #include "base/paths.h"
 #include "base/strings.h"
+#include <string_view>
 
 namespace Lingmo::Shell {
 
@@ -80,7 +81,7 @@ static bool matches(const Glob &glob, const std::string &name)
     const std::string subject = glob.caseSensitive ? name : base::strings::toAsciiLower(name);
     const std::string pattern = glob.caseSensitive ? glob.pattern : base::strings::toAsciiLower(glob.pattern);
     if (pattern.starts_with('*') && pattern.find_first_of("*?[", 1) == std::string::npos)
-        return subject.size() >= pattern.size() - 1 && subject.ends_with(QStringView(pattern).substr(1));
+        return subject.size() >= pattern.size() - 1 && subject.ends_with(std::string_view(pattern).substr(1));
     if (pattern.find_first_of("*?[") == std::string::npos)
         return subject == pattern;
     return false;
@@ -119,8 +120,8 @@ std::string mimeIconNameForFile(const std::string &path)
         return iconOf("application/octet-stream");
     char buffer[512];
     file.read(buffer, sizeof(buffer));
-    const QStringView start(buffer, size_t(file.gcount()));
-    if (start.find('\0') == QStringView::npos && base::strings::isValidUtf8(start))
+    const std::string_view start(buffer, size_t(file.gcount()));
+    if (start.find('\0') == std::string_view::npos && base::strings::isValidUtf8(start))
         return iconOf("text/plain");
     return iconOf("application/octet-stream");
 }

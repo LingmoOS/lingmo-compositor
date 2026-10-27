@@ -9,6 +9,7 @@
 
 #include "base/file.h"
 #include "base/strings.h"
+#include <string_view>
 
 namespace Lingmo::Shell {
 
@@ -16,7 +17,7 @@ namespace Lingmo::Shell {
 static bool isScriptInterpreter(const std::string &name)
 {
     for (const char *interpreter : {"python", "perl", "ruby", "lua"}) {
-        const QStringView prefix(interpreter);
+        const std::string_view prefix(interpreter);
         if (name.starts_with(prefix)
             && name.find_first_not_of("0123456789.", prefix.size()) == std::string::npos)
             return true;
@@ -75,7 +76,7 @@ int64_t parentProcess(int64_t pid)
     const size_t close = stat->rfind(')');
     if (close == std::string::npos || close + 2 >= stat->size())
         return 0;
-    const std::vector<std::string> fields = base::strings::split(QStringView(*stat).substr(close + 2), ' ');
+    const std::vector<std::string> fields = base::strings::split(std::string_view(*stat).substr(close + 2), ' ');
     if (fields.size() < 2)
         return 0;
     return base::strings::toNumber<int64_t>(fields[1]).value_or(0);

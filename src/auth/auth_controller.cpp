@@ -13,6 +13,7 @@
 #include <pwd.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <string_view>
 
 namespace Lingmo::Auth {
 
@@ -28,7 +29,7 @@ std::string accountDisplayName(const std::string &userName)
 {
     if (const passwd *entry = getpwnam(userName.c_str())) {
         // GECOS is comma-separated; the first field is the full name.
-        const QStringView gecos = entry->pw_gecos ? entry->pw_gecos : "";
+        const std::string_view gecos = entry->pw_gecos ? entry->pw_gecos : "";
         const std::string full(trimmed(gecos.substr(0, gecos.find(','))));
         if (!full.empty())
             return full;
