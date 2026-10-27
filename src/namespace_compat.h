@@ -13,6 +13,9 @@
 
 namespace Lingmo {
 namespace Accelerators {}
+namespace Render {}
+namespace Toolkit {}
+namespace Wayland {}
 namespace Auth {}
 namespace Backend {}
 namespace Clipboard {}
@@ -54,6 +57,9 @@ namespace scene = Lingmo::Scene;
 namespace session = Lingmo::Session;
 namespace shell = Lingmo::Shell;
 namespace switcher = Lingmo::Switcher;
+namespace render = Lingmo::Render;
+namespace toolkit = Lingmo::Toolkit;
+namespace wayland = Lingmo::Wayland;
 namespace ui = Lingmo::ui;
 namespace wm = Lingmo::WM;
 
