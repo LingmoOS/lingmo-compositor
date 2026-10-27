@@ -19,7 +19,7 @@
 #include "ui/geometry.h"
 namespace scene = Lingmo::Scene;
 
-namespace Lingmo::Appearance {
+namespace Lingmo::appearance {
 class Appearance;
 }
 

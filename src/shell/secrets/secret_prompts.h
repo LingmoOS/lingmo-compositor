@@ -13,7 +13,7 @@ namespace Lingmo::base::dbus {
 class Connection;
 }
 
-namespace Lingmo::Bluetooth {
+namespace Lingmo::bluez {
 class Manager;
 }
 

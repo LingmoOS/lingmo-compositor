@@ -18,10 +18,10 @@
 #include "lingmo/networkmanager/types.h"
 #include "shell/secrets/vpn_secret_fields.h"
 
-namespace Lingmo::NetworkManager {
+namespace Lingmo::Networkmanager {
 class Client;
 class Handler;
-} // namespace Lingmo::NetworkManager
+} // namespace Lingmo::Networkmanager
 
 namespace Lingmo::Shell {
 

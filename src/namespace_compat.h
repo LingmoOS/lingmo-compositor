@@ -12,6 +12,15 @@
 #ifdef __cplusplus
 
 namespace Lingmo {
+namespace Accounts {}
+namespace appearance {}
+namespace Audio {}
+namespace bluez {}
+namespace Networkmanager {}
+namespace powerprofiles {}
+namespace timedate {}
+namespace Files {}
+namespace upower {}
 namespace Accelerators {}
 namespace Render {}
 namespace Toolkit {}
@@ -62,6 +71,17 @@ namespace render = Lingmo::Render;
 namespace toolkit = Lingmo::Toolkit;
 namespace wayland = Lingmo::Wayland;
 namespace xwayland = Lingmo::XWayland;
+namespace accounts = Lingmo::Accounts;
+namespace appearance = Lingmo::appearance;
+namespace audio = Lingmo::Audio;
+namespace bluez = Lingmo::bluez;
+namespace bluetooth = Lingmo::bluez;
+namespace display = Lingmo::Display;
+namespace files = Lingmo::Files;
+namespace networkmanager = Lingmo::Networkmanager;
+namespace powerprofiles = Lingmo::powerprofiles;
+namespace timedate = Lingmo::timedate;
+namespace upower = Lingmo::upower;
 namespace ui = Lingmo::ui;
 namespace wm = Lingmo::WM;
 

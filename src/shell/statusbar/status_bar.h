@@ -18,9 +18,9 @@
 #include "shell/statusbar/status_notifier_watcher.h"
 #include "shell/statusbar/system_tray_model.h"
 
-namespace Lingmo::PowerProfiles {
+namespace Lingmo::powerprofiles {
 class PowerProfiles;
-} // namespace Lingmo::PowerProfiles
+} // namespace Lingmo::powerprofiles
 
 namespace Lingmo::Shell {
 

@@ -13,9 +13,9 @@
 #include "base/signal.h"
 #include "base/thread_pool.h"
 
-namespace Lingmo::UPower {
+namespace Lingmo::upower {
 class BatteryStatus;
-} // namespace Lingmo::UPower
+} // namespace Lingmo::upower
 
 namespace Lingmo::Shell {
 
