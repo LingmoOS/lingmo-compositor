@@ -44,6 +44,9 @@ private:
 // privileged client registry is what hides the interface from ordinary clients.
 wl_global* createCutefishShellGlobal(wl_display* display, WaylandCutefishShell* shell);
 
+// Creates the lingmo_shell_v1 global for the display.
+wl_global* createLingmoShellGlobal(wl_display* display, WaylandCutefishShell* shell);
+
 } // namespace Lingmo::Wayland
 
 #endif // LINGMO_WAYLAND_PROTOCOLS_LINGMO_SHELL_H_
