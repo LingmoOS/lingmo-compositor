@@ -5,7 +5,7 @@
 // Force-included before every compositor translation unit via -include.
 // Extends the toolkit's base/compat.h (base::, ui::, dbus::, i18n::) with
 // the compositor's own short-form namespace aliases so that sources using
-// compositor::, core::, render::, and motion:: still compile.
+// compositor::, core::, display::, render::, and motion:: still compile.
 //
 // This file is found first because -I src/ precedes -isystem lingmo-sdk/
 // in the compiler invocation. It uses #include_next to pull in the SDK copy.
@@ -27,6 +27,7 @@
 
 namespace Lingmo::Compositor {}
 namespace Lingmo::Core {}
+namespace Lingmo::Display {}
 namespace Lingmo::Render {}
 namespace Lingmo::Scene {}
 namespace Lingmo::Scene::Motion {}
@@ -34,6 +35,7 @@ namespace Lingmo::Scene::Motion {}
 // Short aliases matching the pre-alias source spelling.
 namespace compositor = Lingmo::Compositor;
 namespace core       = Lingmo::Core;
+namespace display    = Lingmo::Display;
 namespace render     = Lingmo::Render;
 namespace motion     = Lingmo::Scene::Motion;
 
