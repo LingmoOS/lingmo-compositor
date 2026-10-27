@@ -21,7 +21,7 @@
 #include "input/seat.h"
 #include "wm/window_manager.h"
 
-namespace Lingmo::xwayland {
+namespace Lingmo::XWayland {
 namespace {
 
 // Upstream kMinXdndVersion and kMaxXdndVersion.
@@ -746,4 +746,4 @@ void DndBridge::resetIncoming()
         drag->cancel();
 }
 
-} // namespace Lingmo::xwayland
+} // namespace Lingmo::XWayland

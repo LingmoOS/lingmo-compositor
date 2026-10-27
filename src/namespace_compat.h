@@ -16,6 +16,7 @@ namespace Accelerators {}
 namespace Render {}
 namespace Toolkit {}
 namespace Wayland {}
+namespace XWayland {}
 namespace Auth {}
 namespace Backend {}
 namespace Clipboard {}
@@ -60,6 +61,7 @@ namespace switcher = Lingmo::Switcher;
 namespace render = Lingmo::Render;
 namespace toolkit = Lingmo::Toolkit;
 namespace wayland = Lingmo::Wayland;
+namespace xwayland = Lingmo::XWayland;
 namespace ui = Lingmo::ui;
 namespace wm = Lingmo::WM;
 

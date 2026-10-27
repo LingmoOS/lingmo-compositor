@@ -118,7 +118,7 @@ class OverviewNode;
 class SlideOutNode;
 } // namespace scene
 
-namespace xwayland {
+namespace XWayland {
 class XwaylandServer;
 }
 
