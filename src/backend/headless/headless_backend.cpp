@@ -48,7 +48,7 @@ void HeadlessBackend::startClock()
         const uint64_t generation = ++m_generation;
         aboutToPresent();
         m_compositor->frameSubmitted(generation);
-        m_compositor->frameDrawn(wayland::nowInMilliseconds(), generation);
+        m_compositor->frameDrawn(Lingmo::Wayland::nowInMilliseconds(), generation);
     };
     m_clock.start(std::chrono::milliseconds(16));
 }

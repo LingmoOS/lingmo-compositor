@@ -689,7 +689,7 @@ void DisplayRuntime::bindFrames()
                 [this, tokens](uint64_t generation, uint64_t aimedNs) {
                     if (!tokens->contains(generation))
                         return;
-                    compositor.frameDrawn(wayland::nowInMilliseconds(), tokens->at(generation));
+                    compositor.frameDrawn(Lingmo::Wayland::nowInMilliseconds(), tokens->at(generation));
                     compositor.outputDrawn(tokens->at(generation), aimedNs);
                 }));
         binding.subscriptions.push_back(output->framePresented.connect(
