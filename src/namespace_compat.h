@@ -31,7 +31,10 @@ namespace Motion {}
 namespace Session {}
 namespace Shell {}
 namespace Switcher {}
-namespace WM {}
+namespace WM {
+namespace Overview {}
+namespace WindowPositioner {}
+}
 namespace ui {}
 } // namespace Lingmo
 
@@ -53,6 +56,11 @@ namespace shell = Lingmo::Shell;
 namespace switcher = Lingmo::Switcher;
 namespace ui = Lingmo::ui;
 namespace wm = Lingmo::WM;
+
+namespace Lingmo::WM {
+namespace overview = Overview;
+namespace window_positioner = WindowPositioner;
+} // namespace Lingmo::WM
 
 namespace Lingmo::Scene {
 namespace motion = Motion;
