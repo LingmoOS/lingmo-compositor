@@ -28,12 +28,6 @@ pkg_check_modules(Libseat REQUIRED IMPORTED_TARGET libseat)
 pkg_check_modules(Libdrm REQUIRED IMPORTED_TARGET libdrm)
 pkg_check_modules(Gbm REQUIRED IMPORTED_TARGET gbm)
 pkg_check_modules(Egl REQUIRED IMPORTED_TARGET egl)
-
-# The sources name the components with lower-case prefixes (scene::, wm::, ...)
-# while they live in Lingmo::<Component>. namespace_compat.h aliases them at
-# global scope; force-include it, as one token so it cannot merge with another
-# -include option.
-add_compile_options(-include${CMAKE_CURRENT_SOURCE_DIR}/src/namespace_compat.h)
 pkg_check_modules(GlesV2 REQUIRED IMPORTED_TARGET glesv2)
 pkg_check_modules(Xkbcommon REQUIRED IMPORTED_TARGET xkbcommon)
 pkg_check_modules(Libinput REQUIRED IMPORTED_TARGET libinput)
