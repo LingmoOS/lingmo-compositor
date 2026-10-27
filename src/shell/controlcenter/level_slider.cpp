@@ -203,7 +203,7 @@ void TileSlider::layout()
 
 void TileSlider::paint(ui::Painter &painter)
 {
-    Panel::paintTile(painter, localRect());
+    panel::paintTile(painter, localRect());
 }
 
 bool TileSlider::scroll(const ui::ScrollEvent &event)

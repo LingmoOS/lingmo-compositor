@@ -162,7 +162,7 @@ base::Rect ControlCenter::panelGeometry(Panel panel, ShellWindow *bar, const bas
     const base::Point position(barOrigin.x() + anchor.x() + 3, barOrigin.y() + anchor.y() + anchor.height());
     const Shell::Output *output = m_shell->output(bar ? bar->outputName() : std::string());
     const base::Rect screen = output ? output->bounds : base::Rect(0, 0, 1440, 960);
-    const int margin = int(Panel::kPopupMargin);
+    const int margin = int(panel::kPopupMargin);
 
     if (panel == Panel::ControlCenter) {
         const int width = int(ControlCenterView::kWidth);
@@ -292,8 +292,8 @@ void ControlCenter::updateWindow(Panel panel)
         height = std::max(1, int(std::lround(open.panel->shownBottom())));
         open.window->resize({double(open.geometry.width()), double(height)});
     }
-    window->setBackgroundBlur(base::Rect(0, 0, open.geometry.width(), height), int(Panel::kTileRadius),
-                              Panel::panelGlass());
+    window->setBackgroundBlur(base::Rect(0, 0, open.geometry.width(), height), int(panel::kTileRadius),
+                              panel::panelGlass());
 }
 
 void ControlCenter::fitToWorkArea(Panel panel)
