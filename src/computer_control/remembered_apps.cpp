@@ -29,15 +29,15 @@ constexpr auto key = "ComputerControl/AllowedApps";
 
 // Programs that run what they are handed, matched on the executable's name
 // with any version suffix ("python3.13", "node22").
-constexpr std::array<QStringView, 20> kRunsAnything = {
+constexpr std::array<std::string_view, 20> kRunsAnything = {
         "bash", "bun", "busybox", "dash", "deno", "env", "fish", "ksh", "lua", "node",
         "nodejs", "perl", "php", "python", "ruby", "sh", "sudo", "systemd", "tcsh", "zsh",
 };
 
-bool runsAnything(QStringView name)
+bool runsAnything(std::string_view name)
 {
     const size_t end = name.find_first_of("0123456789.-");
-    const QStringView stem = name.substr(0, end);
+    const std::string_view stem = name.substr(0, end);
     return std::find(kRunsAnything.begin(), kRunsAnything.end(), stem) != kRunsAnything.end();
 }
 
@@ -53,9 +53,9 @@ std::optional<int64_t> parentProcess(int64_t pid)
     const size_t close = stat->rfind(')');
     if (close == std::string::npos)
         return std::nullopt;
-    QStringView rest = QStringView(*stat).substr(close + 1);
+    std::string_view rest = std::string_view(*stat).substr(close + 1);
     const size_t state = rest.find_first_not_of(' ');
-    if (state == QStringView::npos)
+    if (state == std::string_view::npos)
         return std::nullopt;
     rest = rest.substr(state + 1);
     rest.remove_prefix(std::min(rest.find_first_not_of(' '), rest.size()));

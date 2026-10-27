@@ -24,7 +24,7 @@ namespace Lingmo::WM {
 class Window;
 class WindowManager;
 
-namespace window_positioner {
+namespace WindowPositioner {
 
 // Where a new `window` at `bounds`, centered in its work area, should go:
 // offset down and right from its application's most recent window on the same
@@ -38,7 +38,7 @@ base::Rect boundsForNewWindow(const Window *window, base::Rect bounds);
 WindowStateType showStateForNewWindow(WindowManager *manager, const base::Rect &output,
                                       const std::string &applicationId, WindowStateType requested);
 
-} // namespace window_positioner
+} // namespace WindowPositioner
 
 } // namespace Lingmo::WM
 
