@@ -9,6 +9,7 @@
 #include "core/logging.h"
 #include "display/display_types.h"
 #include "session/secure_container.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Session {
 

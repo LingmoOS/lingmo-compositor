@@ -20,6 +20,7 @@
 #include "wm/overview/overview_controller.h"
 #include "wm/window.h"
 #include "wm/window_manager.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Shell {
 

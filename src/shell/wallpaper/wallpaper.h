@@ -17,6 +17,7 @@
 #include "shell/wallpaper/wallpaper_cache.h"
 #include "ui/bitmap.h"
 #include "ui/geometry.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Appearance {
 class Appearance;

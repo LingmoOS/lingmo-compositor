@@ -14,6 +14,7 @@
 #include <string>
 
 #include "scene/node.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Decoration {
 

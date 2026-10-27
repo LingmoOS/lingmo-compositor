@@ -33,6 +33,7 @@
 #include <cmath>
 #include <cstring>
 #include <format>
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Display {
 

@@ -20,6 +20,7 @@
 #include "compositor/surface_observer.h"
 #include "input/cursor_shape.h"
 #include "input/types.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Scene {
 class SurfaceNode;

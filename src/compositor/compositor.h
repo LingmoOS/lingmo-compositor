@@ -25,6 +25,7 @@
 #include "base/signal.h"
 
 #include "compositor/output_scale.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Render {
 class DmaBufDevice;

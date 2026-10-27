@@ -30,6 +30,7 @@
 #include "core/logging.h"
 #include "render/egl_renderer.h"
 #include "scene/surface_node.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Backend {
 

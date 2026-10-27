@@ -19,6 +19,7 @@
 #include "switcher/application_info.h"
 #include "ui/bitmap.h"
 #include "wm/window_cycle_controller.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::render {
 class Renderer;

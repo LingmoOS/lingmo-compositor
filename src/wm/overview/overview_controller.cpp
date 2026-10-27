@@ -25,6 +25,7 @@
 #include "wm/window.h"
 #include "wm/window_manager.h"
 #include "wm/window_state.h"
+namespace scene = Lingmo::Scene;
 
 using Lingmo::i18n::format;
 using Lingmo::i18n::tr;

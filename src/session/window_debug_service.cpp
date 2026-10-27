@@ -19,6 +19,7 @@
 #include "wm/window.h"
 #include "wm/window_frame.h"
 #include "wm/window_manager.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Session {
 

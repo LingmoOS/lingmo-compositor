@@ -25,6 +25,7 @@
 #include "input/session_gate.h"
 #include "base/event_loop.h"
 #include "scene/node.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Input {
 

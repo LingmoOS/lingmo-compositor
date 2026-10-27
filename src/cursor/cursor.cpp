@@ -14,6 +14,7 @@
 #include "base/timer.h"
 #include "input/seat.h"
 #include "input/types.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Cursor {
 

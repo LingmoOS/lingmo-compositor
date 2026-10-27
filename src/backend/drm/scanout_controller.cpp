@@ -25,6 +25,7 @@
 #include "backend/drm/plane_assignment.h"
 #include "core/logging.h"
 #include "scene/surface_node.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Backend {
 

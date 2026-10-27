@@ -19,6 +19,7 @@
 #include "core/logging.h"
 #include "scene/node.h"
 #include "scene/surface_node.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Compositor {
 

@@ -18,6 +18,7 @@
 #define LINGMO_INPUT_HIT_TEST_H_
 
 #include "base/geometry.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Compositor {
 class Compositor;

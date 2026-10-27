@@ -24,6 +24,7 @@
 #include "wm/shadow_types.h"
 #include "ui/path.h"
 #include "wm/window_shadow.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::WM {
 class Window;

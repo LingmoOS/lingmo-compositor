@@ -18,6 +18,7 @@
 #include "compositor/surface.h"
 #include "scene/node.h"
 #include "scene/surface_node.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Input {
 

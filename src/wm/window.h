@@ -18,6 +18,7 @@
 #include "ui/path.h"
 #include "wm/types.h"
 #include "wm/window_frame.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Compositor {
 class Surface;

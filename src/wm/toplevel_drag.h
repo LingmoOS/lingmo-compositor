@@ -38,6 +38,7 @@
 #include "compositor/surface_observer.h"
 #include "input/drag.h"
 #include "scene/window_animation.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Clipboard {
 class DataSource;

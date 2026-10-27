@@ -26,6 +26,7 @@
 #include "scene/desk_switch_node.h"
 #include "wm/activation.h"
 #include "wm/window_observer.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Scene {
 class SlideOutNode;

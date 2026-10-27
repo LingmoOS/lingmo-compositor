@@ -15,6 +15,7 @@
 #include "wm/toplevel_event_handler.h"
 #include "wm/window.h"
 #include "wm/window_manager.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::WM {
 

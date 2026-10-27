@@ -19,7 +19,7 @@
 #include "base/dbus_types.h"
 #include "display/display_types.h"
 
-namespace Lingmo::display::ipc {
+namespace Lingmo::Display::ipc {
 
 // (iiiiiiubbs)
 struct Mode {
@@ -139,11 +139,11 @@ DisplayConfiguration fromWire(const std::string& instanceId, uint64_t topologyGe
                               uint64_t appliedRevision, const std::vector<DisplayRequest>& displays,
                               const std::string& primary, const std::vector<Placement>& placements,
                               const MirrorGroups& mirrorGroups);
-std::vector<PhysicalDisplay> toWire(const std::vector<display::DisplaySnapshot>& displays);
-std::vector<LogicalDisplay> toWire(const std::vector<display::LogicalDisplay>& displays);
-std::vector<Placement> toWire(const std::vector<display::DisplayPlacement>& placements);
+std::vector<PhysicalDisplay> toWire(const std::vector<DisplaySnapshot>& displays);
+std::vector<LogicalDisplay> toWire(const std::vector<LogicalDisplay>& displays);
+std::vector<Placement> toWire(const std::vector<DisplayPlacement>& placements);
 
-} // namespace Lingmo::display::ipc
+} // namespace Lingmo::Display::ipc
 
 namespace Lingmo::Base::DBus {
 
@@ -176,11 +176,11 @@ struct TiedDisplayType
     }
 };
 
-template<> struct Type<display::ipc::Mode> : TiedDisplayType<display::ipc::Mode> {};
-template<> struct Type<display::ipc::RequestedMode> : TiedDisplayType<display::ipc::RequestedMode> {};
-template<> struct Type<display::ipc::PhysicalDisplay> : TiedDisplayType<display::ipc::PhysicalDisplay> {};
-template<> struct Type<display::ipc::LogicalDisplay> : TiedDisplayType<display::ipc::LogicalDisplay> {};
-template<> struct Type<display::ipc::DisplayRequest> : TiedDisplayType<display::ipc::DisplayRequest> {};
-template<> struct Type<display::ipc::Placement> : TiedDisplayType<display::ipc::Placement> {};
+template<> struct Type<ipc::Mode> : TiedDisplayType<ipc::Mode> {};
+template<> struct Type<ipc::RequestedMode> : TiedDisplayType<ipc::RequestedMode> {};
+template<> struct Type<ipc::PhysicalDisplay> : TiedDisplayType<ipc::PhysicalDisplay> {};
+template<> struct Type<ipc::LogicalDisplay> : TiedDisplayType<ipc::LogicalDisplay> {};
+template<> struct Type<ipc::DisplayRequest> : TiedDisplayType<ipc::DisplayRequest> {};
+template<> struct Type<ipc::Placement> : TiedDisplayType<ipc::Placement> {};
 
 } // namespace Lingmo::Base::DBus

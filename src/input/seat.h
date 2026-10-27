@@ -32,6 +32,7 @@
 #include "input/types.h"
 #include "input/key_translator.h"
 #include "input/xkb_tracker.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Compositor {
 class Compositor;

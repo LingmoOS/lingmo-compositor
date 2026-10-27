@@ -19,6 +19,7 @@
 #include <filesystem>
 #include <string_view>
 #include <sys/stat.h>
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Session {
 

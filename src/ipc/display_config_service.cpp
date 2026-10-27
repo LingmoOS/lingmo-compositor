@@ -19,7 +19,7 @@
 #include "base/uuid.h"
 #include "display/recommended_scale.h"
 
-namespace Lingmo::display::ipc {
+namespace Lingmo::Display::ipc {
 
 namespace dbus = base::dbus;
 
@@ -109,13 +109,13 @@ void DisplayConfigService::addMethods()
         const auto applied = m_manager->applied();
         const auto& physical = applied ? applied->physicalDisplays
                                        : (hardware ? hardware->displays
-                                                   : std::vector<display::DisplaySnapshot>());
+                                                   : std::vector<DisplaySnapshot>());
         return std::tuple(
                 hardware ? hardware->compositorInstanceId : std::string(),
                 hardware ? hardware->seatId : std::string(), topologyGeneration(),
                 appliedRevision(), toWire(physical),
-                toWire(applied ? applied->logicalDisplays : std::vector<display::LogicalDisplay>()),
-                toWire(applied ? applied->placements : std::vector<display::DisplayPlacement>()),
+                toWire(applied ? applied->logicalDisplays : std::vector<LogicalDisplay>()),
+                toWire(applied ? applied->placements : std::vector<DisplayPlacement>()),
                 m_controller->previewToken(), uint64_t(m_controller->previewDeadlineMs()));
     }, dbus::ArgumentNames {{},
                             {"instanceId", "seatId", "topologyGeneration", "appliedRevision",
@@ -300,4 +300,4 @@ std::string DisplayConfigService::reject(DisplayErrorCode code, const std::strin
     return token;
 }
 
-} // namespace Lingmo::display::ipc
+} // namespace Lingmo::Display::ipc

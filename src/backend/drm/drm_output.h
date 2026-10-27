@@ -32,6 +32,7 @@
 #include "render/output_scheduler.h"
 #include "render/texture.h"
 #include "scene/overlay_candidate.h"
+namespace scene = Lingmo::Scene;
 
 struct gbm_bo;
 struct gbm_surface;

@@ -24,6 +24,7 @@
 #include "input/pointer_gesture_delegate.h"
 #include "input/seat_observer.h"
 #include "input/types.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Display {
 class DisplayManager;

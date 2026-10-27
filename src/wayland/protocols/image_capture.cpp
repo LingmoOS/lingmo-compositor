@@ -25,6 +25,7 @@
 #include "scene/node.h"
 #include "wayland/protocols/wl_output.h"
 #include "wayland/protocols/wl_shm.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Wayland {
 

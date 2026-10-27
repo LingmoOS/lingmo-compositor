@@ -30,6 +30,7 @@
 #include "wm/window_frame.h"
 #include "wm/window_modality_controller.h"
 #include "wm/work_area.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Compositor {
 class Compositor;

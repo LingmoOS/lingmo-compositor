@@ -6,6 +6,7 @@
 #define LINGMO_DECORATION_OVERVIEW_WINDOW_FRAME_H_
 
 #include "scene/overview_node.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Decoration {
 

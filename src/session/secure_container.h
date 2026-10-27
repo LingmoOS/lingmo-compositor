@@ -15,6 +15,7 @@
 #include "base/geometry.h"
 #include "base/signal.h"
 #include "ui/bitmap.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Render {
 class Renderer;

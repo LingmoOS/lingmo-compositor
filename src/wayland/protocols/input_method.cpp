@@ -27,6 +27,7 @@
 #include "wayland/protocols/wayland_keyboard_delegate.h"
 #include "wayland/protocols/wl_seat.h"
 #include "wayland/server_util.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Wayland {
 namespace {

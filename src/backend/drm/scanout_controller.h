@@ -32,6 +32,7 @@
 #include "render/scanout.h"
 #include "render/sync_fence.h"
 #include "scene/overlay_candidate.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Backend {
 

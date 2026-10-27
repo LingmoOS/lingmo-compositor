@@ -27,6 +27,7 @@
 #include "render/drm_syncobj.h"
 #include "render/renderer.h"
 #include "scene/surface_node.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Compositor {
 

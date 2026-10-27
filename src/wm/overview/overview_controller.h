@@ -16,6 +16,7 @@
 #include "scene/overview_node.h"
 #include "wm/activation.h"
 #include "wm/desks/desks_controller.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::WM {
 

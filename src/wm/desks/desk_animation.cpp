@@ -16,6 +16,7 @@
 #include "wm/desks/desk.h"
 #include "wm/window.h"
 #include "wm/window_manager.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::WM {
 

@@ -7,6 +7,7 @@
 #include "base/geometry.h"
 #include "scene/window_visual_node.h"
 #include "wm/window_observer.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Decoration {
 struct WindowVisualStyle;

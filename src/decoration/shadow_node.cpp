@@ -17,6 +17,7 @@
 #include "decoration/shadow.h"
 #include "wm/window.h"
 #include "wm/window_visual_controller.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Decoration {
 

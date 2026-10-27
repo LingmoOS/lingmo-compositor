@@ -19,6 +19,7 @@
 #include "input/seat.h"
 #include "scene/motion.h"
 #include "scene/surface_node.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Input {
 

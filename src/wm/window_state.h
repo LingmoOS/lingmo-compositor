@@ -18,6 +18,7 @@
 
 #include "base/geometry.h"
 #include "wm/types.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Scene {
 class WindowAnimation;

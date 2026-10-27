@@ -11,6 +11,7 @@
 #include "input/seat_observer.h"
 #include "render/cursor_sink.h"
 #include "scene/node.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Input {
 class Seat;

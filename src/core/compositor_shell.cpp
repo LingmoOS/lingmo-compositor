@@ -102,6 +102,7 @@
 
 #ifdef LINGMO_ENABLE_XWAYLAND
 #include "xwayland/xwayland_server.h"
+namespace scene = Lingmo::Scene;
 #endif
 
 namespace Lingmo::Core {

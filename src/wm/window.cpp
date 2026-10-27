@@ -21,6 +21,7 @@
 #include "wm/window_state.h"
 #include "wm/window_visual_controller.h"
 #include "wm/wm_event.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::WM {
 

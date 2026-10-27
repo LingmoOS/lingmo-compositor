@@ -13,6 +13,7 @@
 #include "input/session_gate.h"
 #include "session/secure_container.h"
 #include "session/session_state.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Compositor {
 class Surface;

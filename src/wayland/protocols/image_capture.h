@@ -10,6 +10,7 @@
 #include <string>
 
 #include "base/geometry.h"
+namespace scene = Lingmo::Scene;
 
 struct wl_client;
 struct wl_display;

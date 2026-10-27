@@ -17,6 +17,7 @@
 #include "base/timer.h"
 #include "base/weak_ptr.h"
 #include "wm/desks/desks_controller.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::WM {
 

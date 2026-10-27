@@ -12,18 +12,18 @@
 
 #include "display/recommended_scale.h"
 
-namespace Lingmo::display::ipc {
+namespace Lingmo::Display::ipc {
 
 DisplayConfiguration fromWire(const std::string& instanceId, uint64_t topologyGeneration,
                               uint64_t appliedRevision, const std::vector<DisplayRequest>& displays,
                               const std::string& primary, const std::vector<Placement>& placements,
                               const MirrorGroups& mirrorGroups)
 {
-    display::DisplayConfiguration result;
+    DisplayConfiguration result;
     result.base = {instanceId, topologyGeneration, appliedRevision};
-    result.primary = display::DisplayId(primary);
+    result.primary = DisplayId(primary);
     for (const auto& value : displays) {
-        display::DisplayMode mode;
+        DisplayMode mode;
         mode.pixelSize = {value.mode.width, value.mode.height};
         mode.refreshMilliHz = value.mode.refreshMilliHz;
         mode.pixelClockKHz = value.mode.pixelClockKHz;
@@ -33,25 +33,25 @@ DisplayConfiguration fromWire(const std::string& instanceId, uint64_t topologyGe
         mode.preferred = value.mode.preferred;
         mode.name = value.mode.name;
         const auto scale = compositor::OutputScale::fromNumerator(value.scale120);
-        result.displays.push_back({display::DisplayId(value.id), value.enabled, mode,
+        result.displays.push_back({DisplayId(value.id), value.enabled, mode,
                                    scale.value_or(compositor::OutputScale()),
-                                   display::DisplayRotation(value.rotation)});
+                                   DisplayRotation(value.rotation)});
     }
     for (const auto& value : placements) {
-        result.placements.push_back({display::DisplayId(value.displayId),
-                                     display::DisplayId(value.parentId),
-                                     display::LayoutEdge(value.edge), value.offset});
+        result.placements.push_back({DisplayId(value.displayId),
+                                     DisplayId(value.parentId),
+                                     LayoutEdge(value.edge), value.offset});
     }
     for (const auto& group : mirrorGroups) {
-        std::vector<display::DisplayId> ids;
+        std::vector<DisplayId> ids;
         for (const auto& value : group)
-            ids.push_back(display::DisplayId(value));
+            ids.push_back(DisplayId(value));
         result.mirrorGroups.push_back(ids);
     }
     return result;
 }
 
-std::vector<PhysicalDisplay> toWire(const std::vector<display::DisplaySnapshot>& displays)
+std::vector<PhysicalDisplay> toWire(const std::vector<DisplaySnapshot>& displays)
 {
     std::vector<PhysicalDisplay> result;
     for (const auto& value : displays) {
@@ -84,7 +84,7 @@ std::vector<PhysicalDisplay> toWire(const std::vector<display::DisplaySnapshot>&
     return result;
 }
 
-std::vector<LogicalDisplay> toWire(const std::vector<display::LogicalDisplay>& displays)
+std::vector<LogicalDisplay> toWire(const std::vector<LogicalDisplay>& displays)
 {
     std::vector<LogicalDisplay> result;
     for (const auto& value : displays) {
@@ -100,7 +100,7 @@ std::vector<LogicalDisplay> toWire(const std::vector<display::LogicalDisplay>& d
     return result;
 }
 
-std::vector<Placement> toWire(const std::vector<display::DisplayPlacement>& placements)
+std::vector<Placement> toWire(const std::vector<DisplayPlacement>& placements)
 {
     std::vector<Placement> result;
     for (const auto& value : placements)
@@ -109,4 +109,4 @@ std::vector<Placement> toWire(const std::vector<display::DisplayPlacement>& plac
     return result;
 }
 
-} // namespace Lingmo::display::ipc
+} // namespace Lingmo::Display::ipc

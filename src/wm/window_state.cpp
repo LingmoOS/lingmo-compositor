@@ -14,6 +14,7 @@
 #include "wm/window_observer.h"
 #include "wm/window_snap.h"
 #include "wm/wm_event.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::WM {
 

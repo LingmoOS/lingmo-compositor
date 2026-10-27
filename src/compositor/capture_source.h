@@ -10,6 +10,7 @@
 #include "base/geometry.h"
 
 #include "base/signal.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Scene {
 class Node;

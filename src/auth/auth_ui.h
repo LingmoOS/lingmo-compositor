@@ -18,6 +18,7 @@
 #include <functional>
 #include <memory>
 #include <vector>
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Input {
 class XkbTracker;

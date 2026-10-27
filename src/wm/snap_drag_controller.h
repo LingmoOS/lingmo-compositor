@@ -19,6 +19,7 @@
 #include "base/geometry.h"
 #include "base/timer.h"
 #include "wm/window_snap.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Scene {
 class SnapPreviewNode;

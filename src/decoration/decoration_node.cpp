@@ -16,6 +16,7 @@
 #include "decoration/decoration_theme.h"
 #include "decoration/text.h"
 #include "wm/window.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Decoration {
 

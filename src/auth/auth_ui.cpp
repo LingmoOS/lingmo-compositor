@@ -23,6 +23,7 @@
 #include <linux/input-event-codes.h>
 #include <unistd.h>
 #include <xkbcommon/xkbcommon.h>
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Auth {
 namespace {

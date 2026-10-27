@@ -9,6 +9,7 @@
 #include <memory>
 #include <string>
 #include <wayland-server-core.h>
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::scene {
 class Node;

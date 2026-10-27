@@ -29,6 +29,7 @@
 #include "render/glass.h"
 #include "render/presentation.h"
 #include "ui/path.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Render {
 

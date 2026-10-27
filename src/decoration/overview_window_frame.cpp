@@ -14,6 +14,7 @@
 #include "render/renderer.h"
 #include "scene/window_animation.h"
 #include "scene/window_visual_node.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Decoration {
 

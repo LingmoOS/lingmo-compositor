@@ -23,6 +23,7 @@
 #include "input/pointer.h"
 #include "input/seat_observer.h"
 #include "input/touch.h"
+namespace scene = Lingmo::Scene;
 
 namespace Lingmo::Input {
 
