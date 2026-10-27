@@ -35,7 +35,7 @@ StatusBar::StatusBar(dbus::Connection *sessionBus, dbus::Connection *systemBus, 
     m_battery->followService(sessionBus, [sessionBus, systemBus] {
         return std::make_shared<upower::BatteryStatus>(sessionBus, systemBus);
     });
-    m_timeFormat = clock_format::pattern(m_timeLocale, m_twentyFourTime);
+    m_timeFormat = ClockFormat::pattern(m_timeLocale, m_twentyFourTime);
 
     m_load = runOnFileThread(
             [path = m_settingsPath] { return base::Settings(path).boolValue("Statusbar/TwentyFourTime", false); },
@@ -116,7 +116,7 @@ void StatusBar::reloadLanguage()
 
 void StatusBar::updateTimeFormat()
 {
-    m_timeFormat = clock_format::pattern(m_timeLocale, m_twentyFourTime);
+    m_timeFormat = ClockFormat::pattern(m_timeLocale, m_twentyFourTime);
     timeFormatChanged();
 }
 

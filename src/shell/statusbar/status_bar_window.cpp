@@ -442,7 +442,7 @@ void StatusBarWindow::armClock()
         return;
     timespec now {};
     clock_gettime(CLOCK_REALTIME, &now);
-    const time_t period = clock_format::showsSeconds(m_statusBar->timeFormat()) ? 1 : 60;
+    const time_t period = ClockFormat::showsSeconds(m_statusBar->timeFormat()) ? 1 : 60;
     itimerspec spec {};
     spec.it_value.tv_sec = (now.tv_sec / period + 1) * period;
     timerfd_settime(m_clockFd, TFD_TIMER_ABSTIME | TFD_TIMER_CANCEL_ON_SET, &spec, nullptr);
