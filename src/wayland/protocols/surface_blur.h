@@ -7,7 +7,7 @@
 
 #include <wayland-server-core.h>
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Path;
 }
 

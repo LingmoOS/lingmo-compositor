@@ -14,7 +14,7 @@
 #include "ui/geometry.h"
 #include "ui/image.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Bitmap;
 }
 

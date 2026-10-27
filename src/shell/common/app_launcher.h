@@ -11,7 +11,7 @@
 #include "base/dbus.h"
 #include "shell/common/pending_calls.h"
 
-namespace Lingmo::Base {
+namespace Lingmo::base {
 struct DesktopEntry;
 } // namespace Lingmo::Base
 

@@ -14,7 +14,7 @@
 #include "base/timer.h"
 #include "ui/view.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Animation;
 class ColumnLayout;
 class Window;

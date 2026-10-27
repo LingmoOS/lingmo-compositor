@@ -18,7 +18,7 @@
 #include "ui/scroller.h"
 #include "ui/view.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Label;
 class Menu;
 } // namespace Lingmo::UI

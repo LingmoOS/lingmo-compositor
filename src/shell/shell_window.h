@@ -36,7 +36,7 @@ namespace Lingmo::toolkit {
 class PanelTexture;
 }
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class EmbeddedWindow;
 class View;
 } // namespace Lingmo::UI

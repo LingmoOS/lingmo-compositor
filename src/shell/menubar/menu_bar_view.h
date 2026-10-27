@@ -16,7 +16,7 @@ namespace Lingmo::Accounts {
 class UserAccount;
 }
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Menu;
 }
 

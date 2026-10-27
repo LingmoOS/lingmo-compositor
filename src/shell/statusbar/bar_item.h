@@ -13,7 +13,7 @@
 #include "ui/styled_label.h"
 #include "ui/view.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Icon;
 } // namespace Lingmo::UI
 

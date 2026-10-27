@@ -7,7 +7,7 @@
 #include "base/json.h"
 #include "base/timer.h"
 
-namespace Lingmo::Base {
+namespace Lingmo::base {
 class EventLoop;
 }
 

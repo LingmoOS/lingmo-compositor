@@ -11,7 +11,7 @@
 #include "base/geometry.h"
 #include "base/signal.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Bitmap;
 } // namespace Lingmo::UI
 

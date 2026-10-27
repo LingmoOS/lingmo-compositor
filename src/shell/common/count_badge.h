@@ -9,7 +9,7 @@
 
 #include "ui/view.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Label;
 } // namespace Lingmo::UI
 

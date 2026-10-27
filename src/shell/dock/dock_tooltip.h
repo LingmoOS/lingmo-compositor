@@ -10,7 +10,7 @@
 #include "base/geometry.h"
 #include "ui/geometry.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Label;
 class Window;
 } // namespace Lingmo::UI

@@ -11,7 +11,7 @@
 #include "base/timer.h"
 #include "shell/shell.h"
 
-namespace Lingmo::Base::DBus {
+namespace Lingmo::base::dbus {
 class Object;
 }
 

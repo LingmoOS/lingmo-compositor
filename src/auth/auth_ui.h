@@ -37,7 +37,7 @@ namespace Lingmo::Scene {
 class Node;
 }
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class EmbeddedWindow;
 class View;
 } // namespace Lingmo::UI

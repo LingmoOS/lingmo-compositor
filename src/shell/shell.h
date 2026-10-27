@@ -13,7 +13,7 @@
 #include "base/signal.h"
 #include "base/timer.h"
 
-namespace Lingmo::Base::DBus {
+namespace Lingmo::base::dbus {
 class Connection;
 }
 

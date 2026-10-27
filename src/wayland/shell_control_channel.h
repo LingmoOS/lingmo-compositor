@@ -8,7 +8,7 @@
 #include <functional>
 #include <string>
 
-namespace Lingmo::Base {
+namespace Lingmo::base {
 class EventLoop;
 }
 

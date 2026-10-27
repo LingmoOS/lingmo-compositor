@@ -20,7 +20,7 @@
 #include "shell/shell.h"
 #include "ui/bitmap.h"
 
-namespace Lingmo::Base::DBus {
+namespace Lingmo::base::dbus {
 class Object;
 }
 
@@ -32,7 +32,7 @@ namespace Lingmo::Compositor {
 class CaptureSource;
 }
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class FileChooser;
 }
 

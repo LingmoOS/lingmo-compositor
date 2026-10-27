@@ -19,7 +19,7 @@ namespace Lingmo::Audio {
 class AudioModel;
 }
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Label;
 class Menu;
 class Window;

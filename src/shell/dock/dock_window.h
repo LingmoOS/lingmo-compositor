@@ -23,7 +23,7 @@
 #include "ui/geometry.h"
 #include "shell/shell.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class DropOffer;
 class Menu;
 class View;

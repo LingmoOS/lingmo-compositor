@@ -19,7 +19,7 @@
 #include "ui/image.h"
 #include "ui/view.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Menu;
 class ThemeIcon;
 } // namespace Lingmo::UI

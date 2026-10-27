@@ -13,7 +13,7 @@
 #include "shell/controlcenter/control_center_services.h"
 #include "ui/view.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Icon;
 class ImageView;
 class Label;

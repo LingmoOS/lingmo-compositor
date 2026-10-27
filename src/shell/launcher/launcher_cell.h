@@ -12,7 +12,7 @@
 #include "shell/launcher/launcher_tween.h"
 #include "ui/view.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Label;
 class ThemeIcon;
 } // namespace Lingmo::UI

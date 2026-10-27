@@ -9,7 +9,7 @@
 #include "base/signal.h"
 #include "shell/shell.h"
 
-namespace Lingmo::Base::DBus {
+namespace Lingmo::base::dbus {
 class Connection;
 }
 

@@ -11,7 +11,7 @@
 #include "base/desktop_entry.h"
 #include "base/signal.h"
 
-namespace Lingmo::Base {
+namespace Lingmo::base {
 class ApplicationRegistry;
 } // namespace Lingmo::Base
 

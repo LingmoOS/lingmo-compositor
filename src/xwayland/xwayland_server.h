@@ -16,7 +16,7 @@
 #include "base/timer.h"
 #include "surface_association.h"
 
-namespace Lingmo::Base {
+namespace Lingmo::base {
 class EventLoop;
 }
 

@@ -13,7 +13,7 @@
 #include "ui/image.h"
 #include "ui/view.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Animation;
 class ThemeIcon;
 } // namespace Lingmo::UI

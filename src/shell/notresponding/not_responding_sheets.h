@@ -17,7 +17,7 @@
 #include "ui/view.h"
 #include "wm/window_observer.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class DialogButton;
 class Label;
 class ThemeIcon;

@@ -10,7 +10,7 @@
 #include "shell/secrets/network_secret_agent.h"
 #include "shell/secrets/secret_dialog.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class CheckBox;
 class TextField;
 } // namespace Lingmo::UI

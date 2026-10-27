@@ -145,7 +145,7 @@ std::vector<Placement> toWire(const std::vector<DisplayPlacement>& placements);
 
 } // namespace Lingmo::Display::ipc
 
-namespace Lingmo::Base::DBus {
+namespace Lingmo::base::dbus {
 
 // A struct whose tie() lists its members in the order of its D-Bus tuple.
 template<typename T>

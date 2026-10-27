@@ -14,7 +14,7 @@
 #include "ui/label.h"
 #include "ui/view.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class ImageView;
 class ThemeIcon;
 } // namespace Lingmo::UI

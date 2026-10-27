@@ -10,7 +10,7 @@
 #include "render/glass.h"
 #include "ui/geometry.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Painter;
 }
 

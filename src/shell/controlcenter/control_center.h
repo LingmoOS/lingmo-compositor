@@ -14,7 +14,7 @@
 #include "shell/shell.h"
 #include "shell/statusbar/status_bar_panels.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Window;
 } // namespace Lingmo::UI
 

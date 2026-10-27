@@ -16,7 +16,7 @@
 #include "base/timer.h"
 #include "shell/common/list_model.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Bitmap;
 } // namespace Lingmo::UI
 

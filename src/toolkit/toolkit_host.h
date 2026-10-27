@@ -16,7 +16,7 @@ class Renderer;
 class Texture;
 } // namespace Lingmo::Render
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Application;
 class EmbeddedWindow;
 } // namespace Lingmo::UI

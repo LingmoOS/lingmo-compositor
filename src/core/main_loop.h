@@ -7,7 +7,7 @@
 
 #include <memory>
 
-namespace Lingmo::Base {
+namespace Lingmo::base {
 class EventLoop;
 } // namespace Lingmo::Base
 

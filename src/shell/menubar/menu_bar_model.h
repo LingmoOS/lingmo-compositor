@@ -13,7 +13,7 @@
 
 #include "base/signal.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Menu;
 }
 

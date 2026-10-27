@@ -19,7 +19,7 @@
 #include "ui/view.h"
 #include "ui/window.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Label;
 class ScrollView;
 } // namespace Lingmo::UI

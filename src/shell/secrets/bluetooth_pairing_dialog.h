@@ -9,7 +9,7 @@
 
 #include "shell/secrets/secret_dialog.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Label;
 class TextField;
 } // namespace Lingmo::UI

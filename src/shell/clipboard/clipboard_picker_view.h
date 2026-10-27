@@ -16,7 +16,7 @@
 #include "ui/text_field.h"
 #include "ui/view.h"
 
-namespace Lingmo::UI {
+namespace Lingmo::ui {
 class Button;
 class ImageView;
 class Label;

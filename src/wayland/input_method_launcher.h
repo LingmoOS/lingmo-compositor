@@ -15,7 +15,7 @@
 #include "base/timer.h"
 #include "core/process_environment.h"
 
-namespace Lingmo::Base {
+namespace Lingmo::base {
 class EventLoop;
 class Process;
 } // namespace Lingmo::Base
