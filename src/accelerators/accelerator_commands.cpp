@@ -31,7 +31,7 @@
 #include "wm/window_state.h"
 #include "wm/wm_event.h"
 
-namespace Lingmo::Accelerators::Commands {
+namespace Lingmo::Accelerators::commands {
 
 wm::Window *targetWindow(const CommandContext &context)
 {
@@ -364,4 +364,4 @@ void toggleAssignToAllDesks(const CommandContext &context)
     desks->setVisibleOnAllDesks(window, !desks->isVisibleOnAllDesks(window));
 }
 
-} // namespace Lingmo::Accelerators::Commands
+} // namespace Lingmo::Accelerators::commands
