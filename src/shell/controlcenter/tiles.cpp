@@ -122,9 +122,9 @@ void CardItem::setStatus(std::string status)
 
 void CardItem::updateIcon()
 {
-    const bool white = panel::dark() || m_checked;
+    const bool white = Panel::dark() || m_checked;
     if (!m_artwork.empty())
-        m_svg->setFile(panel::artwork(m_artwork, white));
+        m_svg->setFile(Panel::artwork(m_artwork, white));
     m_glyph->setColor(white ? kWhite : kLightArtwork);
 }
 
@@ -142,7 +142,7 @@ void CardItem::layout()
     m_glyph->setGeometry(icon);
 
     m_status->setFontSize(theme.smallFontSize());
-    m_status->setColor(panel::secondaryTextColor());
+    m_status->setColor(Panel::secondaryTextColor());
     m_status->setVisible(!m_status->text().empty());
     const double x = slot.x + kPlateSize + theme.smallSpacing * 1.5;
     const double width = std::max(0.0, geometry().width - x - padding);
@@ -155,18 +155,18 @@ void CardItem::layout()
 
 void CardItem::paint(ui::Painter &painter)
 {
-    panel::paintTile(painter, localRect());
-    const ui::Color surface = panel::tileInkColor();
-    const bool darkSurface = panel::isDark(surface);
+    Panel::paintTile(painter, localRect());
+    const ui::Color surface = Panel::tileInkColor();
+    const bool darkSurface = Panel::isDark(surface);
     const ui::Color highlight = ui::Theme::current().highlight;
     ui::Color plate;
     if (m_checked)
-        plate = m_pressed ? panel::shade(highlight, 0.2) : highlight;
+        plate = m_pressed ? Panel::shade(highlight, 0.2) : highlight;
     else
-        plate = panel::on(surface, m_pressed ? (darkSurface ? 0.25 : 0.2) : (darkSurface ? 0.15 : 0.1));
+        plate = Panel::on(surface, m_pressed ? (darkSurface ? 0.25 : 0.2) : (darkSurface ? 0.15 : 0.1));
     const double padding = ui::Theme::current().largeSpacing;
     const ui::RectF slot {padding, (geometry().height - kPlateSize) / 2, kPlateSize, kPlateSize};
-    const ui::RectF rect = panel::parityPlate(slot, kIconSize, painter.scale());
+    const ui::RectF rect = Panel::parityPlate(slot, kIconSize, painter.scale());
     painter.fillRoundedRect(rect, rect.width / 2, plate);
 }
 
@@ -223,9 +223,9 @@ void IconButton::paint(ui::Painter &painter)
 {
     if (!isEnabled() || !isHovered())
         return;
-    const bool dark = panel::isDark(m_surface);
+    const bool dark = Panel::isDark(m_surface);
     const bool pressed = m_pressed && m_inside;
-    const ui::Color color = panel::on(m_surface, pressed ? (dark ? 0.3 : 0.2) : (dark ? 0.2 : 0.1));
+    const ui::Color color = Panel::on(m_surface, pressed ? (dark ? 0.3 : 0.2) : (dark ? 0.2 : 0.1));
     const ui::RectF rect = localRect();
     painter.fillRoundedRect(rect, rect.height / 2, color);
 }
@@ -334,15 +334,15 @@ void MediaTile::setState(const MediaState &state)
 
 void MediaTile::updateArtwork()
 {
-    const bool white = panel::dark();
-    m_cover->setFile(panel::artwork("media-cover", white));
-    m_previous->setFile(panel::artwork("media-skip-backward-symbolic", white));
-    m_play->setFile(panel::artwork(m_state.playing ? "media-playback-pause-symbolic"
+    const bool white = Panel::dark();
+    m_cover->setFile(Panel::artwork("media-cover", white));
+    m_previous->setFile(Panel::artwork("media-skip-backward-symbolic", white));
+    m_play->setFile(Panel::artwork(m_state.playing ? "media-playback-pause-symbolic"
                                                    : "media-playback-start-symbolic",
                                    white));
-    m_next->setFile(panel::artwork("media-skip-forward-symbolic", white));
+    m_next->setFile(Panel::artwork("media-skip-forward-symbolic", white));
     for (IconButton *button : {m_previous, m_play, m_next})
-        button->setSurfaceColor(panel::tileInkColor());
+        button->setSurfaceColor(Panel::tileInkColor());
 
     // Album art from a file; anything else keeps the default cover.
     std::string path;
@@ -394,14 +394,14 @@ void MediaTile::layout()
 
 void MediaTile::paint(ui::Painter &painter)
 {
-    panel::paintTile(painter, localRect());
+    Panel::paintTile(painter, localRect());
     if (m_artReady)
         return;
     // The cards' plate colour under the default cover, inside its mask.
-    const ui::Color surface = panel::tileInkColor();
+    const ui::Color surface = Panel::tileInkColor();
     const ui::RectF art = m_cover->geometry();
     painter.fillRoundedRect(art, ui::Theme::current().smallRadius,
-                            panel::on(surface, panel::isDark(surface) ? 0.15 : 0.1), ui::Corners::Continuous);
+                            Panel::on(surface, Panel::isDark(surface) ? 0.15 : 0.1), ui::Corners::Continuous);
 }
 
 std::string deviceUsageText(const DeviceUser &user)
@@ -504,7 +504,7 @@ void DeviceUsersTile::layout()
 
 void DeviceUsersTile::paint(ui::Painter &painter)
 {
-    panel::paintTile(painter, localRect());
+    Panel::paintTile(painter, localRect());
     const double spacing = ui::Theme::current().smallSpacing * 1.5;
     const double height = rowHeight();
     double y = inset();

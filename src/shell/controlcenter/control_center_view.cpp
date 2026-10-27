@@ -88,7 +88,7 @@ ControlCenterView::ControlCenterView(ControlCenterServices &services)
     // TRANSLATORS: the title of the screen brightness slider.
     m_brightness = addChild<TileSlider>(tr("Display"));
     m_brightness->slider()->setRange(1, 100, 1);
-    m_brightness->slider()->setIcon(panel::artwork("brightness", false));
+    m_brightness->slider()->setIcon(Panel::artwork("brightness", false));
     m_brightnessTimer.setSingleShot(true);
     m_brightnessTimer.setInterval(kBrightnessDelay);
     m_brightnessTimer.onTimeout = [this] {
@@ -159,7 +159,7 @@ void ControlCenterView::refresh()
     const bool sink = m_services.hasSink();
     m_sound->setVisible(sink);
     m_sound->slider()->setValue(sink ? m_services.volume() : 0);
-    m_sound->slider()->setIcon(panel::artwork(volumeIconName(sink, m_services.volume()), false));
+    m_sound->slider()->setIcon(Panel::artwork(volumeIconName(sink, m_services.volume()), false));
 
     requestLayout();
     if (layoutHeight() != before && onHeightChanged)
