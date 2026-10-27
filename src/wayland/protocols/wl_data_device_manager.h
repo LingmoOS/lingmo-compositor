@@ -12,7 +12,7 @@
 #include <memory>
 #include <wayland-server-core.h>
 
-namespace Lingmo::clipboard {
+namespace Lingmo::Clipboard {
 class DataSource;
 }
 

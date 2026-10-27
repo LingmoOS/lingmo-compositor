@@ -28,6 +28,10 @@ pkg_check_modules(Libseat REQUIRED IMPORTED_TARGET libseat)
 pkg_check_modules(Libdrm REQUIRED IMPORTED_TARGET libdrm)
 pkg_check_modules(Gbm REQUIRED IMPORTED_TARGET gbm)
 pkg_check_modules(Egl REQUIRED IMPORTED_TARGET egl)
+
+# The sources use lower-case component prefixes; namespace_compat.h gives them
+# a target at global scope.
+add_compile_options(-include${CMAKE_CURRENT_SOURCE_DIR}/src/namespace_compat.h)
 pkg_check_modules(GlesV2 REQUIRED IMPORTED_TARGET glesv2)
 pkg_check_modules(Xkbcommon REQUIRED IMPORTED_TARGET xkbcommon)
 pkg_check_modules(Libinput REQUIRED IMPORTED_TARGET libinput)
