@@ -17,4 +17,3 @@ wl_global *createStatusItemGlobal(wl_display *display, wm::StatusItems *items);
 
 } // namespace Lingmo::Wayland
 
-#endif

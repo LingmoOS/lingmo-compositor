@@ -21,4 +21,3 @@ void sendInteractiveResize(wl_resource *surface, bool active);
 
 } // namespace Lingmo::Wayland
 
-#endif
