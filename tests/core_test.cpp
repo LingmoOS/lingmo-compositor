@@ -127,7 +127,7 @@ TEST(LoggingTest, TheMacroWritesOneLine)
                                   std::string_view message) {
         lines.push_back(base::logging::formatLine(category, level, message));
     });
-    CF_INFO(cfWayland) << "started" << 3;
+    LM_INFO(cfWayland) << "started" << 3;
     base::logging::setHandler(nullptr);
     ASSERT_EQ(lines.size(), 1u);
     EXPECT_EQ(lines.front(), "lingmo.wayland: started 3");
