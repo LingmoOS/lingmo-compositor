@@ -22,7 +22,7 @@
 #include "display/display_configuration_controller.h"
 #include "ipc/display_dbus_types.h"
 
-namespace Lingmo::display::ipc {
+namespace Lingmo::Display::ipc {
 
 // org.lingmo.DisplayConfig1 at /org/lingmo/DisplayConfig1.
 class DisplayConfigService
@@ -67,4 +67,4 @@ private:
     std::vector<base::Subscription> m_subscriptions;
 };
 
-} // namespace Lingmo::display::ipc
+} // namespace Lingmo::Display::ipc

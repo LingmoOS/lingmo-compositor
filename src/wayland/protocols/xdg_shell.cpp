@@ -40,9 +40,9 @@ namespace Lingmo::Wayland {
 
 namespace {
 
-using Lingmo::wm::ResizeEdge;
-using Lingmo::wm::ShellSurface;
-using Lingmo::wm::WindowStateType;
+using Lingmo::WM::ResizeEdge;
+using Lingmo::WM::ShellSurface;
+using Lingmo::WM::WindowStateType;
 
 ////////////////////////////////////////////////////////////////////////////////
 // xdg_positioner_interface:

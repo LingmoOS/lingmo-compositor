@@ -23,7 +23,7 @@ namespace Lingmo::Appearance {
 class Appearance;
 }
 
-namespace Lingmo::compositor {
+namespace Lingmo::Compositor {
 class CaptureSource;
 }
 

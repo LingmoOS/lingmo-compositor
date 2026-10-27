@@ -9,7 +9,7 @@
 #include "base/signal.h"
 #include "base/weak_ptr.h"
 
-namespace Lingmo::input {
+namespace Lingmo::Input {
 class InputManager;
 }
 

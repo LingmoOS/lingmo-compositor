@@ -23,7 +23,7 @@ struct libinput_event;
 struct libinput_device;
 struct udev;
 
-namespace Lingmo::input {
+namespace Lingmo::Input {
 class InputManager;
 }
 

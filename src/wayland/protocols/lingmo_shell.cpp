@@ -25,9 +25,9 @@ namespace Lingmo::Wayland {
 
 namespace {
 
-using Lingmo::wm::FocusPolicy;
-using Lingmo::wm::ShellWindowMetadata;
-using Lingmo::wm::WindowRole;
+using Lingmo::WM::FocusPolicy;
+using Lingmo::WM::ShellWindowMetadata;
+using Lingmo::WM::WindowRole;
 
 std::optional<WindowRole> roleFromWayland(uint32_t role)
 {

@@ -23,7 +23,7 @@ class Label;
 class ThemeIcon;
 } // namespace Lingmo::UI
 
-namespace Lingmo::wm {
+namespace Lingmo::WM {
 class Window;
 }
 

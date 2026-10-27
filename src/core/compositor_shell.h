@@ -49,20 +49,20 @@ struct wl_global;
 
 namespace Lingmo {
 
-namespace backend {
+namespace Backend {
 class DrmBackend;
 class HeadlessBackend;
 class LibinputBackend;
 class LibseatSession;
 } // namespace backend
 
-namespace computer_control {
+namespace ComputerControl {
 class Controller;
 class PermissionConsent;
 class RememberedApps;
 } // namespace computer_control
 
-namespace display {
+namespace Display {
 class CallbackNativeDisplayDelegate;
 class DisplayConfigurationController;
 class DisplayTopologyCoordinator;
@@ -82,7 +82,7 @@ class Server;
 class ShellControlChannel;
 } // namespace wayland
 
-namespace accelerators {
+namespace Accelerators {
 class AcceleratorConfiguration;
 class AcceleratorController;
 class AcceleratorFilter;
@@ -92,18 +92,18 @@ class HotCornerController;
 class HotCornerSettings;
 } // namespace accelerators
 
-namespace shell {
+namespace Shell {
 class DockWindow;
 class Wallpaper;
 class Shell;
 struct ScreenCaptureServices;
 }
 
-namespace switcher {
+namespace Switcher {
 class SwitcherView;
 }
 
-namespace wm {
+namespace WM {
 class DemoController;
 class DeskPreferences;
 class QuitAll;
@@ -111,7 +111,7 @@ class WindowCycleController;
 class WmGestureHandler;
 } // namespace wm
 
-namespace scene {
+namespace Scene {
 class DeskSwitchNode;
 class OverviewDeskBarNode;
 class OverviewNode;
@@ -122,7 +122,7 @@ namespace xwayland {
 class XwaylandServer;
 }
 
-namespace core {
+namespace Core {
 
 // Everything the compositor process owns, in one place. Modelled on ash::Shell:
 // members are constructed in declaration order and torn down in reverse, so the

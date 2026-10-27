@@ -14,7 +14,7 @@
 #include "base/timer.h"
 #include "ui/event.h"
 
-namespace Lingmo::compositor {
+namespace Lingmo::Compositor {
 class Surface;
 }
 

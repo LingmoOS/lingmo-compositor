@@ -25,11 +25,11 @@ namespace Lingmo::Compositor {
 class Compositor;
 }
 
-namespace Lingmo::input {
+namespace Lingmo::Input {
 class Seat;
 }
 
-namespace Lingmo::wm {
+namespace Lingmo::WM {
 class ShellSurface;
 class WindowManager;
 }

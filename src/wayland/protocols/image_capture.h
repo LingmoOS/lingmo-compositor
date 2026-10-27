@@ -25,7 +25,7 @@ namespace Lingmo::Render {
 class Renderer;
 }
 
-namespace Lingmo::scene {
+namespace Lingmo::Scene {
 class Node;
 }
 

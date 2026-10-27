@@ -18,7 +18,7 @@ namespace Lingmo::Wayland {
 
 namespace {
 
-using Lingmo::wm::ShellSurface;
+using Lingmo::WM::ShellSurface;
 
 // The user data of an xdg_dialog_v1. The protocol lets the xdg_toplevel go
 // first; the dialog object is inert from then on.

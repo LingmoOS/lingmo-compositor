@@ -11,15 +11,15 @@
 
 namespace Lingmo {
 
-namespace computer_control {
+namespace ComputerControl {
 class PermissionConsent;
 }
 
-namespace input {
+namespace Input {
 class Seat;
 }
 
-namespace session {
+namespace Session {
 class SessionController;
 }
 
@@ -27,11 +27,11 @@ namespace wayland {
 class InputMethodManager;
 }
 
-namespace wm {
+namespace WM {
 class WindowManager;
 }
 
-namespace core {
+namespace Core {
 
 // What of the session an agent is given to drive: the windows, the seat, the
 // input method and the clipboard, behind the controller's Environment.

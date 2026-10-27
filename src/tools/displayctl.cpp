@@ -19,7 +19,7 @@
 #include "base/timer.h"
 #include "ipc/display_dbus_types.h"
 
-namespace ipc = Lingmo::display::ipc;
+namespace ipc = Lingmo::Display::ipc;
 namespace base = Lingmo::base;
 namespace dbus = Lingmo::base::dbus;
 using base::json::Value;

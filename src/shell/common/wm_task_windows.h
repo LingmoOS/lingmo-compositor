@@ -11,10 +11,10 @@
 #include "shell/common/task_windows.h"
 #include "wm/window_observer.h"
 
-namespace Lingmo::wm {
+namespace Lingmo::WM {
 class Window;
 class WindowManager;
-} // namespace Lingmo::wm
+} // namespace Lingmo::WM
 
 namespace Lingmo::Shell {
 

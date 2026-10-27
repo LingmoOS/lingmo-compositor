@@ -43,7 +43,7 @@ int createSignalFd()
 
 int main(int argc, char *argv[])
 {
-    Lingmo::core::applyMallocPolicy();
+    Lingmo::Core::applyMallocPolicy();
     signal(SIGPIPE, SIG_IGN);
     // The user's locale from the start, not only once the embedded toolkit
     // sets it when the lock screen first appears.
@@ -52,16 +52,16 @@ int main(int argc, char *argv[])
     const Lingmo::ScopedFd signalFdOwner(createSignalFd());
     const int signalFd = signalFdOwner.get();
     // Outlives the shell, whose objects may watch, time or post on it.
-    const Lingmo::core::MainLoop mainLoop;
+    const Lingmo::Core::MainLoop mainLoop;
 
-    const auto options = Lingmo::core::CompositorOptions::parse(argc, argv);
+    const auto options = Lingmo::Core::CompositorOptions::parse(argc, argv);
     if (!options)
         return 1;
     if (!options->logRules.empty())
-        Lingmo::core::setLoggingRules(options->logRules);
-    Lingmo::scene::motion::setDurationScale(options->animationDurationScale);
+        Lingmo::Core::setLoggingRules(options->logRules);
+    Lingmo::Scene::motion::setDurationScale(options->animationDurationScale);
 
-    auto shell = std::make_unique<Lingmo::core::CompositorShell>(*options);
+    auto shell = std::make_unique<Lingmo::Core::CompositorShell>(*options);
     if (!shell->init())
         return 1;
 

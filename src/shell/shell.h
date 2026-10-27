@@ -17,7 +17,7 @@ namespace Lingmo::Base::DBus {
 class Connection;
 }
 
-namespace Lingmo::compositor {
+namespace Lingmo::Compositor {
 class Compositor;
 }
 

@@ -9,7 +9,7 @@
 
 #include <cstdint>
 
-namespace Lingmo::wm {
+namespace Lingmo::WM {
 class WindowManager;
 }
 

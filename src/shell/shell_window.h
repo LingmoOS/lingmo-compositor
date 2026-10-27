@@ -23,7 +23,7 @@
 #include "wm/window_manager.h"
 #include "wm/window_observer.h"
 
-namespace Lingmo::compositor {
+namespace Lingmo::Compositor {
 class Buffer;
 class Surface;
 }

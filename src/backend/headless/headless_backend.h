@@ -14,12 +14,12 @@
 
 namespace Lingmo {
 
-namespace compositor {
+namespace Compositor {
 class Compositor;
 struct Output;
 } // namespace compositor
 
-namespace backend {
+namespace Backend {
 
 // Stands in for a display: synthesizes outputs and a presentation clock so the
 // compositor and real toolkit clients run with no hardware.

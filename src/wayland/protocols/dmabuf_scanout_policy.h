@@ -6,7 +6,7 @@
 #include "base/signal.h"
 #include "wm/window_observer.h"
 
-namespace Lingmo::wm {
+namespace Lingmo::WM {
 class Window;
 class WindowManager;
 }

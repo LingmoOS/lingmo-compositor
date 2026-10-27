@@ -15,7 +15,7 @@ struct wl_display;
 struct wl_global;
 struct wl_resource;
 
-namespace Lingmo::wm {
+namespace Lingmo::WM {
 class WindowManager;
 }
 

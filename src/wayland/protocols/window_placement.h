@@ -12,7 +12,7 @@
 
 #include "base/signal.h"
 
-namespace Lingmo::wm {
+namespace Lingmo::WM {
 class Window;
 class WindowManager;
 }

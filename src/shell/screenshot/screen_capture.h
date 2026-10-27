@@ -28,7 +28,7 @@ namespace Lingmo::Clipboard {
 class SelectionController;
 }
 
-namespace Lingmo::compositor {
+namespace Lingmo::Compositor {
 class CaptureSource;
 }
 
@@ -36,7 +36,7 @@ namespace Lingmo::UI {
 class FileChooser;
 }
 
-namespace Lingmo::wm {
+namespace Lingmo::WM {
 class Window;
 }
 

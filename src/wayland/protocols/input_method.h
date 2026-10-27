@@ -11,7 +11,7 @@
 #include <wayland-server-core.h>
 namespace scene = Lingmo::Scene;
 
-namespace Lingmo::scene {
+namespace Lingmo::Scene {
 class Node;
 }
 

@@ -6,7 +6,7 @@
 
 #include <wayland-server-core.h>
 
-namespace Lingmo::wm {
+namespace Lingmo::WM {
 class StatusItems;
 }
 

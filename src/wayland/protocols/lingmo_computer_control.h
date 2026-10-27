@@ -9,7 +9,7 @@
 
 #include <wayland-server-core.h>
 
-namespace Lingmo::computer_control {
+namespace Lingmo::ComputerControl {
 class Controller;
 }
 

@@ -14,25 +14,25 @@
 
 namespace Lingmo {
 
-namespace compositor {
+namespace Compositor {
 class Compositor;
 }
 
-namespace computer_control {
+namespace ComputerControl {
 class Controller;
 }
 
-namespace input {
+namespace Input {
 class InputMethodSettings;
 class Seat;
 class InputManager;
 } // namespace input
 
-namespace scene {
+namespace Scene {
 class Node;
 }
 
-namespace wm {
+namespace WM {
 class ShadowController;
 class WindowManager;
 }

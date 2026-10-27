@@ -22,17 +22,17 @@ struct wl_display;
 struct wl_global;
 
 namespace Lingmo {
-namespace backend {
+namespace Backend {
 class DrmBackend;
 class DrmOutput;
 } // namespace backend
 
-namespace compositor {
+namespace Compositor {
 class Compositor;
 struct Output;
 } // namespace compositor
 
-namespace input {
+namespace Input {
 class InputManager;
 }
 namespace render {
@@ -40,22 +40,22 @@ class Renderer;
 class Texture;
 } // namespace render
 
-namespace wm {
+namespace WM {
 class WindowManager;
 }
 
-namespace scene {
+namespace Scene {
 class Node;
 class Scene;
 class ScreenTransitionNode;
 } // namespace scene
 
-namespace cursor {
+namespace Cursor {
 class Cursor;
 class OutputCursorRouter;
 } // namespace cursor
 
-namespace display {
+namespace Display {
 class DisplayManager;
 
 class DisplayRuntime

@@ -16,7 +16,7 @@ namespace Lingmo::Compositor {
 class Surface;
 }
 
-namespace Lingmo::input {
+namespace Lingmo::Input {
 class Seat;
 }
 

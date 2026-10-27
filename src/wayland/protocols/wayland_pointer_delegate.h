@@ -18,7 +18,7 @@
 #include "clipboard/selection.h"
 #include "input/pointer_delegate.h"
 
-namespace Lingmo::input {
+namespace Lingmo::Input {
 class Seat;
 }
 

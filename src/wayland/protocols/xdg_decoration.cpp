@@ -27,7 +27,7 @@ namespace Lingmo::Wayland {
 
 namespace {
 
-using Lingmo::wm::ShellSurface;
+using Lingmo::WM::ShellSurface;
 using DecorationMode = ShellSurface::DecorationMode;
 
 uint32_t toWayland(DecorationMode mode)

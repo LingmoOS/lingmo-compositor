@@ -24,7 +24,7 @@ class CaptureSource;
 class Compositor;
 }
 
-namespace Lingmo::wm {
+namespace Lingmo::WM {
 class Window;
 class WindowManager;
 }

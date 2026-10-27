@@ -21,7 +21,7 @@ namespace Lingmo::Wayland {
 
 namespace {
 
-using Lingmo::wm::ShellSurface;
+using Lingmo::WM::ShellSurface;
 
 class ExportedSurface;
 

@@ -17,11 +17,11 @@ class ForeignToplevelList;
 class ImageCaptureManager;
 } // namespace Lingmo::wayland
 
-namespace Lingmo::compositor {
+namespace Lingmo::Compositor {
 class CaptureSource;
 }
 
-namespace Lingmo::wm {
+namespace Lingmo::WM {
 class Window;
 }
 

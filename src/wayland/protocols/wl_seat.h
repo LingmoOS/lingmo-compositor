@@ -16,11 +16,11 @@
 
 #include "input/seat_observer.h"
 
-namespace Lingmo::input {
+namespace Lingmo::Input {
 class Seat;
 }
 
-namespace Lingmo::input {
+namespace Lingmo::Input {
 class Pointer;
 }
 

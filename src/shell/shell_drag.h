@@ -12,7 +12,7 @@
 #include "base/signal.h"
 #include "ui/drag.h"
 
-namespace Lingmo::compositor {
+namespace Lingmo::Compositor {
 class Buffer;
 class Surface;
 }
