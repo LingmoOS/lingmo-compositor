@@ -84,7 +84,7 @@ std::vector<PhysicalDisplay> toWire(const std::vector<DisplaySnapshot>& displays
     return result;
 }
 
-std::vector<LogicalDisplay> toWire(const std::vector<LogicalDisplay>& displays)
+std::vector<LogicalDisplay> toWire(const std::vector<Lingmo::Display::LogicalDisplay>& displays)
 {
     std::vector<LogicalDisplay> result;
     for (const auto& value : displays) {

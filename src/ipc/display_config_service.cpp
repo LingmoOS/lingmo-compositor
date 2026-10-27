@@ -114,7 +114,7 @@ void DisplayConfigService::addMethods()
                 hardware ? hardware->compositorInstanceId : std::string(),
                 hardware ? hardware->seatId : std::string(), topologyGeneration(),
                 appliedRevision(), toWire(physical),
-                toWire(applied ? applied->logicalDisplays : std::vector<LogicalDisplay>()),
+                toWire(applied ? applied->logicalDisplays : std::vector<Lingmo::Display::LogicalDisplay>()),
                 toWire(applied ? applied->placements : std::vector<DisplayPlacement>()),
                 m_controller->previewToken(), uint64_t(m_controller->previewDeadlineMs()));
     }, dbus::ArgumentNames {{},

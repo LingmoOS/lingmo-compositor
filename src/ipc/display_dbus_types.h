@@ -140,7 +140,7 @@ DisplayConfiguration fromWire(const std::string& instanceId, uint64_t topologyGe
                               const std::string& primary, const std::vector<Placement>& placements,
                               const MirrorGroups& mirrorGroups);
 std::vector<PhysicalDisplay> toWire(const std::vector<DisplaySnapshot>& displays);
-std::vector<LogicalDisplay> toWire(const std::vector<LogicalDisplay>& displays);
+std::vector<LogicalDisplay> toWire(const std::vector<Lingmo::Display::LogicalDisplay>& displays);
 std::vector<Placement> toWire(const std::vector<DisplayPlacement>& placements);
 
 } // namespace Lingmo::Display::ipc
@@ -176,11 +176,11 @@ struct TiedDisplayType
     }
 };
 
-template<> struct Type<ipc::Mode> : TiedDisplayType<ipc::Mode> {};
-template<> struct Type<ipc::RequestedMode> : TiedDisplayType<ipc::RequestedMode> {};
-template<> struct Type<ipc::PhysicalDisplay> : TiedDisplayType<ipc::PhysicalDisplay> {};
-template<> struct Type<ipc::LogicalDisplay> : TiedDisplayType<ipc::LogicalDisplay> {};
-template<> struct Type<ipc::DisplayRequest> : TiedDisplayType<ipc::DisplayRequest> {};
-template<> struct Type<ipc::Placement> : TiedDisplayType<ipc::Placement> {};
+template<> struct Type<Lingmo::Display::ipc::Mode> : TiedDisplayType<Lingmo::Display::ipc::Mode> {};
+template<> struct Type<Lingmo::Display::ipc::RequestedMode> : TiedDisplayType<Lingmo::Display::ipc::RequestedMode> {};
+template<> struct Type<Lingmo::Display::ipc::PhysicalDisplay> : TiedDisplayType<Lingmo::Display::ipc::PhysicalDisplay> {};
+template<> struct Type<Lingmo::Display::ipc::LogicalDisplay> : TiedDisplayType<Lingmo::Display::ipc::LogicalDisplay> {};
+template<> struct Type<Lingmo::Display::ipc::DisplayRequest> : TiedDisplayType<Lingmo::Display::ipc::DisplayRequest> {};
+template<> struct Type<Lingmo::Display::ipc::Placement> : TiedDisplayType<Lingmo::Display::ipc::Placement> {};
 
 } // namespace Lingmo::Base::DBus
