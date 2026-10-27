@@ -23,7 +23,7 @@ namespace Session {
 class SessionController;
 }
 
-namespace wayland {
+namespace Wayland {
 class InputMethodManager;
 }
 

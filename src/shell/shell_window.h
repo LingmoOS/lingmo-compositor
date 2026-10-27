@@ -28,11 +28,11 @@ class Buffer;
 class Surface;
 }
 
-namespace Lingmo::render {
+namespace Lingmo::Render {
 class Renderer;
 }
 
-namespace Lingmo::toolkit {
+namespace Lingmo::Toolkit {
 class PanelTexture;
 }
 

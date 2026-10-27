@@ -37,7 +37,7 @@ class ShadowController;
 class WindowManager;
 }
 
-namespace wayland {
+namespace Wayland {
 
 class DataControlManager;
 class ForeignToplevelList;

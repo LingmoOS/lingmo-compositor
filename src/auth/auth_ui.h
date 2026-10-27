@@ -24,12 +24,12 @@ namespace Lingmo::Input {
 class XkbTracker;
 }
 
-namespace Lingmo::render {
+namespace Lingmo::Render {
 class Renderer;
 class Texture;
-} // namespace Lingmo::render
+} // namespace Lingmo::Render
 
-namespace Lingmo::toolkit {
+namespace Lingmo::Toolkit {
 class PanelTexture;
 }
 

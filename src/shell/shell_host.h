@@ -10,7 +10,7 @@
 
 #include "ui/embedded_host.h"
 
-namespace Lingmo::wayland {
+namespace Lingmo::Wayland {
 class InputMethodRelay;
 }
 

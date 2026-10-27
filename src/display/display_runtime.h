@@ -35,7 +35,7 @@ struct Output;
 namespace Input {
 class InputManager;
 }
-namespace render {
+namespace Render {
 class Renderer;
 class Texture;
 } // namespace render

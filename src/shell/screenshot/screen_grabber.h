@@ -12,10 +12,10 @@
 
 #include "ui/bitmap.h"
 
-namespace Lingmo::wayland {
+namespace Lingmo::Wayland {
 class ForeignToplevelList;
 class ImageCaptureManager;
-} // namespace Lingmo::wayland
+} // namespace Lingmo::Wayland
 
 namespace Lingmo::Compositor {
 class CaptureSource;

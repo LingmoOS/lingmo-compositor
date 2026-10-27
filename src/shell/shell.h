@@ -33,7 +33,7 @@ namespace Lingmo::Input {
 class Seat;
 }
 
-namespace Lingmo::wayland {
+namespace Lingmo::Wayland {
 class InputMethodRelay;
 }
 

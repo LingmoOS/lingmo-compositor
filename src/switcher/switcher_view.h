@@ -21,12 +21,12 @@
 #include "wm/window_cycle_controller.h"
 namespace scene = Lingmo::Scene;
 
-namespace Lingmo::render {
+namespace Lingmo::Render {
 class Renderer;
 class Texture;
-} // namespace Lingmo::render
+} // namespace Lingmo::Render
 
-namespace Lingmo::toolkit {
+namespace Lingmo::Toolkit {
 class PanelTexture;
 }
 

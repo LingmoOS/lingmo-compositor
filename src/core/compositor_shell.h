@@ -72,7 +72,7 @@ class DisplayConfigService;
 }
 } // namespace display
 
-namespace wayland {
+namespace Wayland {
 class ExecutableSecurityDelegate;
 class IdleInhibition;
 class DmaBufScanoutPolicy;
