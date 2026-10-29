@@ -15,7 +15,7 @@ namespace Lingmo::Accelerators {
 
 namespace {
 
-constexpr std::array<std::pair<AcceleratorAction, const char *>, 46> kActionNames = {{
+constexpr auto kActionNames = std::to_array<std::pair<AcceleratorAction, const char *>>({
         {AcceleratorAction::ToggleAppList, "toggle-app-list"},
         {AcceleratorAction::LockScreen, "lock-screen"},
         {AcceleratorAction::CycleForwardMru, "cycle-forward-mru"},
@@ -67,7 +67,7 @@ constexpr std::array<std::pair<AcceleratorAction, const char *>, 46> kActionName
         {AcceleratorAction::MediaNext, "media-next"},
         {AcceleratorAction::MediaPrevious, "media-previous"},
         {AcceleratorAction::MediaStop, "media-stop"},
-}};
+});
 
 } // namespace
 

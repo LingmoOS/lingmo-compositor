@@ -1,3 +1,11 @@
+lingmo-compositor (5.0.3+lingmo5u1) unstable; urgency=medium
+
+  * Size the action-name table from its own initializers. It was fixed at
+    46 entries, and the four media keys made 50, which the compiler
+    refuses as too many initializers.
+
+ -- Lingmo OS Team <team@lingmo.org>  Thu, 29 Oct 2026 13:10:00 +0800
+
 lingmo-compositor (5.0.2+lingmo5u1) unstable; urgency=medium
 
   * Bring the window a launch opens to the front: the shell mints an
