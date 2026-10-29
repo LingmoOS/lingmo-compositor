@@ -174,6 +174,16 @@
       <arg name="surface" type="object" interface="wl_surface"/>
       <arg name="opacity" type="fixed"/>
     </request>
+    <request name="hide_application">
+      <description summary="hide every window of the application">
+        Hides the application the surface belongs to, all of its windows at
+        once, as the shell's Hide command does. The windows stay mapped and
+        keep their state; the next activation brings them back. A client that
+        wants to be unseen and out of the way, rather than closed, asks for
+        this instead of unmapping its own surface.
+      </description>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
     <event name="interactive_resize">
       <description summary="an interactive resize started or ended">
         Sent with active 1 when the user starts resizing one of the client's

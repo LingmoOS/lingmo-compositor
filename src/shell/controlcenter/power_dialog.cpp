@@ -32,8 +32,6 @@ static constexpr double kMargin = 16;
 static constexpr double kBottomMargin = 12;
 static constexpr double kMinimumWidth = 336;
 static constexpr double kTextSize = 14;
-static constexpr double kCloseButton = 32;
-static constexpr double kCloseMargin = 8;
 static constexpr double kButtonSpacing = 8;
 // A press that moves this far moves the window.
 static constexpr double kDragDistance = 10;
@@ -41,17 +39,15 @@ static constexpr int kDemiBold = 600;
 
 static const char *const kText = trNoop("Every application is asked to quit first, so you can save your work.");
 
-// The dialog's window content: the close button in the header's corner, the
-// title and text clear of it, the buttons at the bottom right; a drag
-// anywhere else moves the window.
+// The dialog's window content: the title and text, the buttons at the bottom
+// right; a drag anywhere else moves the window. Cancel is the only way out,
+// as the power dialog of every other desktop has it.
 class PowerDialog::Content final : public ui::View
 {
 public:
     explicit Content(PowerDialog *dialog)
         : m_dialog(dialog)
     {
-        m_close = addChild<ui::HeaderButton>("close", kCloseButton);
-        m_close->onClicked = [this] { m_dialog->finish(false); };
         m_title = addChild<ui::Label>();
         m_title->setFontSize(kTextSize);
         m_title->setWeight(kDemiBold);
@@ -105,7 +101,6 @@ protected:
     void layout() override
     {
         const double width = geometry().width;
-        m_close->setGeometry({width - kCloseMargin - kCloseButton, kCloseMargin, kCloseButton, kCloseButton});
         const double textWidth = this->textWidth();
         const double titleHeight = m_title->heightForWidth(textWidth);
         m_title->setGeometry({kMargin, kMargin, textWidth, titleHeight});
@@ -152,7 +147,6 @@ protected:
 
 private:
     PowerDialog *m_dialog;
-    ui::HeaderButton *m_close;
     ui::Label *m_title;
     ui::Label *m_text;
     ui::DialogButton *m_cancel;

@@ -26,7 +26,12 @@ class ApplicationLauncher
 public:
     using Done = std::function<void(bool started)>;
 
-    explicit ApplicationLauncher(base::dbus::Connection *bus = base::dbus::Connection::session());
+    // `createActivationToken` mints the token that lets the window a launch
+    // opens come to the front: without one the compositor has no proof the
+    // user asked for it, and Wayland puts it behind. Unset, launches go out
+    // without a token, as they did before the shell had one to give.
+    explicit ApplicationLauncher(base::dbus::Connection *bus = base::dbus::Connection::session(),
+                                 std::function<std::string()> createActivationToken = {});
 
     // The entry by its id, as DesktopEntry::launch() did: the runtime starts
     // it and ties it to the entry; its command is the fallback.
@@ -43,6 +48,12 @@ public:
                               const std::vector<std::string> &environment = {});
 
 private:
+    // The one place a launch leaves this class from, with the token both
+    // public entries minted for it.
+    void startCommand(const std::vector<std::string> &command, const std::string &workingDirectory,
+                      const std::string &appId, const std::string &activationToken, Done done);
+
+    std::function<std::string()> m_createActivationToken;
     base::dbus::Proxy m_runtime;
     PendingCalls m_calls;
 };

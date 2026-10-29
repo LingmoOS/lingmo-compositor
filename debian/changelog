@@ -1,3 +1,14 @@
+lingmo-compositor (5.0.2+lingmo5u1) unstable; urgency=medium
+
+  * Bring the window a launch opens to the front: the shell mints an
+    activation token and hands it to the runtime, and to the program it
+    starts itself, instead of passing an empty one.
+  * Add hide_application to lingmo-window-hints-v1, so an application can
+    hide all of its windows at once, as the shell's Hide does.
+  * Drop the power dialog's close button; Cancel is the only way out.
+
+ -- Lingmo OS Team <team@lingmo.org>  Thu, 29 Oct 2026 13:00:00 +0800
+
 lingmo-compositor (5.0.1+lingmo5u1) unstable; urgency=medium
 
   * Add the Simplified Chinese translation.
