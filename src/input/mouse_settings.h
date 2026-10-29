@@ -53,7 +53,11 @@ private:
     base::Settings m_settings;
     bool m_available = false;
     bool m_leftHanded = false;
-    bool m_naturalScroll = true;
+    // A wheel reads as a scrollbar, not as a finger on the content: pushing it
+    // down moves the content down, as on every other desktop. A touchpad keeps
+    // the natural direction, where the content follows the fingers, so the two
+    // default apart.
+    bool m_naturalScroll = false;
     bool m_acceleration = true;
     double m_pointerAcceleration = 0;
     std::unique_ptr<DBusExport> m_object;

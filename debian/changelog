@@ -1,3 +1,11 @@
+lingmo-compositor (5.0.4+lingmo5u1) unstable; urgency=medium
+
+  * Default the mouse to the scrollbar direction rather than the natural
+    one. A wheel is pushed down to move the content down; only a touchpad
+    follows the fingers. The two shared a default until now.
+
+ -- Lingmo OS Team <team@lingmo.org>  Thu, 29 Oct 2026 14:26:00 +0800
+
 lingmo-compositor (5.0.3+lingmo5u1) unstable; urgency=medium
 
   * Size the action-name table from its own initializers. It was fixed at
