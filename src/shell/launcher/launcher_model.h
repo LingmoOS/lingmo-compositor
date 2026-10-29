@@ -4,6 +4,8 @@
 #pragma once
 
 
+#include <cstdint>
+#include <map>
 #include <optional>
 #include <set>
 #include <string>
@@ -30,11 +32,21 @@ struct LauncherItem {
     bool newInstalled = false;
 };
 
+// How often an application was started from the launcher, and when it was
+// last started (seconds since the epoch, 0 for never). A search ranks the
+// applications the query matches equally by this, so the ones a person
+// actually uses come first.
+struct LaunchUsage {
+    int count = 0;
+    int64_t lastUsed = 0;
+};
+
 // The launcher's applications in the user's order, or the ones a search
 // finds: the order in the [Launcher] group of shell.conf (order, the desktop
 // ids, and newAppIds), new applications appended and marked, alphabetical
-// the first time. A search keeps that order and matches the name, generic name,
-// comment or id, ignoring case.
+// the first time. A search ranks instead: the name, generic name, comment or
+// id fuzzy-matched, and equally good matches ordered by how recently and how
+// often the application was started, from the [LauncherUsage] group.
 class LauncherModel : public ListModelSignals
 {
 public:
@@ -80,12 +92,18 @@ private:
         bool valid = false;
         std::vector<LauncherItem> items;
         std::vector<std::string> newAppIds;
+        std::map<std::string, LaunchUsage> usage;
     };
 
     static Stored load(const std::string &path);
     void onApplicationsChanged();
     void updateRows();
     void delaySave();
+    // Counts one start of `id` and saves it with the next write.
+    void recordLaunch(const std::string &id);
+    // Starts weighted by how recently and how often the application was
+    // used, as a tie-break between equally good search matches.
+    int64_t frecency(const std::string &id) const;
 
     Applications &m_applications;
     ApplicationLauncher &m_launcher;
@@ -93,6 +111,8 @@ private:
     std::vector<LauncherItem> m_items;
     SyncedList<LauncherItem> m_rows;
     std::string m_searchKey;
+    // Kept for the whole session, not only while the launcher is open.
+    std::map<std::string, LaunchUsage> m_usage;
     // Opened before the registry listed them; they do not arrive as new.
     std::set<std::string> m_openedUnknownIds;
     bool m_loaded = false;

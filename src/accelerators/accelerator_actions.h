@@ -7,9 +7,9 @@
 //
 // Adapted for Cutefish: the launcher, the lock screen, the window actions,
 // the application menu's Quit, Hide and Hide Others, desks, screen capture and
-// the volume, microphone, brightness and keyboard backlight keys. Media keys
-// stay with the applications; browser, IME, accessibility, tablet and debug
-// actions have nothing to act on.
+// the volume, microphone, brightness and keyboard backlight keys, plus the
+// media keys, which reach the session's MPRIS player. Browser, IME,
+// accessibility, tablet and debug actions have nothing to act on.
 #pragma once
 
 
@@ -82,6 +82,14 @@ enum class AcceleratorAction : uint32_t {
     BrightnessUp,
     KeyboardBrightnessDown,
     KeyboardBrightnessUp,
+
+    // The media keys, sent to the player the session is playing from over
+    // MPRIS. The session's own, not the focused window's: a player in the
+    // background still answers them, as it does on any other desktop.
+    MediaPlayPause,
+    MediaNext,
+    MediaPrevious,
+    MediaStop,
 };
 
 using AcceleratorActionId = uint32_t;

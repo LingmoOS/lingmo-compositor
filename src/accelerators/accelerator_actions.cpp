@@ -63,6 +63,10 @@ constexpr std::array<std::pair<AcceleratorAction, const char *>, 46> kActionName
         {AcceleratorAction::BrightnessUp, "brightness-up"},
         {AcceleratorAction::KeyboardBrightnessDown, "keyboard-brightness-down"},
         {AcceleratorAction::KeyboardBrightnessUp, "keyboard-brightness-up"},
+        {AcceleratorAction::MediaPlayPause, "media-play-pause"},
+        {AcceleratorAction::MediaNext, "media-next"},
+        {AcceleratorAction::MediaPrevious, "media-previous"},
+        {AcceleratorAction::MediaStop, "media-stop"},
 }};
 
 } // namespace

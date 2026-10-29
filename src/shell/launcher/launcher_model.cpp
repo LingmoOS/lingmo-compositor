@@ -5,6 +5,8 @@
 #include "shell/launcher/launcher_model.h"
 
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
 #include <filesystem>
 #include <map>
 #include <unistd.h>
@@ -52,6 +54,7 @@ LauncherModel::LauncherModel(Applications &applications, ApplicationLauncher &la
     m_load = runOnFileThread([path = m_path] { return load(path); },
                              [this](Stored stored) {
                                  m_firstLoad = !stored.valid;
+                                 m_usage = std::move(stored.usage);
                                  if (stored.valid) {
                                      m_items = std::move(stored.items);
                                      for (LauncherItem &item : m_items)
@@ -74,6 +77,21 @@ LauncherModel::Stored LauncherModel::load(const std::string &path)
 {
     const base::Settings settings(path);
     Stored stored;
+
+    // Read first: a launch recorded before the list was ever saved still
+    // counts.
+    for (const std::string &id : settings.childKeys("LauncherUsage")) {
+        const std::string value = settings.stringValue("LauncherUsage/" + id);
+        const size_t space = value.find(' ');
+        if (space == std::string::npos)
+            continue;
+        LaunchUsage usage;
+        usage.count = int(std::strtol(value.substr(0, space).c_str(), nullptr, 10));
+        usage.lastUsed = int64_t(std::strtoll(value.substr(space + 1).c_str(), nullptr, 10));
+        if (usage.count > 0 && usage.lastUsed > 0)
+            stored.usage.emplace(id, usage);
+    }
+
     if (!settings.contains("Launcher/order"))
         return stored;
 
@@ -103,11 +121,18 @@ void LauncherModel::save()
             newAppIds.push_back(item.id);
     }
 
-    fileThread().post([path = m_path, order, newAppIds] {
+    std::map<std::string, LaunchUsage> usage = m_usage;
+    fileThread().post([path = m_path, order, newAppIds, usage] {
         base::Settings settings(path);
         settings.remove("Launcher");
+        // Rewritten whole, so the entries of applications that are gone do
+        // not stay behind.
+        settings.remove("LauncherUsage");
         settings.setValue("Launcher/order", order);
         settings.setValue("Launcher/newAppIds", newAppIds);
+        for (const auto &[id, entry] : usage)
+            settings.setValue("LauncherUsage/" + id,
+                              std::to_string(entry.count) + ' ' + std::to_string(entry.lastUsed));
         settings.sync();
     });
 }
@@ -173,13 +198,76 @@ void LauncherModel::updateRows()
         m_rows.sync(m_items);
         return;
     }
-    std::vector<LauncherItem> results;
-    for (const LauncherItem &item : m_items) {
-        if (containsIgnoringCase(item.name, m_searchKey) || containsIgnoringCase(item.genericName, m_searchKey)
-            || containsIgnoringCase(item.comment, m_searchKey) || containsIgnoringCase(item.id, m_searchKey))
-            results.push_back(item);
+
+    struct Ranked {
+        LauncherItem item;
+        int match = 0;
+        int64_t weight = 0;
+        size_t order = 0;
+    };
+
+    std::vector<Ranked> ranked;
+    ranked.reserve(m_items.size());
+    for (size_t i = 0; i < m_items.size(); ++i) {
+        const LauncherItem &item = m_items[i];
+        // The name says the most about which application was meant; the rest
+        // are there for the searches the name cannot answer.
+        const int match = std::max({fuzzyMatchScore(item.name, m_searchKey),
+                                    fuzzyMatchScore(item.genericName, m_searchKey),
+                                    fuzzyMatchScore(item.comment, m_searchKey),
+                                    fuzzyMatchScore(item.id, m_searchKey)});
+        if (match == 0)
+            continue;
+        ranked.push_back(Ranked{item, match, frecency(item.id), i});
     }
+
+    // Equally good matches go to what the person uses, and the user's own
+    // order settles what is left.
+    std::stable_sort(ranked.begin(), ranked.end(), [](const Ranked &a, const Ranked &b) {
+        if (a.match != b.match)
+            return a.match > b.match;
+        if (a.weight != b.weight)
+            return a.weight > b.weight;
+        return a.order < b.order;
+    });
+
+    std::vector<LauncherItem> results;
+    results.reserve(ranked.size());
+    for (Ranked &row : ranked)
+        results.push_back(std::move(row.item));
     m_rows.sync(results);
+}
+
+int64_t LauncherModel::frecency(const std::string &id) const
+{
+    const auto found = m_usage.find(id);
+    if (found == m_usage.end() || found->second.count <= 0)
+        return 0;
+
+    const int64_t now = int64_t(std::time(nullptr));
+    const int64_t age = std::max<int64_t>(0, now - found->second.lastUsed);
+
+    // A start an hour ago says more about what someone wants now than one
+    // from last month.
+    int64_t weight = 10;
+    if (age < 4 * 3600)
+        weight = 100;
+    else if (age < 24 * 3600)
+        weight = 70;
+    else if (age < 7 * 86400)
+        weight = 50;
+    else if (age < 30 * 86400)
+        weight = 30;
+
+    return int64_t(found->second.count) * weight;
+}
+
+void LauncherModel::recordLaunch(const std::string &id)
+{
+    LaunchUsage &usage = m_usage[id];
+    usage.count += 1;
+    usage.lastUsed = int64_t(std::time(nullptr));
+    delaySave();
 }
 
 int LauncherModel::findById(const std::string &id) const
@@ -265,6 +353,7 @@ bool LauncherModel::launch(const std::string &idOrPath)
     if (command.empty())
         return false;
     m_launcher.launchCommand(command, entry->workingDirectory, entry->id);
+    recordLaunch(entry->id);
     applicationLaunched();
     return true;
 }

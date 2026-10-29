@@ -97,11 +97,16 @@ public:
     void brightnessUp() override { levels.push_back("brightness-up"); }
     void keyboardBrightnessDown() override { levels.push_back("keyboard-brightness-down"); }
     void keyboardBrightnessUp() override { levels.push_back("keyboard-brightness-up"); }
+    void mediaPlayPause() override { players.push_back("play-pause"); }
+    void mediaNext() override { players.push_back("next"); }
+    void mediaPrevious() override { players.push_back("previous"); }
+    void mediaStop() override { players.push_back("stop"); }
 
     int appListToggles = 0;
     int clipboardHistoryToggles = 0;
     std::vector<std::string> captures;
     std::vector<std::string> levels;
+    std::vector<std::string> players;
 };
 
 // Records what reaches a client keyboard.

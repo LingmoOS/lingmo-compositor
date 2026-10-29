@@ -93,6 +93,12 @@ void brightnessDown(const CommandContext &context);
 void brightnessUp(const CommandContext &context);
 void keyboardBrightnessDown(const CommandContext &context);
 void keyboardBrightnessUp(const CommandContext &context);
+// The session's media player, over MPRIS. Nothing happens when none is
+// running, which is the answer a key with nothing to control should give.
+void mediaPlayPause(const CommandContext &context);
+void mediaNext(const CommandContext &context);
+void mediaPrevious(const CommandContext &context);
+void mediaStop(const CommandContext &context);
 
 } // namespace commands
 } // namespace Lingmo::Accelerators

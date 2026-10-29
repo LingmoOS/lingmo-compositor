@@ -40,6 +40,12 @@ public:
     virtual void brightnessUp() = 0;
     virtual void keyboardBrightnessDown() = 0;
     virtual void keyboardBrightnessUp() = 0;
+
+    // org.mpris.MediaPlayer2.*: the session's player, which may be none.
+    virtual void mediaPlayPause() = 0;
+    virtual void mediaNext() = 0;
+    virtual void mediaPrevious() = 0;
+    virtual void mediaStop() = 0;
 };
 
 // The production delegate.
@@ -63,6 +69,10 @@ public:
     void brightnessUp() override;
     void keyboardBrightnessDown() override;
     void keyboardBrightnessUp() override;
+    void mediaPlayPause() override;
+    void mediaNext() override;
+    void mediaPrevious() override;
+    void mediaStop() override;
 };
 
 } // namespace Lingmo::Accelerators

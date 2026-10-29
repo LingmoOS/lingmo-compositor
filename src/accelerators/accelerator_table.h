@@ -104,6 +104,14 @@ inline constexpr auto kAcceleratorData = std::to_array<AcceleratorData>({
         {true, XKB_KEY_XF86KbdBrightnessDown, NoModifier,
          AcceleratorAction::KeyboardBrightnessDown},
         {true, XKB_KEY_XF86KbdBrightnessUp, NoModifier, AcceleratorAction::KeyboardBrightnessUp},
+
+        // Media keys. Play and Pause are the same key on most keyboards, but
+        // some send one and some the other.
+        {true, XKB_KEY_XF86AudioPlay, NoModifier, AcceleratorAction::MediaPlayPause},
+        {true, XKB_KEY_XF86AudioPause, NoModifier, AcceleratorAction::MediaPlayPause},
+        {true, XKB_KEY_XF86AudioNext, NoModifier, AcceleratorAction::MediaNext},
+        {true, XKB_KEY_XF86AudioPrev, NoModifier, AcceleratorAction::MediaPrevious},
+        {true, XKB_KEY_XF86AudioStop, NoModifier, AcceleratorAction::MediaStop},
 });
 
 // The defaults under input::ShortcutConvention::Command. Command reaches the
@@ -184,6 +192,14 @@ inline constexpr auto kCommandAcceleratorData = std::to_array<AcceleratorData>({
         {true, XKB_KEY_XF86KbdBrightnessDown, NoModifier,
          AcceleratorAction::KeyboardBrightnessDown},
         {true, XKB_KEY_XF86KbdBrightnessUp, NoModifier, AcceleratorAction::KeyboardBrightnessUp},
+
+        // Media keys. Play and Pause are the same key on most keyboards, but
+        // some send one and some the other.
+        {true, XKB_KEY_XF86AudioPlay, NoModifier, AcceleratorAction::MediaPlayPause},
+        {true, XKB_KEY_XF86AudioPause, NoModifier, AcceleratorAction::MediaPlayPause},
+        {true, XKB_KEY_XF86AudioNext, NoModifier, AcceleratorAction::MediaNext},
+        {true, XKB_KEY_XF86AudioPrev, NoModifier, AcceleratorAction::MediaPrevious},
+        {true, XKB_KEY_XF86AudioStop, NoModifier, AcceleratorAction::MediaStop},
 });
 
 // Switching applications always switches, over a fullscreen game too, and
@@ -206,6 +222,12 @@ inline constexpr std::array kActionsAllowedAtLockScreen = {
         AcceleratorAction::BrightnessUp,
         AcceleratorAction::KeyboardBrightnessDown,
         AcceleratorAction::KeyboardBrightnessUp,
+        // The keys reach the player, not the session, so they stay useful
+        // while it is locked.
+        AcceleratorAction::MediaNext,
+        AcceleratorAction::MediaPlayPause,
+        AcceleratorAction::MediaPrevious,
+        AcceleratorAction::MediaStop,
         AcceleratorAction::MicrophoneMuteToggle,
         AcceleratorAction::VolumeDown,
         AcceleratorAction::VolumeMuteToggle,
@@ -219,6 +241,10 @@ inline constexpr std::array kActionsAllowedAtModalWindow = {
         AcceleratorAction::KeyboardBrightnessDown,
         AcceleratorAction::KeyboardBrightnessUp,
         AcceleratorAction::LockScreen,
+        AcceleratorAction::MediaNext,
+        AcceleratorAction::MediaPlayPause,
+        AcceleratorAction::MediaPrevious,
+        AcceleratorAction::MediaStop,
         AcceleratorAction::MicrophoneMuteToggle,
         AcceleratorAction::VolumeDown,
         AcceleratorAction::VolumeMuteToggle,
