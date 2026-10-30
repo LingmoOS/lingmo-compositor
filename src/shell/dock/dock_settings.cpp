@@ -28,12 +28,19 @@ DockSettings::DockSettings(std::string path)
                                  const bool visibility = values.visibility != m_visibility;
                                  const bool tint = values.glassTint != m_glassTint;
                                  const bool area = values.minimizedArea != m_minimizedArea;
+                                 const bool magnification = values.magnification != m_magnification;
+                                 const bool factor =
+                                         values.magnificationFactor != m_magnificationFactor;
+                                 const bool bounce = values.bounceOnLaunch != m_bounceOnLaunch;
                                  m_iconSize = values.iconSize;
                                  m_direction = values.direction;
                                  m_visibility = values.visibility;
                                  m_edgeMargins = values.edgeMargins;
                                  m_glassTint = values.glassTint;
                                  m_minimizedArea = values.minimizedArea;
+                                 m_magnification = values.magnification;
+                                 m_magnificationFactor = values.magnificationFactor;
+                                 m_bounceOnLaunch = values.bounceOnLaunch;
                                  m_ready = true;
                                  ready();
                                  if (iconSize)
@@ -46,6 +53,12 @@ DockSettings::DockSettings(std::string path)
                                      glassTintChanged();
                                  if (area)
                                      minimizedAreaChanged();
+                                 if (magnification)
+                                     magnificationChanged();
+                                 if (factor)
+                                     magnificationFactorChanged();
+                                 if (bounce)
+                                     bounceOnLaunchChanged();
                              });
 }
 
@@ -65,6 +78,12 @@ DockSettings::Values DockSettings::load(const std::string &path)
         settings.setValue("Dock/GlassTint", 0.5);
     if (!settings.contains("Dock/MinimizedArea"))
         settings.setValue("Dock/MinimizedArea", true);
+    if (!settings.contains("Dock/Magnification"))
+        settings.setValue("Dock/Magnification", true);
+    if (!settings.contains("Dock/MagnificationFactor"))
+        settings.setValue("Dock/MagnificationFactor", 1.5);
+    if (!settings.contains("Dock/BounceOnLaunch"))
+        settings.setValue("Dock/BounceOnLaunch", true);
     settings.sync();
 
     Values values;
@@ -74,6 +93,10 @@ DockSettings::Values DockSettings::load(const std::string &path)
     values.edgeMargins = int(settings.intValue("Dock/EdgeMargins", 10));
     values.glassTint = std::clamp(settings.doubleValue("Dock/GlassTint", 0.5), 0.0, 1.0);
     values.minimizedArea = settings.boolValue("Dock/MinimizedArea", true);
+    values.magnification = settings.boolValue("Dock/Magnification", true);
+    const double factor = settings.doubleValue("Dock/MagnificationFactor", 1.5);
+    values.magnificationFactor = std::clamp(std::isfinite(factor) ? factor : 1.5, 1.0, 2.0);
+    values.bounceOnLaunch = settings.boolValue("Dock/BounceOnLaunch", true);
     return values;
 }
 
@@ -81,8 +104,10 @@ void DockSettings::write(const char *key, double value)
 {
     const std::string name = key;
     writeSettings(m_path, [name, value](base::Settings &settings) {
-        if (name == "Dock/GlassTint")
+        if (name == "Dock/GlassTint" || name == "Dock/MagnificationFactor")
             settings.setValue(name, value);
+        else if (name == "Dock/Magnification" || name == "Dock/BounceOnLaunch")
+            settings.setValue(name, value != 0);
         else
             settings.setValue(name, int64_t(value));
     });
@@ -132,6 +157,34 @@ void DockSettings::setMinimizedArea(bool enabled)
     m_minimizedArea = enabled;
     writeSettings(m_path, [enabled](base::Settings &settings) { settings.setValue("Dock/MinimizedArea", enabled); });
     minimizedAreaChanged();
+}
+
+void DockSettings::setMagnification(bool enabled)
+{
+    if (m_magnification == enabled)
+        return;
+    m_magnification = enabled;
+    write("Dock/Magnification", enabled ? 1 : 0);
+    magnificationChanged();
+}
+
+void DockSettings::setMagnificationFactor(double factor)
+{
+    factor = std::isfinite(factor) ? std::clamp(factor, 1.0, 2.0) : 1.5;
+    if (std::abs(m_magnificationFactor - factor) < 1e-12)
+        return;
+    m_magnificationFactor = factor;
+    write("Dock/MagnificationFactor", factor);
+    magnificationFactorChanged();
+}
+
+void DockSettings::setBounceOnLaunch(bool enabled)
+{
+    if (m_bounceOnLaunch == enabled)
+        return;
+    m_bounceOnLaunch = enabled;
+    write("Dock/BounceOnLaunch", enabled ? 1 : 0);
+    bounceOnLaunchChanged();
 }
 
 } // namespace Lingmo::Shell

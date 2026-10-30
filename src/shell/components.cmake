@@ -29,8 +29,12 @@ target_link_libraries(lingmo-compositor PRIVATE lingmo-shell-osd)
 
 # The dock: its view, window and input on the dock's backend.
 add_library(lingmo-shell-dock-view STATIC
+    src/shell/dock/dock_bounce.cpp
+    src/shell/dock/dock_bounce.h
     src/shell/dock/dock_icon.cpp
     src/shell/dock/dock_icon.h
+    src/shell/dock/dock_magnification.cpp
+    src/shell/dock/dock_magnification.h
     src/shell/dock/dock_metrics.h
     src/shell/dock/dock_presentation.cpp
     src/shell/dock/dock_presentation.h

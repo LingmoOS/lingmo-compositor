@@ -56,6 +56,14 @@ bool Dock::registerService()
                       dbus::ArgumentNames{{"tint"}, {}});
     object->addMethod("setMinimizedArea", [this](bool enabled) { m_settings.setMinimizedArea(enabled); },
                       dbus::ArgumentNames{{"enabled"}, {}});
+    object->addMethod("setMagnification", [this](bool enabled) { m_settings.setMagnification(enabled); },
+                      dbus::ArgumentNames{{"enabled"}, {}});
+    object->addMethod("setMagnificationFactor",
+                      [this](double factor) { m_settings.setMagnificationFactor(factor); },
+                      dbus::ArgumentNames{{"factor"}, {}});
+    object->addMethod("setBounceOnLaunch",
+                      [this](bool enabled) { m_settings.setBounceOnLaunch(enabled); },
+                      dbus::ArgumentNames{{"enabled"}, {}});
     if (!object->publish() || !m_bus->requestName("org.lingmo.Dock", dbus::Connection::DoNotQueue)) {
         LM_WARNING(cfDock) << "Cannot own org.lingmo.Dock";
         return false;

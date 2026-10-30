@@ -19,7 +19,9 @@
 #include "shell/common/task_manager.h"
 #include "shell/common/task_windows.h"
 #include "shell/dock/dock.h"
+#include "shell/dock/dock_bounce.h"
 #include "shell/dock/dock_icon.h"
+#include "shell/dock/dock_magnification.h"
 #include "shell/dock/dock_presentation.h"
 #include "shell/dock/dock_tooltip.h"
 #include "shell/shell_data.h"
@@ -138,10 +140,18 @@ public:
 protected:
     void hoverChanged() override
     {
-        // Leaving the dock itself takes the tooltip down at once.
-        if (!isHovered())
+        // Leaving the dock itself takes the tooltip down at once, and lets
+        // the magnified icons settle back.
+        if (!isHovered()) {
             m_dock->hideTooltip();
+            m_dock->panelHoverLeft();
+        }
     }
+
+    // The pointer's place on the dock, for the magnification; the chain of
+    // hovered views includes this panel while the pointer is on any of its
+    // children too.
+    void hoverMove(const ui::PointerEvent &event) override { m_dock->panelHoverMoved(event.position); }
 
     // A theme change lays every window out again.
     void layout() override
@@ -215,6 +225,12 @@ DockWindow::DockWindow(Shell *shell, std::unique_ptr<Dock> dock)
     m_applications->setOpensForNewIcons(true);
     m_applications->onChanged = [this] { layoutItems(); };
     m_minimized->onChanged = [this] { layoutItems(); };
+
+    m_magnification = std::make_unique<DockMagnification>(window);
+    m_bounce = std::make_unique<DockBounce>(window);
+    m_magnification->onChanged = [this] { layoutItems(); };
+    m_bounce->onChanged = [this] { layoutItems(); };
+    configureMagnification();
 
     m_tooltip = std::make_unique<DockTooltip>(this, shell);
     m_trash = m_panel->addChild<DockIcon>(this, DockIcon::Kind::Trash);
@@ -310,6 +326,18 @@ DockWindow::DockWindow(Shell *shell, std::unique_ptr<Dock> dock)
         m_sentTargets.clear();
         updateMinimizeTargets();
     }));
+    m_subscriptions.push_back(settings.magnificationChanged.connect([this] {
+        configureMagnification();
+        resize(false);
+    }));
+    m_subscriptions.push_back(settings.magnificationFactorChanged.connect([this] {
+        configureMagnification();
+        resize(false);
+    }));
+    m_subscriptions.push_back(settings.bounceOnLaunchChanged.connect([this] {
+        if (!m_dock->settings().bounceOnLaunch())
+            m_bounce->clear();
+    }));
     m_subscriptions.push_back(m_dock->trash().emptyChanged.connect([this] { rebuild(); }));
     m_subscriptions.push_back(ui::Application::instance()->languageChanged.connect([this] { retranslate(); }));
     m_subscriptions.push_back(m_shell->outputsChanged.connect([this] { resize(false); }));
@@ -358,6 +386,8 @@ DockWindow::~DockWindow()
     m_dock->primaryGeometry = nullptr;
     m_menu.reset();
     m_tooltip.reset();
+    m_bounce.reset();
+    m_magnification.reset();
     m_applications.reset();
     m_minimized.reset();
     m_window.reset();
@@ -376,13 +406,17 @@ base::Rect DockWindow::primaryGeometry() const
 
 double DockWindow::cornerRadius() const
 {
-    // From the panel as drawn, which is between two sizes while it resizes.
+    // From the panel as drawn, which is between two sizes while it resizes;
+    // magnification makes it taller, not rounder, so the base thickness is
+    // what its corners come from.
     const bool bottom = m_dock->settings().direction() == DockSettings::Bottom;
-    const double thickness = bottom ? m_panelRect.height() : m_panelRect.width();
-    return (thickness > 0 ? thickness : m_metrics.thickness()) * 28.0 / 86.0;
+    const double drawn = bottom ? m_panelRect.height() : m_panelRect.width();
+    const double base = m_metrics.thickness();
+    const double thickness = drawn > 0 && base > 0 ? std::min(drawn, base) : (drawn > 0 ? drawn : base);
+    return (thickness > 0 ? thickness : 1) * 28.0 / 86.0;
 }
 
-base::Rect DockWindow::windowRect(int thickness) const
+base::Rect DockWindow::baseWindowRect(int thickness) const
 {
     const Shell::Output *output = m_shell->output({});
     if (!output)
@@ -407,6 +441,46 @@ base::Rect DockWindow::windowRect(int thickness) const
     }
     return base::Rect(screen.x() + (screen.width() - length) / 2,
                       screen.y() + screen.height() - across, length, across);
+}
+
+base::Rect DockWindow::windowRect(int thickness) const
+{
+    const base::Rect rect = baseWindowRect(thickness);
+    if (rect.isEmpty())
+        return rect;
+    // Room the magnified icons and a bounce need beyond the panel: the window
+    // takes it on the screen's side, so the panel keeps its place against the
+    // edge.
+    const int headroom = magnificationHeadroom();
+    if (headroom <= 0)
+        return rect;
+    switch (m_dock->settings().direction()) {
+    case DockSettings::Left:
+        return base::Rect(rect.x(), rect.y(), rect.width() + headroom, rect.height());
+    case DockSettings::Right:
+        return base::Rect(rect.x() - headroom, rect.y(), rect.width() + headroom, rect.height());
+    case DockSettings::Bottom:
+        break;
+    }
+    return base::Rect(rect.x(), rect.y() - headroom, rect.width(), rect.height() + headroom);
+}
+
+int DockWindow::magnificationHeadroom() const
+{
+    const DockSettings &settings = m_dock->settings();
+    const int iconSize = DockMetrics::forIconSize(settings.iconSize()).iconSize;
+    const double grows = settings.magnification() ? iconSize * (settings.magnificationFactor() - 1.0) : 0.0;
+    const double hops = settings.bounceOnLaunch() ? iconSize * DockBounce::kAmplitude : 0.0;
+    if (grows <= 0 && hops <= 0)
+        return 0;
+    return int(std::ceil(grows + hops)) + 2;
+}
+
+void DockWindow::configureMagnification()
+{
+    const DockSettings &settings = m_dock->settings();
+    m_magnification->setEnabled(settings.magnification());
+    m_magnification->setFactor(settings.magnificationFactor());
 }
 
 int DockWindow::edgeGap() const
@@ -642,8 +716,9 @@ void DockWindow::updateLayoutStart()
 
 void DockWindow::layoutItems()
 {
-    if (m_windowRect.isEmpty())
+    if (m_windowRect.isEmpty() || m_layingOut)
         return;
+    m_layingOut = true;
     updateLayoutStart();
     const DockSettings::Direction direction = m_dock->settings().direction();
     const bool bottom = direction == DockSettings::Bottom;
@@ -688,22 +763,24 @@ void DockWindow::layoutItems()
         return ui::RectF {left ? -double(gap) : 0, start - m_drawn.iconGap / 2,
                           drawnThickness + gap, itemSize + m_drawn.iconGap};
     };
-    const auto placeIcon = [&](DockIcon *icon, double position, double scale, double opacity) {
-        const ui::RectF slot = slotRect(position);
-        icon->setGeometry({slot.x + panel.x(), slot.y + panel.y(), slot.width, slot.height});
-        const ui::RectF iconRect = bottom ? ui::RectF {m_drawn.iconGap / 2, across, itemSize, itemSize}
-                                          : ui::RectF {across, m_drawn.iconGap / 2, itemSize, itemSize};
-        icon->setIconRect(iconRect);
-        icon->setPresentation(scale * itemScale, opacity);
+    // The icon inside a slot, in the item's own coordinates.
+    const ui::RectF iconIn = bottom ? ui::RectF {m_drawn.iconGap / 2, across, itemSize, itemSize}
+                                    : ui::RectF {across, m_drawn.iconGap / 2, itemSize, itemSize};
+
+    // Where each item goes and what it is drawn as, before the magnification
+    // and the bounce have had their say.
+    struct Placed
+    {
+        DockIcon *icon;
+        double position;
+        double scale;
+        double opacity;
+    };
+    std::vector<Placed> placed;
+    const auto place = [&](DockIcon *icon, double position, double scale, double opacity) {
+        placed.push_back({icon, position, scale, opacity});
         m_leavingIcons.erase(icon);
-        const double dot = m_metrics.dotSize;
-        const double dotGap = m_metrics.dotGap;
-        if (bottom)
-            icon->setDotRect({iconRect.x + (itemSize - dot) / 2, iconRect.y + itemSize + dotGap, dot, dot});
-        else if (left)
-            icon->setDotRect({iconRect.x - (dotGap + dot), iconRect.y + (itemSize - dot) / 2, dot, dot});
-        else
-            icon->setDotRect({iconRect.x + itemSize + dotGap, iconRect.y + (itemSize - dot) / 2, dot, dot});
+        icon->setEnabled(true);
     };
 
     // Out of the layout, above the icons that close up under it, where it was
@@ -739,8 +816,7 @@ void DockWindow::layoutItems()
         }
         const double position = along(m_applications->position(entry), m_applications->targetPosition(entry))
                 + itemGrowth;
-        placeIcon(icon, position, m_applications->iconScale(entry), m_applications->appearance(entry));
-        icon->setEnabled(true);
+        place(icon, position, m_applications->iconScale(entry), m_applications->appearance(entry));
     }
     for (auto it = m_applicationIcons.begin(); it != m_applicationIcons.end();) {
         if (present.contains(it->first)) {
@@ -781,9 +857,8 @@ void DockWindow::layoutItems()
                                       settledMinimizedStart + m_minimized->targetPosition(entry))
                 + itemGrowth;
         const bool revealed = state == m_minimizedStates.end() || !state->second.flownIn;
-        placeIcon(icon, position, revealed ? m_minimized->iconScale(entry) : 1,
-                  !landed ? 0 : revealed ? m_minimized->appearance(entry) : 1);
-        icon->setEnabled(true);
+        place(icon, position, revealed ? m_minimized->iconScale(entry) : 1,
+              !landed ? 0 : revealed ? m_minimized->appearance(entry) : 1);
     }
     for (auto it = m_minimizedIcons.begin(); it != m_minimizedIcons.end();) {
         if (windows.contains(it->first)) {
@@ -801,10 +876,118 @@ void DockWindow::layoutItems()
         it = m_minimizedIcons.erase(it);
     }
 
-    placeIcon(m_trash,
-              along(minimizedStart + m_minimized->length(), settledMinimizedStart + m_minimized->targetLength())
-                      + itemGrowth,
-              1, 1);
+    place(m_trash,
+          along(minimizedStart + m_minimized->length(), settledMinimizedStart + m_minimized->targetLength())
+                  + itemGrowth,
+          1, 1);
+
+    // The row as it rests, for the magnification: every icon's centre along
+    // the dock, its width, and the gap before it.
+    std::vector<DockMagnification::Item> items;
+    items.reserve(placed.size());
+    for (size_t i = 0; i < placed.size(); ++i) {
+        const double centre = placed[i].position + itemSize / 2;
+        double gapBefore = 0;
+        if (i > 0) {
+            const double previous = placed[i - 1].position + itemSize / 2;
+            gapBefore = std::max(0.0, centre - previous - itemSize);
+        }
+        items.push_back({centre, itemSize, gapBefore});
+    }
+    m_magnification->setItems(std::move(items), m_metrics.pitch());
+    const double contentOrigin = m_start + m_drawn.lengthPadding;
+    // A drag from the dock, or one arriving over it, holds the icons still.
+    const bool dragging = m_drag.has_value() || m_drop.offer;
+    if (m_pointerAlong && !dragging)
+        m_magnification->setPointer(*m_pointerAlong - contentOrigin);
+    else
+        m_magnification->setPointer(std::nullopt);
+
+    // Drawing: the rest places, moved by the magnification's shifts and scaled
+    // by it, and lifted off the dock's base line by the magnification and the
+    // bounce.
+    const std::vector<DockMagnification::Placement> &placements = m_magnification->placements();
+    const bool smoothed = placements.size() == placed.size();
+    const double restIconSize = itemSize * itemScale;
+    const auto liftOff = [&](double lift) {
+        if (bottom)
+            return ui::PointF {0, -lift};
+        return ui::PointF {left ? lift : -lift, 0};
+    };
+    const auto include = [](std::optional<ui::RectF> &bounds, const ui::RectF &rect) {
+        if (!bounds) {
+            bounds = rect;
+            return;
+        }
+        const double left = std::min(bounds->x, rect.x);
+        const double top = std::min(bounds->y, rect.y);
+        const double right = std::max(bounds->x + bounds->width, rect.x + rect.width);
+        const double bottom = std::max(bounds->y + bounds->height, rect.y + rect.height);
+        bounds = ui::RectF {left, top, right - left, bottom - top};
+    };
+
+    bool lifted = false;
+    std::optional<ui::RectF> rest;
+    std::optional<ui::RectF> drawn;
+    for (size_t i = 0; i < placed.size(); ++i) {
+        const double scale = smoothed ? placements[i].scale : 1;
+        const double shift = smoothed ? placements[i].shift : 0;
+        const double hop = m_bounce->lift(placed[i].icon);
+        const double lift = (scale - 1) * itemSize / 2 + hop;
+        const ui::PointF offset = liftOff(lift);
+        if (scale != 1 || lift != 0)
+            lifted = true;
+
+        const double position = placed[i].position + shift;
+        const ui::RectF itSlot = slotRect(position);
+        const ui::RectF restSlot = slotRect(placed[i].position);
+        const double restCentreX = restSlot.x + panel.x() + iconIn.x + iconIn.width / 2;
+        const double restCentreY = restSlot.y + panel.y() + iconIn.y + iconIn.height / 2;
+        const double drawnCentreX = itSlot.x + panel.x() + iconIn.x + iconIn.width / 2 + offset.x;
+        const double drawnCentreY = itSlot.y + panel.y() + iconIn.y + iconIn.height / 2 + offset.y;
+        const double size = restIconSize * scale;
+        include(rest, ui::RectF {restCentreX - restIconSize / 2, restCentreY - restIconSize / 2,
+                                 restIconSize, restIconSize});
+        include(drawn, ui::RectF {drawnCentreX - size / 2, drawnCentreY - size / 2, size, size});
+
+        placed[i].icon->setGeometry({itSlot.x + panel.x(), itSlot.y + panel.y(), itSlot.width,
+                                     itSlot.height});
+        placed[i].icon->setIconRect(iconIn);
+        placed[i].icon->setPresentation(placed[i].scale * scale, placed[i].opacity, offset);
+        const double dot = m_metrics.dotSize;
+        const double dotGap = m_metrics.dotGap;
+        if (bottom)
+            placed[i].icon->setDotRect({iconIn.x + (itemSize - dot) / 2, iconIn.y + itemSize + dotGap, dot, dot});
+        else if (left)
+            placed[i].icon->setDotRect({iconIn.x - (dotGap + dot), iconIn.y + (itemSize - dot) / 2, dot, dot});
+        else
+            placed[i].icon->setDotRect({iconIn.x + itemSize + dotGap, iconIn.y + (itemSize - dot) / 2, dot, dot});
+    }
+
+    // The panel the icons need: it grows on its screen side and along with the
+    // spread, keeping the base dock's padding around them.
+    base::Rect panelRect = panel;
+    if (rest && drawn) {
+        const double extraLeft = std::min(0.0, drawn->x - rest->x);
+        const double extraTop = std::min(0.0, drawn->y - rest->y);
+        const double extraRight =
+                std::max(0.0, drawn->x + drawn->width - (rest->x + rest->width));
+        const double extraBottom =
+                std::max(0.0, drawn->y + drawn->height - (rest->y + rest->height));
+        if (extraLeft != 0 || extraTop != 0 || extraRight != 0 || extraBottom != 0) {
+            const double leftEdge = panel.x() + extraLeft;
+            const double topEdge = panel.y() + extraTop;
+            const double rightEdge = panel.x() + panel.width() + extraRight;
+            const double bottomEdge = panel.y() + panel.height() + extraBottom;
+            const int rectLeft = std::clamp(int(std::floor(leftEdge)), 0, m_windowRect.width());
+            const int rectTop = std::clamp(int(std::floor(topEdge)), 0, m_windowRect.height());
+            const int rectRight =
+                    std::clamp(int(std::ceil(rightEdge)), rectLeft + 1, m_windowRect.width());
+            const int rectBottom =
+                    std::clamp(int(std::ceil(bottomEdge)), rectTop + 1, m_windowRect.height());
+            panelRect = base::Rect(rectLeft, rectTop, rectRight - rectLeft, rectBottom - rectTop);
+        }
+    }
 
     // The dividers: 48/86 of the thickness, centred across the panel, in the
     // middle of their gap with the leading edge half a pixel before it.
@@ -828,15 +1011,17 @@ void DockWindow::layoutItems()
             : base::RectF();
     m_panel->setGeometry({0, 0, double(m_windowRect.width()), double(m_windowRect.height())});
     m_panel->requestPaint();
-    updatePanelRect(panel);
+    updatePanelRect(panelRect, !lifted);
     // Landed windows follow their sliding thumbnails.
     updateMinimizeTargets();
     if (m_tooltipOwner)
         showTooltip(m_tooltipOwner);
+    m_layingOut = false;
 }
 
 void DockWindow::retire(DockIcon *icon)
 {
+    m_bounce->stop(icon);
     // Not from inside the frame that laid it out: destroyed on the next turn.
     icon->setVisible(false);
     m_leavingIcons.erase(icon);
@@ -849,7 +1034,7 @@ void DockWindow::retire(DockIcon *icon)
     }
 }
 
-void DockWindow::updatePanelRect(const base::Rect &rect)
+void DockWindow::updatePanelRect(const base::Rect &rect, bool notify)
 {
     if (rect == m_panelRect)
         return;
@@ -864,7 +1049,38 @@ void DockWindow::updatePanelRect(const base::Rect &rect)
             : base::Rect::fromEdges(rect.x() + rect.width() / 2, rect.y(), m_windowRect.width(),
                                     rect.bottom());
     m_window->setInputRegion(roundedRegion(rect, cornerRadius()) | gap);
-    m_dock->notifyPrimaryGeometryChanged();
+    // While the icons magnify the panel moves every frame; the dock's place on
+    // the screen is still its rest one, so only a settled panel announces it.
+    if (notify)
+        m_dock->notifyPrimaryGeometryChanged();
+}
+
+void DockWindow::panelHoverMoved(const ui::PointF &position)
+{
+    const DockSettings::Direction direction = m_dock->settings().direction();
+    setPointerAlong(direction == DockSettings::Bottom ? position.x : position.y);
+}
+
+void DockWindow::panelHoverLeft()
+{
+    setPointerAlong(std::nullopt);
+}
+
+void DockWindow::setPointerAlong(std::optional<double> along)
+{
+    if (m_pointerAlong == along)
+        return;
+    m_pointerAlong = along;
+    // The magnification turns the pointer into scales and shifts on the next
+    // layout, and runs on from there frame by frame.
+    layoutItems();
+}
+
+void DockWindow::iconRunningChanged(DockIcon *icon, bool running)
+{
+    // The window arrived: there is nothing left to wait for.
+    if (running)
+        m_bounce->stop(icon);
 }
 
 void DockWindow::updateGlass()
@@ -888,7 +1104,7 @@ void DockWindow::updateStrut()
     // dock, so it covers the dock plus its edge gap.
     constexpr int kStrutExtraPixels = 2;
     const base::Rect screen = output->bounds;
-    const base::Rect dock = windowRect(m_metrics.thickness());
+    const base::Rect dock = baseWindowRect(m_metrics.thickness());
     int thickness = 0;
     wm::ScreenEdge edge = wm::ScreenEdge::Bottom;
     switch (settings.direction()) {
@@ -1039,10 +1255,10 @@ void DockWindow::showTooltip(DockIcon *icon)
     if (m_menuOpen || icon->toolTipText().empty())
         return;
     m_tooltipOwner = icon;
-    const ui::RectF slot = icon->geometry();
-    const ui::RectF rect = icon->iconRect();
-    m_tooltip->show(icon->toolTipText(), base::PointF(slot.x + rect.x + rect.width / 2,
-                                                      slot.y + rect.y + rect.height / 2));
+    // Above the icon as drawn, so a magnified one keeps its name over it.
+    const ui::RectF rect = icon->presentedIconRect();
+    const ui::PointF centre = icon->mapToWindow({rect.x + rect.width / 2, rect.y + rect.height / 2});
+    m_tooltip->show(icon->toolTipText(), base::PointF {centre.x, centre.y});
 }
 
 // Menus are made when they open: an open one closes.
@@ -1067,10 +1283,15 @@ void DockWindow::iconClicked(DockIcon *icon, int button)
 {
     switch (icon->kind()) {
     case DockIcon::Kind::Application:
-        if (button == int(ui::MouseButton::Left))
+        if (button == int(ui::MouseButton::Left)) {
             m_dock->applications().clicked(icon->key());
-        else if (button == int(ui::MouseButton::Middle))
+            // Starting, not switching to: it hops until its window is there.
+            if (m_dock->settings().bounceOnLaunch() && !icon->isRunning()
+                && icon->key() != DockModel::kLauncherId)
+                m_bounce->start(icon, m_metrics.iconSize);
+        } else if (button == int(ui::MouseButton::Middle)) {
             m_dock->applications().openNewInstance(icon->key());
+        }
         break;
     case DockIcon::Kind::Minimized:
         if (button == int(ui::MouseButton::Left))
@@ -1166,7 +1387,7 @@ void DockWindow::popupMenu(DockIcon *icon, std::unique_ptr<ui::Menu> menu)
     // side and pulled back only as far as the arrow needs.
     const DockSettings::Direction direction = m_dock->settings().direction();
     const ui::RectF slot = icon->geometry();
-    const ui::RectF rect = icon->iconRect();
+    const ui::RectF rect = icon->presentedIconRect();
     const ui::PointF iconStart {slot.x + rect.x, slot.y + rect.y};
     const ui::PointF centre {iconStart.x + rect.width / 2, iconStart.y + rect.height / 2};
     m_menu->setArrow(direction == DockSettings::Left    ? ui::BubbleShape::Edge::Left
@@ -1240,7 +1461,7 @@ ui::Bitmap DockWindow::iconImage(DockIcon *icon, double *scale) const
     *scale = pixelRatio();
     const ui::Image window = m_window->window()->grab();
     const ui::RectF slot = icon->geometry();
-    const ui::RectF rect = icon->iconRect();
+    const ui::RectF rect = icon->presentedIconRect();
     const int x = int(std::lround((slot.x + rect.x) * *scale));
     const int y = int(std::lround((slot.y + rect.y) * *scale));
     const int width = int(std::lround(rect.width * *scale));

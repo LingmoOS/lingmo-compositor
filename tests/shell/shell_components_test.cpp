@@ -5,6 +5,7 @@
 // The OSD and the dock as the compositor draws them: their windows, places,
 // glass, input and behaviour, headless on a fake renderer.
 
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 
@@ -27,7 +28,9 @@
 #include "shell/common/count_badge.h"
 #include "shell/common/task_manager.h"
 #include "shell/dock/dock.h"
+#include "shell/dock/dock_bounce.h"
 #include "shell/dock/dock_icon.h"
+#include "shell/dock/dock_magnification.h"
 #include "shell/dock/dock_presentation.h"
 #include "shell/dock/minimized_windows.h"
 #include "shell/dock/dock_tooltip.h"
@@ -236,6 +239,18 @@ protected:
         frame();
         return view;
     }
+
+    // Where the magnification draws an icon, in the dock's order.
+    static shell::DockMagnification::Placement placementOf(shell::DockWindow *dock,
+                                                           shell::DockIcon *icon)
+    {
+        const auto icons = dock->icons();
+        const auto it = std::find(icons.cbegin(), icons.cend(), icon);
+        const auto &placements = dock->magnification()->placements();
+        if (it == icons.cend() || size_t(it - icons.cbegin()) >= placements.size())
+            return {};
+        return placements[size_t(it - icons.cbegin())];
+    }
 };
 
 } // namespace
@@ -372,6 +387,9 @@ TEST_F(ShellComponentsTest, TheOsdAndTheDockServeTheirNames)
     const std::string dockXml = client.introspect("org.lingmo.Dock", "/Dock");
     EXPECT_NE(std::string::npos, dockXml.find("<interface name=\"org.lingmo.Dock\">")) << dockXml;
     EXPECT_NE(std::string::npos, dockXml.find("<method name=\"setMinimizedArea\">")) << dockXml;
+    EXPECT_NE(std::string::npos, dockXml.find("<method name=\"setMagnification\">")) << dockXml;
+    EXPECT_NE(std::string::npos, dockXml.find("<method name=\"setMagnificationFactor\">")) << dockXml;
+    EXPECT_NE(std::string::npos, dockXml.find("<method name=\"setBounceOnLaunch\">")) << dockXml;
 
     client.call("org.lingmo.Osd", "/Osd", "org.lingmo.Osd", "brightnessUp");
     EXPECT_EQ(69, values->m_brightness);
@@ -388,8 +406,9 @@ TEST_F(ShellComponentsTest, TheDockSitsAlongTheBottomOnItsGlassAndReservesItsStr
     EXPECT_EQ(wm::WindowRole::Dock, window->role());
     EXPECT_EQ(wm::FocusPolicy::NoFocus, window->focusPolicy());
     // The strip along the whole edge, 86 thick at the default icon size and
-    // reaching over its 5 px gap to the edge.
-    EXPECT_EQ(base::Rect(5, 960 - 86 - 5, 1430, 91), window->bounds());
+    // reaching over its 5 px gap to the edge, with the room the magnification's
+    // 27 px and the bounce's 9.72 px need above it on the screen's side.
+    EXPECT_EQ(base::Rect(5, 960 - 86 - 5 - 39, 1430, 91 + 39), window->bounds());
     // From the screen edge to the far side, and 2 more.
     EXPECT_EQ(base::Rect(0, kStatusBar, 1440, 960 - kStatusBar - 92), manager.workAreaFor(nullptr));
 
@@ -1194,4 +1213,133 @@ TEST_F(ShellComponentsTest, AClosedShellWindowLeavesTheSceneWithTheNextFrame)
     ASSERT_TRUE(scene.hasDamage(renderer.outputContext()));
     scene.render(renderer);
     EXPECT_EQ(before, surfaceContainer->children().size());
+}
+
+TEST_F(ShellComponentsTest, TheDockMagnifiesTheIconsNearThePointer)
+{
+    auto *dock = openDock("[Dock]\nPinned=files, terminal\n");
+    shell::DockIcon *files = dock->applicationIcon("files");
+    ASSERT_NE(nullptr, files);
+    const base::Rect restPanel = dock->panelRect();
+    const base::Rect window = dock->window()->geometry();
+
+    // The pointer on the Files icon: it is the largest, its neighbours grow
+    // less the further they are.
+    const base::PointF filesCentre = centreOf(dock, files);
+    move(1, filesCentre.x(), filesCentre.y());
+    ASSERT_TRUE(test::runUntil([&] {
+        frame();
+        return !dock->magnification()->isRunning();
+    }));
+    const shell::DockMagnification::Placement filesPlacement = placementOf(dock, files);
+    const shell::DockMagnification::Placement terminalPlacement =
+            placementOf(dock, dock->applicationIcon("terminal"));
+    const shell::DockMagnification::Placement trashPlacement = placementOf(dock, dock->trashIcon());
+    EXPECT_NEAR(1.5, filesPlacement.scale, 0.05);
+    EXPECT_GT(terminalPlacement.scale, 1.2);
+    EXPECT_GT(trashPlacement.scale, 1.0);
+    EXPECT_GT(filesPlacement.scale, trashPlacement.scale);
+    // The row spreads about the pointer: the icon under it stays, the ones
+    // before it move back and the ones after it forward.
+    EXPECT_NEAR(0.0, filesPlacement.shift, 1e-3);
+    EXPECT_LT(placementOf(dock, dock->applicationIcon(shell::DockModel::kLauncherId)).shift, -1);
+    EXPECT_GT(terminalPlacement.shift, 1);
+
+    // The glass panel grows with what is drawn: taller on the screen's side
+    // and wider with the spread, while its edge against the screen stays put
+    // and the window does not move.
+    const base::Rect magnifiedPanel = dock->panelRect();
+    EXPECT_EQ(restPanel.bottom(), magnifiedPanel.bottom());
+    EXPECT_GT(magnifiedPanel.height(), restPanel.height());
+    EXPECT_EQ(restPanel.y() - (magnifiedPanel.height() - restPanel.height()), magnifiedPanel.y());
+    EXPECT_GT(magnifiedPanel.width(), restPanel.width());
+    EXPECT_EQ(window, dock->window()->geometry());
+    EXPECT_EQ(magnifiedPanel, dock->window()->surface()->backgroundBlurRect());
+    ASSERT_TRUE(dock->window()->surface()->inputRegion());
+    EXPECT_TRUE(dock->window()->surface()->inputRegion()->contains(
+            base::Point(magnifiedPanel.x() + magnifiedPanel.width() / 2, magnifiedPanel.y() + 2)));
+    // The lifted icon is drawn above where its slot rests.
+    EXPECT_LT(files->presentationOffset().y, -1);
+
+    // Away from the dock everything settles back: the icons at their size, the
+    // panel its rest size, the offset gone.
+    move(2, 700, 300);
+    ASSERT_TRUE(test::runUntil([&] {
+        frame();
+        return !dock->magnification()->isRunning();
+    }));
+    for (const shell::DockMagnification::Placement &placement : dock->magnification()->placements()) {
+        EXPECT_NEAR(1.0, placement.scale, 1e-6);
+        EXPECT_NEAR(0.0, placement.shift, 1e-6);
+    }
+    EXPECT_EQ(restPanel, dock->panelRect());
+    EXPECT_TRUE(files->presentationOffset().isNull());
+}
+
+TEST_F(ShellComponentsTest, TheMagnificationSettingKeepsTheIconsAtTheirSize)
+{
+    auto *dock = openDock("[Dock]\nPinned=files, terminal\nMagnification=false\n");
+    const base::Rect restPanel = dock->panelRect();
+    shell::DockIcon *files = dock->applicationIcon("files");
+    const base::PointF filesCentre = centreOf(dock, files);
+    move(1, filesCentre.x(), filesCentre.y());
+    test::runFor(std::chrono::milliseconds(200));
+    frame();
+    EXPECT_FALSE(dock->magnification()->isRunning());
+    for (const shell::DockMagnification::Placement &placement : dock->magnification()->placements()) {
+        EXPECT_NEAR(1.0, placement.scale, 1e-6);
+        EXPECT_NEAR(0.0, placement.shift, 1e-6);
+    }
+    EXPECT_EQ(restPanel, dock->panelRect());
+    EXPECT_TRUE(files->presentationOffset().isNull());
+}
+
+TEST_F(ShellComponentsTest, AnApplicationThatStartsHopsUntilItsWindowIsThere)
+{
+    auto *dock = openDock("[Dock]\nPinned=files\n");
+    shell::DockIcon *files = dock->applicationIcon("files");
+    ASSERT_NE(nullptr, files);
+    const base::PointF filesCentre = centreOf(dock, files);
+    click(1, filesCentre.x(), filesCentre.y(), BTN_LEFT);
+    ASSERT_TRUE(dock->bounce()->isRunning());
+
+    // Hops up and comes down again.
+    bool hopped = false;
+    bool cameBack = false;
+    ASSERT_TRUE(test::runUntil([&] {
+        frame();
+        const double lift = dock->bounce()->lift(files);
+        hopped = hopped || lift > 1;
+        cameBack = cameBack || (hopped && lift < 1);
+        return cameBack;
+    }));
+    EXPECT_TRUE(hopped);
+
+    // Its window appears: there is nothing left to wait for, so it stops.
+    shell::TaskWindow window;
+    window.appId = "files";
+    window.title = "Files";
+    window.pid = 4242;
+    windows->add(window);
+    ASSERT_TRUE(test::runUntil([&] {
+        frame();
+        return files->isRunning();
+    }));
+    EXPECT_FALSE(dock->bounce()->isRunning());
+    move(20, 700, 300);
+    ASSERT_TRUE(test::runUntil([&] {
+        frame();
+        return !dock->magnification()->isRunning();
+    }));
+    EXPECT_TRUE(files->presentationOffset().isNull());
+}
+
+TEST_F(ShellComponentsTest, ABounceThatIsTurnedOffIsNotStarted)
+{
+    auto *dock = openDock("[Dock]\nPinned=files\nBounceOnLaunch=false\n");
+    shell::DockIcon *files = dock->applicationIcon("files");
+    ASSERT_NE(nullptr, files);
+    const base::PointF filesCentre = centreOf(dock, files);
+    click(1, filesCentre.x(), filesCentre.y(), BTN_LEFT);
+    EXPECT_FALSE(dock->bounce()->isRunning());
 }

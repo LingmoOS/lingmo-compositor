@@ -72,9 +72,15 @@ public:
     void setIconRect(const ui::RectF &rect);
     ui::RectF iconRect() const { return m_iconRect; }
     void setPresentation(double scale, double opacity);
+    // The same, moved by `offset` in the view's coordinates: the magnification
+    // lifts an icon off the dock's base line, and the launch bounce hops it.
+    void setPresentation(double scale, double opacity, const ui::PointF &offset);
     void setPresentationOpacity(double opacity);
     double presentationScale() const { return m_scale; }
     double presentationOpacity() const { return m_opacity; }
+    const ui::PointF &presentationOffset() const { return m_presentOffset; }
+    // The icon as drawn now: scaled about its centre and moved by the offset.
+    ui::RectF presentedIconRect() const;
     // The running dot, in this view.
     void setDotRect(const ui::RectF &rect);
 
@@ -114,6 +120,9 @@ private:
     void updateMask();
     void applyBadgeOpacity();
     void placeCountBadge();
+    // `rect` in this view, drawn as the icon is: scaled about the icon's
+    // centre and moved by the presentation offset.
+    ui::RectF presentedRect(const ui::RectF &rect) const;
 
     DockWindow *m_dock;
     const Kind m_kind;
@@ -146,6 +155,7 @@ private:
     ui::RectF m_dotRect;
     double m_scale = 1;
     double m_opacity = 1;
+    ui::PointF m_presentOffset;
     bool m_hovered = false;
     bool m_pressed = false;
     bool m_menuOpen = false;

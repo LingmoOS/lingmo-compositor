@@ -32,7 +32,9 @@ class View;
 namespace Lingmo::Shell {
 
 class Dock;
+class DockBounce;
 class DockIcon;
+class DockMagnification;
 class DockPresentation;
 class DockTooltip;
 class ShellWindow;
@@ -89,11 +91,14 @@ public:
 
     DockPresentation *applicationPresentation() const { return m_applications.get(); }
     DockPresentation *minimizedPresentation() const { return m_minimized.get(); }
+    DockMagnification *magnification() const { return m_magnification.get(); }
+    DockBounce *bounce() const { return m_bounce.get(); }
     // A drag of one of the dock's icons is under way.
     bool isDraggingIcon() const { return m_drag.has_value(); }
 
     // Called by DockIcon; not part of the public API.
     void iconHovered(DockIcon *icon, bool hovered);
+    void iconRunningChanged(DockIcon *icon, bool running);
     void iconDragRequested(DockIcon *icon);
     void iconClicked(DockIcon *icon, int button);
     void iconMenuRequested(DockIcon *icon);
@@ -148,10 +153,16 @@ private:
     void resize(bool animate);
     void layoutItems();
     void updateLayoutStart();
-    void updatePanelRect(const base::Rect &rect);
+    void updatePanelRect(const base::Rect &rect, bool notify = true);
     void updateStrut();
     void updateGlass();
     void updateMinimizeTargets();
+    void configureMagnification();
+    int magnificationHeadroom() const;
+    base::Rect baseWindowRect(int thickness) const;
+    void panelHoverMoved(const ui::PointF &position);
+    void panelHoverLeft();
+    void setPointerAlong(std::optional<double> along);
     void handOffLanded();
     double pixelRatio() const;
     base::Rect minimizedSlot(int index, int count) const;
@@ -186,6 +197,13 @@ private:
     Panel *m_panel = nullptr;
     std::unique_ptr<DockPresentation> m_applications;
     std::unique_ptr<DockPresentation> m_minimized;
+    std::unique_ptr<DockMagnification> m_magnification;
+    std::unique_ptr<DockBounce> m_bounce;
+    // A callback made from inside layoutItems() must not start it again.
+    bool m_layingOut = false;
+    // The pointer's place along the dock, in the window's coordinates; unset
+    // while it is not on the dock.
+    std::optional<double> m_pointerAlong;
     std::map<std::string, DockIcon *> m_applicationIcons;
     std::map<uint64_t, DockIcon *> m_minimizedIcons;
     // The last model state of each slot, kept while a removed one leaves.

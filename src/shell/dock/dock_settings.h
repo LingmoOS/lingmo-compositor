@@ -54,12 +54,25 @@ public:
     bool minimizedArea() const { return m_minimizedArea; }
     void setMinimizedArea(bool enabled);
 
+    // The icons grow under the pointer, as macOS magnification.
+    bool magnification() const { return m_magnification; }
+    void setMagnification(bool enabled);
+    // The largest scale the pointer brings an icon to; 1 to 2.
+    double magnificationFactor() const { return m_magnificationFactor; }
+    void setMagnificationFactor(double factor);
+    // An application that is starting hops a few times.
+    bool bounceOnLaunch() const { return m_bounceOnLaunch; }
+    void setBounceOnLaunch(bool enabled);
+
     base::Signal<> ready;
     base::Signal<> iconSizeChanged;
     base::Signal<> directionChanged;
     base::Signal<> visibilityChanged;
     base::Signal<> glassTintChanged;
     base::Signal<> minimizedAreaChanged;
+    base::Signal<> magnificationChanged;
+    base::Signal<> magnificationFactorChanged;
+    base::Signal<> bounceOnLaunchChanged;
 
 private:
     struct Values {
@@ -69,6 +82,9 @@ private:
         int edgeMargins = 10;
         double glassTint = 0.5;
         bool minimizedArea = true;
+        bool magnification = true;
+        double magnificationFactor = 1.5;
+        bool bounceOnLaunch = true;
     };
 
     static Values load(const std::string &path);
@@ -82,6 +98,9 @@ private:
     int m_edgeMargins = 10;
     double m_glassTint = 0.5;
     bool m_minimizedArea = true;
+    bool m_magnification = true;
+    double m_magnificationFactor = 1.5;
+    bool m_bounceOnLaunch = true;
     base::Timer m_iconSizeSave;
     base::Job m_load;
 };
