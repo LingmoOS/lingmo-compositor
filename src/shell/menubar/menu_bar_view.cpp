@@ -136,8 +136,14 @@ BarItem *MenuBarView::entry(size_t index) const
 
 void MenuBarView::setUserIcon(const std::string &file)
 {
-    // The theme's picture stands in for an account without one.
-    m_userIcon = file.empty() ? ui::themeIconPath("default-user", int(BarContext::kIconSize)) : file;
+    // The system logo stands in for an account without a picture, as FishUI's
+    // image://icontheme/systemlogo did; the theme's default-user is the last
+    // resort.
+    m_userIcon = file;
+    if (m_userIcon.empty())
+        m_userIcon = ui::themeIconPath("systemlogo", int(BarContext::kIconSize));
+    if (m_userIcon.empty())
+        m_userIcon = ui::themeIconPath("default-user", int(BarContext::kIconSize));
     if (!m_entries.empty())
         m_entries.front()->setAvatar(m_userIcon);
 }

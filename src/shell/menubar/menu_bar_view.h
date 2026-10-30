@@ -58,7 +58,7 @@ public:
     ui::Menu *openMenu() const { return m_openMenu; }
     MenuBarModel &model() { return *m_model; }
     BarItem *entry(size_t index) const;
-    // The avatar's file; empty takes the theme's default-user picture.
+    // The avatar's file; empty takes the theme's systemlogo, then default-user.
     void setUserIcon(const std::string &file);
 
 protected:
