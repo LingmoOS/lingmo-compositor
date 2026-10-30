@@ -407,8 +407,9 @@ TEST_F(ShellComponentsTest, TheDockSitsAlongTheBottomOnItsGlassAndReservesItsStr
     EXPECT_EQ(wm::FocusPolicy::NoFocus, window->focusPolicy());
     // The strip along the whole edge, 86 thick at the default icon size and
     // reaching over its 5 px gap to the edge, with the room the magnification's
-    // 27 px and the bounce's 9.72 px need above it on the screen's side.
-    EXPECT_EQ(base::Rect(5, 960 - 86 - 5 - 39, 1430, 91 + 39), window->bounds());
+    // 27 px and a launch and an attention hop's 2 x 9.72 px need above it on
+    // the screen's side.
+    EXPECT_EQ(base::Rect(5, 960 - 86 - 5 - 49, 1430, 91 + 49), window->bounds());
     // From the screen edge to the far side, and 2 more.
     EXPECT_EQ(base::Rect(0, kStatusBar, 1440, 960 - kStatusBar - 92), manager.workAreaFor(nullptr));
 
@@ -1342,4 +1343,64 @@ TEST_F(ShellComponentsTest, ABounceThatIsTurnedOffIsNotStarted)
     const base::PointF filesCentre = centreOf(dock, files);
     click(1, filesCentre.x(), filesCentre.y(), BTN_LEFT);
     EXPECT_FALSE(dock->bounce()->isRunning());
+}
+
+TEST_F(ShellComponentsTest, AWindowThatDemandsAttentionBouncesItsApplicationsIcon)
+{
+    auto *dock = openDock("[Dock]\nPinned=files\n");
+    shell::TaskWindow window;
+    window.appId = "files";
+    window.title = "Files";
+    window.pid = 4242;
+    const uint64_t id = windows->add(window);
+    shell::DockIcon *icon = dock->applicationIcon("files");
+    ASSERT_NE(nullptr, icon);
+    ASSERT_TRUE(test::runUntil([&] {
+        frame();
+        return icon->isRunning();
+    }));
+
+    // The application asks: its icon hops, as a launch does but shorter.
+    windows->change(id, [](shell::TaskWindow &w) { w.demandsAttention = true; }, shell::kAttentionChange);
+    ASSERT_TRUE(dock->attentionBounce()->isRunning());
+    bool hopped = false;
+    ASSERT_TRUE(test::runUntil([&] {
+        frame();
+        hopped = hopped || dock->attentionBounce()->lift(icon) > 1;
+        return hopped;
+    }));
+    EXPECT_TRUE(hopped);
+
+    // Answered, the request and the hop stop together.
+    windows->change(id, [](shell::TaskWindow &w) { w.demandsAttention = false; }, shell::kAttentionChange);
+    EXPECT_FALSE(dock->attentionBounce()->isRunning());
+}
+
+TEST_F(ShellComponentsTest, TheTooltipFadesIn)
+{
+    auto *dock = openDock("[Dock]\nPinned=files\n");
+    const base::PointF centre = centreOf(dock, dock->applicationIcon("files"));
+    move(1, centre.x(), centre.y());
+    ASSERT_TRUE(dock->tooltip()->isShown());
+    // A bubble that was not up fades in rather than appearing whole.
+    EXPECT_LT(dock->tooltip()->fade(), 1.0);
+    ASSERT_TRUE(test::runUntil([&] {
+        frame();
+        return dock->tooltip()->fade() >= 1.0;
+    }));
+}
+
+TEST_F(ShellComponentsTest, ATooltipThatMovesBetweenIconsStaysWhole)
+{
+    auto *dock = openDock("[Dock]\nPinned=files, terminal\n");
+    const base::PointF files = centreOf(dock, dock->applicationIcon("files"));
+    const base::PointF terminal = centreOf(dock, dock->applicationIcon("terminal"));
+    move(1, files.x(), files.y());
+    ASSERT_TRUE(test::runUntil([&] {
+        frame();
+        return dock->tooltip()->fade() >= 1.0;
+    }));
+    move(2, terminal.x(), terminal.y());
+    EXPECT_EQ("Terminal", dock->tooltip()->text());
+    EXPECT_EQ(1.0, dock->tooltip()->fade());
 }

@@ -93,12 +93,15 @@ public:
     DockPresentation *minimizedPresentation() const { return m_minimized.get(); }
     DockMagnification *magnification() const { return m_magnification.get(); }
     DockBounce *bounce() const { return m_bounce.get(); }
+    DockBounce *attentionBounce() const { return m_attentionBounce.get(); }
     // A drag of one of the dock's icons is under way.
     bool isDraggingIcon() const { return m_drag.has_value(); }
 
     // Called by DockIcon; not part of the public API.
     void iconHovered(DockIcon *icon, bool hovered);
     void iconRunningChanged(DockIcon *icon, bool running);
+    // A window of the application asked for attention, or was answered.
+    void attentionChanged(uint64_t window);
     void iconDragRequested(DockIcon *icon);
     void iconClicked(DockIcon *icon, int button);
     void iconMenuRequested(DockIcon *icon);
@@ -199,6 +202,7 @@ private:
     std::unique_ptr<DockPresentation> m_minimized;
     std::unique_ptr<DockMagnification> m_magnification;
     std::unique_ptr<DockBounce> m_bounce;
+    std::unique_ptr<DockBounce> m_attentionBounce;
     // A callback made from inside layoutItems() must not start it again.
     bool m_layingOut = false;
     // The pointer's place along the dock, in the window's coordinates; unset

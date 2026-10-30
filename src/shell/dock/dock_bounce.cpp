@@ -17,21 +17,23 @@ DockBounce::DockBounce(ui::Window *window)
 
 DockBounce::~DockBounce() = default;
 
-void DockBounce::start(const void *icon, double size)
+void DockBounce::start(const void *icon, double size, int hops)
 {
     if (!icon)
         return;
+    const double duration = std::clamp(hops, 1, kBounces) * kPeriodMs;
     for (Hop &hop : m_hops) {
         if (hop.icon != icon)
             continue;
         // Starting again while it hops: from the top, so it reads as a click.
         hop.startMs = -1;
         hop.size = size;
+        hop.durationMs = duration;
         if (!isTicking())
             startTicking();
         return;
     }
-    m_hops.push_back(Hop {icon, -1, size});
+    m_hops.push_back(Hop {icon, -1, size, duration});
     startTicking();
 }
 
@@ -67,11 +69,11 @@ double DockBounce::lift(const void *icon) const
         if (hop.startMs < 0)
             return 0;
         const double elapsed = m_nowMs - hop.startMs;
-        if (elapsed <= 0 || elapsed >= kDurationMs)
+        if (elapsed <= 0 || elapsed >= hop.durationMs)
             return 0;
         // Hops: |sin| of one period, each lower than the one before.
         return hop.size * kAmplitude * std::abs(std::sin(std::numbers::pi * elapsed / kPeriodMs))
-                * std::exp(-kDecay * elapsed / kDurationMs);
+                * std::exp(-kDecay * elapsed / hop.durationMs);
     }
     return 0;
 }
@@ -85,7 +87,7 @@ void DockBounce::tick(uint64_t frameTimeNs)
         if (hop.startMs < 0)
             hop.startMs = m_nowMs;
     }
-    std::erase_if(m_hops, [this](const Hop &hop) { return m_nowMs - hop.startMs >= kDurationMs; });
+    std::erase_if(m_hops, [this](const Hop &hop) { return m_nowMs - hop.startMs >= hop.durationMs; });
     if (m_hops.empty()) {
         stopTicking();
         m_lastFrameNs = 0;

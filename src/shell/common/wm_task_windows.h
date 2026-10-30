@@ -57,6 +57,7 @@ private:
     void onWindowActivationChanged(wm::Window *window, bool active) override;
     void onWindowTransientParentChanged(wm::Window *window, wm::Window *oldParent) override;
     void onWindowResponsiveChanged(wm::Window *window) override;
+    void onWindowDemandsAttentionChanged(wm::Window *window) override;
     void onWindowApplicationIdChanged(wm::Window *window) override;
     void onWindowTitleChanged(wm::Window *window) override;
     void onWindowHiddenChanged(wm::Window *window) override;

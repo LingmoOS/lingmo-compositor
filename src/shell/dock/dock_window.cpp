@@ -228,8 +228,10 @@ DockWindow::DockWindow(Shell *shell, std::unique_ptr<Dock> dock)
 
     m_magnification = std::make_unique<DockMagnification>(window);
     m_bounce = std::make_unique<DockBounce>(window);
+    m_attentionBounce = std::make_unique<DockBounce>(window);
     m_magnification->onChanged = [this] { layoutItems(); };
     m_bounce->onChanged = [this] { layoutItems(); };
+    m_attentionBounce->onChanged = [this] { layoutItems(); };
     configureMagnification();
 
     m_tooltip = std::make_unique<DockTooltip>(this, shell);
@@ -353,7 +355,9 @@ DockWindow::DockWindow(Shell *shell, std::unique_ptr<Dock> dock)
     m_subscriptions.push_back(windows.windowAdded.connect([this](uint64_t) {
         updateMinimizeTargets();
     }));
-    m_subscriptions.push_back(windows.windowChanged.connect([this](uint64_t, uint32_t changes) {
+    m_subscriptions.push_back(windows.windowChanged.connect([this](uint64_t id, uint32_t changes) {
+        if (changes & kAttentionChange)
+            attentionChanged(id);
         // The target is fitted to the window's shape and follows its state.
         if (changes & (kGeometryChange | kStateChange | kSkipTaskbarChange))
             updateMinimizeTargets();
@@ -387,6 +391,7 @@ DockWindow::~DockWindow()
     m_menu.reset();
     m_tooltip.reset();
     m_bounce.reset();
+    m_attentionBounce.reset();
     m_magnification.reset();
     m_applications.reset();
     m_minimized.reset();
@@ -470,7 +475,9 @@ int DockWindow::magnificationHeadroom() const
     const DockSettings &settings = m_dock->settings();
     const int iconSize = DockMetrics::forIconSize(settings.iconSize()).iconSize;
     const double grows = settings.magnification() ? iconSize * (settings.magnificationFactor() - 1.0) : 0.0;
-    const double hops = settings.bounceOnLaunch() ? iconSize * DockBounce::kAmplitude : 0.0;
+    // A launch hop and an attention hop come from the same height, and either
+    // may run, so the room is there for both.
+    const double hops = iconSize * DockBounce::kAmplitude * (settings.bounceOnLaunch() ? 2.0 : 1.0);
     if (grows <= 0 && hops <= 0)
         return 0;
     return int(std::ceil(grows + hops)) + 2;
@@ -932,7 +939,7 @@ void DockWindow::layoutItems()
     for (size_t i = 0; i < placed.size(); ++i) {
         const double scale = smoothed ? placements[i].scale : 1;
         const double shift = smoothed ? placements[i].shift : 0;
-        const double hop = m_bounce->lift(placed[i].icon);
+        const double hop = m_bounce->lift(placed[i].icon) + m_attentionBounce->lift(placed[i].icon);
         const double lift = (scale - 1) * itemSize / 2 + hop;
         const ui::PointF offset = liftOff(lift);
         if (scale != 1 || lift != 0)
@@ -1022,6 +1029,7 @@ void DockWindow::layoutItems()
 void DockWindow::retire(DockIcon *icon)
 {
     m_bounce->stop(icon);
+    m_attentionBounce->stop(icon);
     // Not from inside the frame that laid it out: destroyed on the next turn.
     icon->setVisible(false);
     m_leavingIcons.erase(icon);
@@ -1081,6 +1089,31 @@ void DockWindow::iconRunningChanged(DockIcon *icon, bool running)
     // The window arrived: there is nothing left to wait for.
     if (running)
         m_bounce->stop(icon);
+}
+
+void DockWindow::attentionChanged(uint64_t window)
+{
+    TaskWindows &windows = m_shell->taskWindows();
+    const TaskWindow *info = windows.window(window);
+    if (!info)
+        return;
+    std::string application = m_dock->applications().appIdForWindow(window);
+    if (application.empty())
+        application = info->appId;
+    DockIcon *icon = applicationIcon(application);
+    if (!icon)
+        return;
+    if (!info->demandsAttention) {
+        // Another window of the same application may still ask for it.
+        for (uint64_t other : windows.windows()) {
+            const TaskWindow *candidate = windows.window(other);
+            if (candidate && candidate->demandsAttention && candidate->appId == info->appId)
+                return;
+        }
+        m_attentionBounce->stop(icon);
+        return;
+    }
+    m_attentionBounce->start(icon, m_metrics.iconSize, DockBounce::kAttentionHops);
 }
 
 void DockWindow::updateGlass()

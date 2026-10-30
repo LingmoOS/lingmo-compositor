@@ -390,6 +390,12 @@ public:
 
     void setResponsive(bool responsive);
 
+    // The application asked for the user's attention: WM_HINTS' urgency bit,
+    // or _NET_WM_STATE_DEMANDS_ATTENTION under XWayland. The dock bounces the
+    // application's icon for it, and activating the window clears it.
+    bool demandsAttention() const { return m_demandsAttention; }
+    void setDemandsAttention(bool demandsAttention);
+
     // Ends the client process behind the window: the only place the window
     // manager terminates a client. See WindowManager::forceQuit().
     using KillCallback = std::function<void()>;
@@ -519,6 +525,7 @@ private:
     bool m_restoringFromDrag = false;
     bool m_modal = false;
     bool m_responsive = true;
+    bool m_demandsAttention = false;
     bool m_systemDialog = false;
     bool m_protectedFromControl = false;
     bool m_alwaysOnTop = false;

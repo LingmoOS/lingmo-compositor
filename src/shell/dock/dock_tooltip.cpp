@@ -12,6 +12,7 @@
 #include "shell/shell_data.h"
 #include "shell/shell_host.h"
 #include "shell/shell_window.h"
+#include "ui/animation.h"
 #include "ui/bubble_shape.h"
 #include "ui/embedded_window.h"
 #include "ui/label.h"
@@ -28,6 +29,7 @@ DockTooltip::DockTooltip(DockWindow *dock, Shell *shell)
 
 DockTooltip::~DockTooltip()
 {
+    m_fade.reset();
     m_window.reset();
 }
 
@@ -38,8 +40,25 @@ bool DockTooltip::isShown() const
 
 void DockTooltip::hide()
 {
+    if (m_fade)
+        m_fade->stop();
     if (m_window)
         m_window->hide();
+}
+
+void DockTooltip::applyFade()
+{
+    if (m_content)
+        m_content->setOpacity(m_progress);
+    if (!m_window || m_glassRegion.isEmpty())
+        return;
+    ShellWindow *popup =
+            m_shell->host()->windowFor(static_cast<ui::EmbeddedWindow *>(m_window.get()));
+    if (!popup)
+        return;
+    render::GlassParams glass = m_glass;
+    glass.opacity = float(m_progress);
+    popup->setBackgroundBlur(m_glassRegion, m_glassRadius, glass, m_glassShape);
 }
 
 void DockTooltip::show(const std::string &text, const base::PointF &target)
@@ -106,6 +125,7 @@ void DockTooltip::show(const std::string &text, const base::PointF &target)
         auto content = std::make_unique<ui::View>();
         m_label = content->addChild<ui::Label>();
         m_label->setElide(ui::Label::Elide::None);
+        m_content = content.get();
         m_window->setContentView(std::move(content));
         m_window->resize({width, height});
     } else {
@@ -116,6 +136,9 @@ void DockTooltip::show(const std::string &text, const base::PointF &target)
     m_label->setGeometry({body.x + (body.width - textSize.width) / 2,
                           body.y + (body.height - textSize.height) / 2, textSize.width,
                           textSize.height});
+    // A bubble that was not up fades in; one that is moving to the next icon
+    // stays whole.
+    const bool appearing = !isShown();
     m_window->show();
 
     // The glass is the body; the arrow outside it continues the glass, and
@@ -129,7 +152,32 @@ void DockTooltip::show(const std::string &text, const base::PointF &target)
     const base::Rect region(int(std::floor(body.x)), int(std::floor(body.y)), int(std::ceil(body.width)),
                             int(std::ceil(body.height)));
     const double radius = std::min(bubble.radius, std::min(body.width, body.height) / 2);
-    popup->setBackgroundBlur(region, int(std::lround(radius)), glass, bubble.path());
+    m_glass = glass;
+    m_glassRegion = region;
+    m_glassRadius = int(std::lround(radius));
+    m_glassShape = bubble.path();
+
+    if (appearing) {
+        if (!m_fade) {
+            m_fade = std::make_unique<ui::Animation>(m_window.get());
+            m_fade->setDuration(std::chrono::milliseconds(140));
+            m_fade->setEasing(ui::Animation::Easing::OutCubic);
+            m_fade->onUpdate = [this](double value) {
+                m_progress = value;
+                applyFade();
+            };
+            m_fade->onFinished = [this] {
+                m_progress = 1;
+                applyFade();
+            };
+        }
+        m_progress = 0;
+        m_fade->stop();
+        m_fade->start();
+    } else if (!m_fade || !m_fade->isRunning()) {
+        m_progress = 1;
+    }
+    applyFade();
 }
 
 } // namespace Lingmo::Shell

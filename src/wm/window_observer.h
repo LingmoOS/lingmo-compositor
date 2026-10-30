@@ -31,6 +31,10 @@ public:
     // Window::isResponsive flipped.
     virtual void onWindowResponsiveChanged(Window* window) { }
 
+    // Window::demandsAttention flipped: the application asked for the user's
+    // attention, the way an X11 client's urgency hint does.
+    virtual void onWindowDemandsAttentionChanged(Window* window) { }
+
     virtual void onWindowApplicationIdChanged(Window* window) { }
 
     virtual void onWindowTitleChanged(Window* window) { }

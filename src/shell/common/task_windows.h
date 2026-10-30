@@ -35,6 +35,9 @@ struct TaskWindow {
     // Hidden by Hide or Hide Others; independent of minimized.
     bool hidden = false;
     bool responsive = true;
+    // The application asked for the user's attention; cleared once one of its
+    // windows is activated.
+    bool demandsAttention = false;
     // The dbusmenu the window's surface names through the appmenu protocol.
     std::string menuService;
     std::string menuPath;
@@ -54,6 +57,7 @@ enum TaskWindowChange : uint32_t {
     kApplicationMenuChange = 1 << 6,
     kParentChange = 1 << 7,
     kResponsiveChange = 1 << 8,
+    kAttentionChange = 1 << 9,
 };
 
 // The application windows and what the shell may do to them. The session's

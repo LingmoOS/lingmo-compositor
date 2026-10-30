@@ -173,6 +173,7 @@ TaskWindow WmTaskWindows::describe(wm::Window *window) const
     info.fullscreen = state == wm::WindowStateType::Fullscreen;
     info.hidden = window->isHidden();
     info.responsive = window->isResponsive();
+    info.demandsAttention = window->demandsAttention();
     if (compositor::Surface *surface = window->rootSurface()) {
         info.menuService = surface->menuAddress().service;
         info.menuPath = surface->menuAddress().path;
@@ -215,6 +216,8 @@ void WmTaskWindows::refresh(wm::Window *window)
         changes |= kParentChange;
     if (old.responsive != info.responsive)
         changes |= kResponsiveChange;
+    if (old.demandsAttention != info.demandsAttention)
+        changes |= kAttentionChange;
     if (!changes)
         return;
     it->second = std::move(info);
@@ -256,8 +259,12 @@ void WmTaskWindows::onWindowStateTypeChanged(wm::Window *window, wm::WindowState
     refresh(window);
 }
 
-void WmTaskWindows::onWindowActivationChanged(wm::Window *window, bool)
+void WmTaskWindows::onWindowActivationChanged(wm::Window *window, bool active)
 {
+    // The user has the application in front of them: it no longer asks for
+    // attention, and the dock stops bouncing its icon.
+    if (active && window->demandsAttention())
+        window->setDemandsAttention(false);
     refresh(window);
 }
 
@@ -267,6 +274,11 @@ void WmTaskWindows::onWindowTransientParentChanged(wm::Window *window, wm::Windo
 }
 
 void WmTaskWindows::onWindowResponsiveChanged(wm::Window *window)
+{
+    refresh(window);
+}
+
+void WmTaskWindows::onWindowDemandsAttentionChanged(wm::Window *window)
 {
     refresh(window);
 }

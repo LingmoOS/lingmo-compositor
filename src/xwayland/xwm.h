@@ -116,6 +116,8 @@ private:
     // WM_CLASS's class, else the client leader's, lower-cased.
     static std::string applicationId(const X11Window &window);
     void applyHints(X11Window &window);
+    // Carries the X11 attention hints to the managed window.
+    void updateAttention(X11Window &window);
     // One _NET_WM_STATE client message applied to the state read from the
     // property, for a window that has no managed window yet.
     void applyStateRequest(X11Window &window, const std::array<uint32_t, 3> &request);

@@ -744,6 +744,16 @@ void Window::setResponsive(bool responsive)
     });
 }
 
+void Window::setDemandsAttention(bool demandsAttention)
+{
+    if (demandsAttention == m_demandsAttention)
+        return;
+    m_demandsAttention = demandsAttention;
+    forEachObserver(this, m_observers, [this](WindowObserver *observer) {
+        observer->onWindowDemandsAttentionChanged(this);
+    });
+}
+
 void Window::setKillCallback(KillCallback callback)
 {
     m_killCallback = std::move(callback);

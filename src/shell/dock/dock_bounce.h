@@ -25,14 +25,18 @@ public:
     static constexpr double kPeriodMs = 300;
     static constexpr int kBounces = 3;
     static constexpr double kDurationMs = kPeriodMs * kBounces;
+    // An attention request hops twice: enough to be noticed, short enough to
+    // leave the icon still if the user is looking elsewhere.
+    static constexpr int kAttentionHops = 2;
     // How much the hops die away over the three of them.
     static constexpr double kDecay = 1.1;
 
     explicit DockBounce(ui::Window *window);
     ~DockBounce() override;
 
-    // Starts, or restarts, the icon's bounce; `size` is the icon's size.
-    void start(const void *icon, double size);
+    // Starts, or restarts, the icon's bounce; `size` is the icon's size, and
+    // `hops` of kBounces how long it lasts.
+    void start(const void *icon, double size, int hops = kBounces);
     void stop(const void *icon);
     void clear();
     bool isRunning() const { return isTicking(); }
@@ -52,6 +56,7 @@ private:
         // start() gives it its time.
         double startMs = -1;
         double size = 0;
+        double durationMs = kDurationMs;
     };
 
     std::vector<Hop> m_hops;

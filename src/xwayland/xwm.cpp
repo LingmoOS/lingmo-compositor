@@ -684,6 +684,7 @@ void Xwm::applyStateRequest(X11Window &w, const std::array<uint32_t, 3> &request
     // As for a managed window, either half maximizes or restores both.
     if (maximize)
         apply(w.maximized);
+    updateAttention(w);
 }
 
 void Xwm::applyHints(X11Window &w)
@@ -692,6 +693,14 @@ void Xwm::applyHints(X11Window &w)
         return;
     w.surface->setAlwaysOnTop(w.above);
     w.surface->setSkipTaskbar(w.skipTaskbar);
+}
+
+void Xwm::updateAttention(X11Window &w)
+{
+    // WM_HINTS' urgency bit and _NET_WM_STATE_DEMANDS_ATTENTION are one thing
+    // to the shell: the application asks for the user's attention.
+    if (w.window)
+        w.window->setDemandsAttention(w.urgent || w.demandsAttention);
 }
 
 void Xwm::setScale(double scale)
@@ -1178,6 +1187,7 @@ void Xwm::properties(X11Window &w, std::vector<xcb_atom_t> atoms)
                                   && (words[0] & 2) && words[2] == 3;
                       w.input = !(r->type == XCB_ATOM_WM_HINTS && count >= 2 && (words[0] & 1))
                               || words[1];
+                      updateAttention(w);
                   } else if (a == atom("WM_PROTOCOLS")) {
                       w.deleteWindow = w.takeFocus = w.pingable = w.syncable = false;
                       if (r->type == XCB_ATOM_ATOM) {
@@ -1231,6 +1241,7 @@ void Xwm::properties(X11Window &w, std::vector<xcb_atom_t> atoms)
                       w.maximized = h && v;
                       for (const auto &request : w.stateRequests)
                           applyStateRequest(w, request);
+                      updateAttention(w);
                   }
               });
     }
@@ -1366,6 +1377,7 @@ void Xwm::present(X11Window &w)
     w.window = m_manager->createWindow(w.surface, init);
     if (!w.window)
         return;
+    updateAttention(w);
     // From here the state goes to the window and back into the property.
     w.stateRequests.clear();
     w.window->setPingCallback([this, id = w.id] {
@@ -1600,6 +1612,8 @@ void Xwm::focus(X11Window &w, bool active)
 {
     if (active) {
         w.demandsAttention = false;
+        w.urgent = false;
+        updateAttention(w);
         uint32_t mode = XCB_STACK_MODE_ABOVE;
         xcb_configure_window(m_connection, w.id, XCB_CONFIG_WINDOW_STACK_MODE, &mode);
         // Obtain X server time without blocking; WM_TAKE_FOCUS forbids CurrentTime.
@@ -1975,6 +1989,7 @@ void Xwm::event(xcb_generic_event_t *generic)
                     const auto current = w.window->stateType();
                     if (d[i] == atom("_NET_WM_STATE_DEMANDS_ATTENTION")) {
                         w.demandsAttention = d[0] == 1 || (d[0] == 2 && !w.demandsAttention);
+                        updateAttention(w);
                         synchronize(w);
                     } else if (d[i] == atom("_NET_WM_STATE_ABOVE")
                                || d[i] == atom("_NET_WM_STATE_SKIP_TASKBAR")
