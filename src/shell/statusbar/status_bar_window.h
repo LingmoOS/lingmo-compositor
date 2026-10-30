@@ -11,6 +11,7 @@
 
 #include "base/geometry.h"
 #include "base/signal.h"
+#include "render/glass.h"
 #include "shell/shell.h"
 #include "shell/statusbar/bar_item.h"
 #include "shell/statusbar/status_bar_menu_bar.h"
@@ -35,11 +36,12 @@ class SystemTrayView;
 class Wallpaper;
 
 // The status bar: a 32 px strip along the top of the primary output, reserved
-// from the work area, with no background of its own. Left to right: the menu
-// bar, the stop buttons of a recording and of an agent's control, the items
-// applications draw, the tray, the volume, Wi-Fi, battery and control centre
-// icons, and the clock. Its contents are light or dark by what the wallpaper
-// shows behind it.
+// from the work area. Its background is the user's Gaussian blur from
+// shell.conf (status_bar_settings.h), so what shows through is softened rather
+// than hidden; with no blur it is clear. Left to right: the menu bar, the stop
+// buttons of a recording and of an agent's control, the items applications
+// draw, the tray, the volume, Wi-Fi, battery and control centre icons, and the
+// clock. Its contents are light or dark by what the wallpaper shows behind it.
 class StatusBarWindow : public Component, public BarContext
 {
 public:
@@ -115,6 +117,9 @@ private:
     StatusBarPanels *panelsFor(StatusBarPanels::Panel panel) const;
     BarItem *itemFor(StatusBarPanels::Panel panel) const;
     void updateChecked();
+    // Puts the bar's blur, or the plate's when the bar has none, behind the
+    // contents.
+    void updateGlass();
     void updatePlateBlur();
     void updateStatusItemLimits();
     ui::RectF availableGeometry() const;
@@ -150,6 +155,11 @@ private:
     bool m_lightContents = false;
     // The plate the blur is behind, in window coordinates; empty for none.
     ui::RectF m_blurPlate;
+    // The bar's own blur: applied while shell.conf gives it some, and what was
+    // applied, so a repaint does not commit the surface again.
+    bool m_barBlurApplied = false;
+    base::Rect m_barBlurRect;
+    render::GlassParams m_barBlurGlass;
     std::vector<base::Subscription> m_subscriptions;
     std::shared_ptr<bool> m_alive = std::make_shared<bool>(true);
 };

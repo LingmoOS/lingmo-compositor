@@ -199,6 +199,47 @@ TEST_F(StatusBarViewTest, TheBarIsAPanelAlongThePrimaryOutputsTop)
     EXPECT_EQ(base::Rect(0, 0, 1280, 32), bar->window()->wmWindow()->bounds());
 }
 
+TEST_F(StatusBarViewTest, TheBarBlursWhatIsBehindIt)
+{
+    ASSERT_TRUE(test::runUntil([&] { return bar->statusBar().statusSettings().isReady(); }));
+    compositor::Surface *surface = bar->window()->surface();
+    ASSERT_TRUE(test::runUntil([&] {
+        frame();
+        return !surface->backgroundBlurRect().isEmpty();
+    }));
+    // The whole bar, in window coordinates: a plain Gaussian blur, no glass
+    // lens, at the file's defaults.
+    EXPECT_EQ(base::Rect(0, 0, 1440, 32), surface->backgroundBlurRect());
+    EXPECT_FALSE(surface->glass().enabled);
+    EXPECT_NEAR(shell::StatusBarSettings::kDefaultBlurSigma, surface->glass().plainSigma, 1e-3);
+    EXPECT_NEAR(shell::StatusBarSettings::kDefaultOpacity, surface->glass().opacity, 1e-3);
+
+    // The settings service changes it at once: zero opacity is a clear bar.
+    ASSERT_TRUE(bar->statusBar().registerServices());
+    test::DBusTestClient settings;
+    settings.call("org.lingmo.Statusbar", "/Statusbar", "org.lingmo.Statusbar", "setOpacity", 0.0);
+    ASSERT_TRUE(test::runUntil([&] {
+        frame();
+        return surface->backgroundBlurRect().isEmpty();
+    }));
+
+    // And a zero blur is as clear, whatever the opacity.
+    settings.call("org.lingmo.Statusbar", "/Statusbar", "org.lingmo.Statusbar", "setOpacity", 0.5);
+    settings.call("org.lingmo.Statusbar", "/Statusbar", "org.lingmo.Statusbar", "setBlurSigma", 0.0);
+    ASSERT_TRUE(test::runUntil([&] {
+        frame();
+        return surface->backgroundBlurRect().isEmpty();
+    }));
+
+    settings.call("org.lingmo.Statusbar", "/Statusbar", "org.lingmo.Statusbar", "setBlurSigma", 40.0);
+    ASSERT_TRUE(test::runUntil([&] {
+        frame();
+        return !surface->backgroundBlurRect().isEmpty();
+    }));
+    EXPECT_NEAR(40.0f, surface->glass().plainSigma, 1e-3);
+    EXPECT_NEAR(0.5f, surface->glass().opacity, 1e-3);
+}
+
 TEST_F(StatusBarViewTest, ItemsAbutTheEdgeAndEachOther)
 {
     // The clock's slot reaches the screen's right edge; its plate stops 9

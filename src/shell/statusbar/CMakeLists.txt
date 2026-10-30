@@ -21,6 +21,8 @@ add_library(lingmo-shell-statusbar STATIC
     power_actions.h
     status_bar.cpp
     status_bar.h
+    status_bar_settings.cpp
+    status_bar_settings.h
     status_notifier_item.cpp
     status_notifier_item.h
     status_notifier_watcher.cpp

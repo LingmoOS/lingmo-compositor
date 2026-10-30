@@ -22,6 +22,7 @@ StatusBar::StatusBar(dbus::Connection *sessionBus, dbus::Connection *systemBus, 
                      std::string settingsPath)
     : m_bus(sessionBus)
     , m_settingsPath(std::move(settingsPath))
+    , m_statusSettings(m_settingsPath)
     , m_watcher(sessionBus)
     , m_tray(m_watcher, sessionBus, tasks)
     , m_registrar(sessionBus)
@@ -74,6 +75,12 @@ bool StatusBar::registerServices()
                           dbus::ArgumentNames{{"batteryPercentage"}, {}});
         object->addMethod("setTwentyFourTime", [this](bool enabled) { setTwentyFourTime(enabled); },
                           dbus::ArgumentNames{{"t"}, {}});
+        object->addMethod("setBlurSigma",
+                          [this](double sigma) { m_statusSettings.setBlurSigma(sigma); },
+                          dbus::ArgumentNames{{"sigma"}, {}});
+        object->addMethod("setOpacity",
+                          [this](double opacity) { m_statusSettings.setOpacity(opacity); },
+                          dbus::ArgumentNames{{"opacity"}, {}});
         // The same as the menu's: the user is asked first. The session's
         // own methods act at once.
         object->addMethod("requestLogout", [this] { m_powerActions.request(PowerActions::Logout); });

@@ -15,6 +15,7 @@
 #include "shell/statusbar/brightness.h"
 #include "shell/statusbar/mpris.h"
 #include "shell/statusbar/power_actions.h"
+#include "shell/statusbar/status_bar_settings.h"
 #include "shell/statusbar/status_notifier_watcher.h"
 #include "shell/statusbar/system_tray_model.h"
 
@@ -45,6 +46,9 @@ public:
     // com.canonical.AppMenu.Registrar; false when one is taken.
     bool registerServices();
 
+    // The bar's [Statusbar] group: the blur behind it and its opacity.
+    StatusBarSettings &statusSettings() { return m_statusSettings; }
+
     SystemTrayModel &systemTray() { return m_tray; }
     AppMenuRegistrar &appMenuRegistrar() { return m_registrar; }
     MprisManager &mpris() { return m_mpris; }
@@ -69,6 +73,7 @@ private:
 
     base::dbus::Connection *m_bus;
     std::string m_settingsPath;
+    StatusBarSettings m_statusSettings;
     StatusNotifierWatcher m_watcher;
     SystemTrayModel m_tray;
     AppMenuRegistrar m_registrar;

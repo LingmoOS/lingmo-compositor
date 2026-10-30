@@ -503,12 +503,19 @@ TEST(StatusBarTest, ServesOrgCutefishStatusbar)
     ASSERT_TRUE(statusBar.registerServices());
     ASSERT_TRUE(test::runUntil([&] { return statusBar.twentyFourTime(); }));
     EXPECT_NE(statusBar.timeFormat().find('H'), std::string::npos);
+    ASSERT_TRUE(test::runUntil([&] { return statusBar.statusSettings().isReady(); }));
+    EXPECT_DOUBLE_EQ(shell::StatusBarSettings::kDefaultBlurSigma, statusBar.statusSettings().blurSigma());
+    EXPECT_DOUBLE_EQ(shell::StatusBarSettings::kDefaultOpacity, statusBar.statusSettings().opacity());
 
     test::DBusTestClient settings;
     settings.call("org.lingmo.Statusbar", "/Statusbar", "org.lingmo.Statusbar", "setTwentyFourTime", false);
     settings.call("org.lingmo.Statusbar", "/Statusbar", "org.lingmo.Statusbar", "setBatteryPercentage", true);
+    settings.call("org.lingmo.Statusbar", "/Statusbar", "org.lingmo.Statusbar", "setBlurSigma", 32.0);
+    settings.call("org.lingmo.Statusbar", "/Statusbar", "org.lingmo.Statusbar", "setOpacity", 0.25);
     EXPECT_FALSE(statusBar.twentyFourTime());
     EXPECT_TRUE(statusBar.battery().showPercentage());
+    EXPECT_DOUBLE_EQ(32.0, statusBar.statusSettings().blurSigma());
+    EXPECT_DOUBLE_EQ(0.25, statusBar.statusSettings().opacity());
     EXPECT_EQ(statusBar.timeFormat().find('H'), std::string::npos);
 
     bool requested = false;
@@ -524,9 +531,13 @@ TEST(StatusBarTest, ServesOrgCutefishStatusbar)
     base::Settings saved(directory.filePath("shell.conf"));
     EXPECT_FALSE(saved.boolValue("Statusbar/TwentyFourTime", true));
     EXPECT_TRUE(saved.boolValue("Statusbar/BatteryPercentage", false));
+    EXPECT_DOUBLE_EQ(32.0, saved.doubleValue("Statusbar/BlurSigma", -1.0));
+    EXPECT_DOUBLE_EQ(0.25, saved.doubleValue("Statusbar/Opacity", -1.0));
 
     const std::string xml = settings.introspect("org.lingmo.Statusbar", "/Statusbar");
     EXPECT_NE(xml.find("name=\"batteryPercentage\""), std::string::npos);
+    EXPECT_NE(xml.find("name=\"setBlurSigma\""), std::string::npos);
+    EXPECT_NE(xml.find("name=\"setOpacity\""), std::string::npos);
 }
 
 TEST(VpnNotifierTest, TellsAFailedVpnAndOpensItsPage)

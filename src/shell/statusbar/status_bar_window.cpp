@@ -73,7 +73,7 @@ protected:
     {
         if (m_bar->m_statusItems)
             m_bar->m_statusItems->placeItems();
-        m_bar->updatePlateBlur();
+        m_bar->updateGlass();
     }
 
 private:
@@ -189,6 +189,10 @@ StatusBarWindow::StatusBarWindow(Shell *shell, std::unique_ptr<StatusBar> status
     m_subscriptions.push_back(battery.showPercentageChanged.connect([this] { updateBattery(); }));
 
     m_subscriptions.push_back(m_backdrop->changed.connect([this] { updateLook(); }));
+    m_subscriptions.push_back(
+            m_statusBar->statusSettings().blurSigmaChanged.connect([this] { updateGlass(); }));
+    m_subscriptions.push_back(
+            m_statusBar->statusSettings().opacityChanged.connect([this] { updateGlass(); }));
     if (bus)
         setDeviceUsage(DeviceUsage::create(&m_shell->tasks()));
     m_subscriptions.push_back(m_shell->outputsChanged.connect([this] { updateGeometry(); }));
@@ -196,6 +200,7 @@ StatusBarWindow::StatusBarWindow(Shell *shell, std::unique_ptr<StatusBar> status
     m_subscriptions.push_back(m_window->mappedChanged.connect([this] { updateLook(); }));
 
     updateGeometry();
+    updateGlass();
     updateBattery();
     updateIndicators();
     updateLook();
@@ -234,6 +239,7 @@ void StatusBarWindow::updateGeometry()
     m_window->setOutput(output->name);
     m_window->setGeometry(base::Rect(output->bounds.x(), output->bounds.y(), output->bounds.width(), kHeight));
     m_window->setExclusiveZone(wm::ScreenEdge::Top, kHeight);
+    updateGlass();
     updateStatusItemLimits();
 }
 
@@ -292,7 +298,7 @@ void StatusBarWindow::updateLook()
 
 void StatusBarWindow::platePainted()
 {
-    updatePlateBlur();
+    updateGlass();
 }
 
 static const BarItem *findPlate(const ui::View *view)
@@ -308,9 +314,44 @@ static const BarItem *findPlate(const ui::View *view)
     return nullptr;
 }
 
-void StatusBarWindow::updatePlateBlur()
+void StatusBarWindow::updateGlass()
 {
     if (!m_window || !m_root)
+        return;
+    const StatusBarSettings &settings = m_statusBar->statusSettings();
+    const double sigma = settings.blurSigma();
+    const double opacity = settings.opacity();
+    // A clear bar keeps the plate's own blur for its popups, as it always had.
+    if (sigma <= 0.0 || opacity <= 0.0) {
+        if (m_barBlurApplied) {
+            m_barBlurApplied = false;
+            m_barBlurRect = {};
+            m_barBlurGlass = {};
+            m_blurPlate = {};
+            m_window->setBackgroundBlur(base::Rect(), 0);
+        }
+        updatePlateBlur();
+        return;
+    }
+    const base::Rect geometry = m_window->geometry();
+    const base::Rect rect(0, 0, geometry.width(), geometry.height());
+    render::GlassParams glass;
+    glass.enabled = false;
+    glass.plainSigma = float(sigma);
+    glass.opacity = float(opacity);
+    if (m_barBlurApplied && rect == m_barBlurRect && m_barBlurGlass == glass)
+        return;
+    m_barBlurApplied = true;
+    m_barBlurRect = rect;
+    m_barBlurGlass = glass;
+    // One blur, the bar's: the plate's fill still marks the open item.
+    m_blurPlate = {};
+    m_window->setBackgroundBlur(rect, 0, glass);
+}
+
+void StatusBarWindow::updatePlateBlur()
+{
+    if (!m_window || !m_root || m_barBlurApplied)
         return;
     // A surface has one blur, and one plate shows at a time: opening a panel
     // or a menu closes the others.
