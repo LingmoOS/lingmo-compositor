@@ -15,7 +15,9 @@ namespace dbus = base::dbus;
 static const base::LogCategory cfPower("lingmo.shell.power");
 
 PowerActions::PowerActions(dbus::Connection *bus)
-    : m_session(bus, "org.lingmo.Session", "/Session", "org.lingmo.Session")
+    // lingmo-core's session application exports org.lingmo.Session at
+    // /org/lingmo/Session; /Session has no object behind it.
+    : m_session(bus, "org.lingmo.Session", "/org/lingmo/Session", "org.lingmo.Session")
     , m_screenSaver(bus, "org.freedesktop.ScreenSaver", "/ScreenSaver", "org.freedesktop.ScreenSaver")
 {
     m_clear.setSingleShot(true);
@@ -67,8 +69,14 @@ void PowerActions::cancel()
 // long that takes, and carries on instead if one of them keeps it.
 void PowerActions::callSession(const char *method)
 {
-    if (!m_session.send(method))
-        LM_WARNING(cfPower) << "Unable to request" << method << "from the session";
+    m_calls.track([&](std::function<void()> finished) {
+        return m_session.callAsync(method, [method, finished](const dbus::Reply &reply) {
+            if (reply.isError())
+                LM_WARNING(cfPower) << "Unable to request" << method << "from the session:"
+                                    << reply.error().message;
+            finished();
+        });
+    });
 }
 
 void PowerActions::logout()
